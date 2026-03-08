@@ -5,3 +5,4 @@
 3. Elie Kuradusenge
 4. Ange Muhawenimana
 5. Kevin Rebakure
+6. Deborah Kamikazi
