@@ -66,7 +66,12 @@ To start the server in development mode with automatic reloading:
 npm run dev
 ```
 
-The server will be available at `http://localhost:3000`.
+The server will be available at `http://localhost:3000/api`.
+
+## API Documentation
+
+Swagger documentation is available at:
+`http://localhost:3000/api/docs`
 
 ## Database Management
 
