@@ -1,0 +1,56 @@
+openapi: 3.0.0
+info:
+  title: Tembera API
+  version: 1.0.0
+  description: API documentation for the Tembera backend
+servers:
+  - url: http://localhost:3000/api
+    description: Local development server
+paths:
+  /users:
+    get:
+      summary: Retrieve a list of users
+      responses:
+        "200":
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+    post:
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                name:
+                  type: string
+              required:
+                - email
+      responses:
+        "200":
+          description: The created user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: User already exists or invalid data
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        name:
+          type: string
