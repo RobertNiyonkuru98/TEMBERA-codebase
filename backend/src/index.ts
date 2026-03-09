@@ -1,15 +1,14 @@
 import "dotenv/config";
-import express, { type Request, type Response } from "express";
+import express, { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 import path from "path";
-import { fileURLToPath } from "url";
+import { asyncWrapper } from "./utils/async.wrapper";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.resolve();
 
 const app = express();
 
@@ -20,8 +19,20 @@ const prisma = new PrismaClient({ adapter });
 
 const PORT = process.env.PORT || 3000;
 
+// Database connection verification function
+async function verifyDatabaseConnection(): Promise<boolean> {
+  try {
+    await prisma.$connect();
+    console.log("Database connected successfully!");
+    return true;
+  } catch (error) {
+    console.error("Failed to connect to database:", error);
+    return false;
+  }
+}
+
 // Swagger setup from YAML
-const swaggerDocument = YAML.load(path.join(__dirname, "swagger.yml"));
+const swaggerDocument = YAML.load(path.join(__dirname, "src", "swagger.yml"));
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(express.json());
@@ -29,27 +40,38 @@ app.use(express.json());
 const router = express.Router();
 
 // Get Users
-router.get("/users", async (req: Request, res: Response) => {
-  const users = await prisma.testUser.findMany();
+router.get("/users", asyncWrapper(async (_req: Request, res: Response) => {
+  const users = await prisma.user.findMany();
   res.json(users);
-});
+}));
 
 // Create User
-router.post("/users", async (req: Request, res: Response) => {
-  const { email, name } = req.body;
+router.post("/users", asyncWrapper(async (req: Request, res: Response) => {
+  const { email, name, phone_number, password } = req.body;
   try {
-    const newUser = await prisma.testUser.create({
-      data: { email, name },
+    const newUser = await prisma.user.create({
+      data: { email, name, phone_number, password },
     });
     res.json(newUser);
   } catch (error) {
     res.status(400).json({ error: "User already exists or invalid data" });
   }
-});
+}));
 
 app.use("/api", router);
 
-app.listen(PORT, () => {
-  console.log(`The server is running on: http://localhost:${PORT}/api`);
-  console.log(`The server documentation is accessible on: http://localhost:${PORT}/api/docs`);
-});
+// Start server with database connection verification
+async function startServer() {  
+  const isDbConnected = await verifyDatabaseConnection();
+  
+  if (!isDbConnected) {
+    process.exit(1); // Exit if database connection fails
+  }
+  
+  app.listen(PORT, () => {
+    console.log(`Server is running on: http://localhost:${PORT}/api`);
+    console.log(`API Documentation: http://localhost:${PORT}/api/docs`);
+  });
+}
+
+startServer();
