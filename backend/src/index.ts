@@ -7,6 +7,8 @@ import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 import path from "path";
 import { asyncWrapper } from "./utils/async.wrapper";
+import authRoutes from './routes/auth.routes';
+// import { authenticateToken } from "./middlewares/auth.middleware";
 
 const __dirname = path.resolve();
 
@@ -37,6 +39,9 @@ app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(express.json());
 
+// Register Auth Routes
+app.use('/api/auth', authRoutes);
+
 const router = express.Router();
 
 // Get Users
@@ -61,13 +66,13 @@ router.post("/users", asyncWrapper(async (req: Request, res: Response) => {
 app.use("/api", router);
 
 // Start server with database connection verification
-async function startServer() {  
+async function startServer() {
   const isDbConnected = await verifyDatabaseConnection();
-  
+
   if (!isDbConnected) {
     process.exit(1); // Exit if database connection fails
   }
-  
+
   app.listen(PORT, () => {
     console.log(`Server is running on: http://localhost:${PORT}/api`);
     console.log(`API Documentation: http://localhost:${PORT}/api/docs`);
