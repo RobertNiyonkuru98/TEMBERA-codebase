@@ -8,7 +8,7 @@ datasource db {
 
 // User Model - Stores all users of the system
 model User {
-  id           BigInt   @id @default(autoincrement())
+  id           String   @id @default(uuid()) @db.Uuid
   name         String   @db.VarChar(255)
   email        String   @unique @db.VarChar(255)
   phone_number String?  @db.VarChar(50)
@@ -20,12 +20,12 @@ model User {
 
 // Company Model - Represents companies that provide itineraries
 model Company {
-  id          BigInt   @id @default(autoincrement())
+  id          String   @id @default(uuid()) @db.Uuid
   name        String   @db.VarChar(50)
   description String?  @db.VarChar(255)
   contact     String?  @db.VarChar(50)
 
-  owner_id    BigInt
+  owner_id    String   @db.Uuid
   owner       User     @relation("CompanyOwner", fields: [owner_id], references: [id])
 
   itineraries Itinerary[]
@@ -33,8 +33,8 @@ model Company {
 
 // Itinerary Model - Stores travel or activity information
 model Itinerary {
-  id          BigInt    @id @default(autoincrement())
-  company_id  BigInt
+  id          String    @id @default(uuid()) @db.Uuid
+  company_id  String    @db.Uuid
   title       String    @db.VarChar(50)
   activity    String?   @db.VarChar(255)
   description String?   @db.VarChar(255)
@@ -48,8 +48,8 @@ model Itinerary {
 
 // Booking Model - Represents a booking created by a user
 model Booking {
-  id          BigInt   @id @default(autoincrement())
-  user_id     BigInt
+  id          String   @id @default(uuid()) @db.Uuid
+  user_id     String   @db.Uuid
   description String?  @db.VarChar(255)
   status      String   @db.VarChar(10)
   date        DateTime @db.Date
@@ -60,9 +60,9 @@ model Booking {
 
 // BookingItem Model - Junction table connecting bookings and itineraries
 model BookingItem {
-  id           BigInt    @id @default(autoincrement())
-  itinerary_id BigInt
-  booking_id   BigInt
+  id           String    @id @default(uuid()) @db.Uuid
+  itinerary_id String    @db.Uuid
+  booking_id   String    @db.Uuid
 
   itinerary    Itinerary @relation(fields: [itinerary_id], references: [id])
   booking      Booking   @relation(fields: [booking_id], references: [id])
