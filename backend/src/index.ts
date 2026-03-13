@@ -8,7 +8,7 @@ import YAML from "yamljs";
 import path from "path";
 import { asyncWrapper } from "./utils/async.wrapper";
 import authRoutes from './routes/auth.routes';
-// import { authenticateToken } from "./middlewares/auth.middleware";
+import { authenticateToken } from "./middlewares/auth.middleware";
 
 const __dirname = path.resolve();
 
@@ -63,7 +63,7 @@ router.post("/users", asyncWrapper(async (req: Request, res: Response) => {
   }
 }));
 
-app.use("/api", router);
+app.use("/api", authenticateToken, router);
 
 // Start server with database connection verification
 async function startServer() {

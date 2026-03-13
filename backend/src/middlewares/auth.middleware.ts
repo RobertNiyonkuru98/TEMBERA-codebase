@@ -16,6 +16,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
         (req as any).user = verified;
         return next();
     } catch (error) {
+        console.error('AuthMiddleware.ts\'s authenticateToken has an Error verifying token:', error);
         return res.status(403).json({message: 'Invalid token'});
     }
 }
