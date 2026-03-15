@@ -1,3 +1,4 @@
+-- Active: 1773172359074@@localhost@5432@tembera
 -- CreateTable
 CREATE TABLE "User" (
     "id" BIGSERIAL NOT NULL,
