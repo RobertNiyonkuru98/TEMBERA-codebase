@@ -16,6 +16,19 @@ model User {
 
   bookings     Booking[]
   companies    Company[] @relation("CompanyOwner")
+  roles        Role[]
+}
+
+// Role Model - Stores access level and access status for each user
+model Role {
+  id            String @id @default(uuid()) @db.Uuid
+  user_id       String @db.Uuid
+  access_level  String @db.VarChar(50)
+  access_status String @db.VarChar(20)
+
+  user          User   @relation(fields: [user_id], references: [id])
+
+  @@unique([user_id, access_level])
 }
 
 // Company Model - Represents companies that provide itineraries
@@ -44,6 +57,16 @@ model Itinerary {
 
   company      Company       @relation(fields: [company_id], references: [id])
   bookingItems BookingItem[]
+  images       ItineraryImage[]
+}
+
+// ItineraryImage Model - Stores one or more images associated with an itinerary
+model ItineraryImage {
+  id           String    @id @default(uuid()) @db.Uuid
+  itinerary_id String    @db.Uuid
+  image_path   String    @db.VarChar(255)
+
+  itinerary    Itinerary @relation(fields: [itinerary_id], references: [id])
 }
 
 // Booking Model - Represents a booking created by a user

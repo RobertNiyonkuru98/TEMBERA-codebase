@@ -85,7 +85,7 @@ export class ExceptionProcessor {
   static handle(err: any): never {
     if (err?.response) {
       const { status, data } = err.response;
-      const message = data?.resp_msg || err.message || "Unexpected error";
+      const message = data?.message || err.message || "Unexpected error";
       const payload = data ?? null;
       this.handleResponseError(status, message, payload);
     }

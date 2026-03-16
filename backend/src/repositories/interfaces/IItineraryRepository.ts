@@ -23,4 +23,7 @@ export interface IItineraryRepository {
 
   // Count
   count(): Promise<number>;
+
+  // Images
+  createImages(itineraryId: string, imagePaths: string[]): Promise<void>;
 }

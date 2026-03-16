@@ -12,7 +12,7 @@ export class ResponseHandler {
     if (data && typeof data === "object" && "pagination" in data) {
       return reply.status(statusCode).send({
         success: true,
-        resp_msg: message,
+        message: message,
         resp_code,
         data: serializeBigInt(data.data),
         pagination: serializeBigInt(data.pagination),
@@ -21,7 +21,7 @@ export class ResponseHandler {
 
     return reply.status(statusCode).send({
       success: true,
-      resp_msg: message,
+      message: message,
       resp_code,
       data: serializeBigInt(data),
     });
@@ -30,7 +30,7 @@ export class ResponseHandler {
   static error(reply: Response, error: any, resp_code: number = 101, statusCode: number = 400) {
     return reply.status(statusCode).send({
       success: false,
-      resp_msg:
+      message:
         error?.message ||
         error ||
         "We couldn't process this request, Please contact gwiza customer support for assistance.",

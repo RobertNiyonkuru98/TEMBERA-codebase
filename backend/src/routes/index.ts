@@ -12,7 +12,7 @@ router.use('/users', authenticateToken, userRoutes);
 router.use('/itineraries', authenticateToken, itineraryRoutes);
 router.use('/bookings', authenticateToken, bookingRoutes);
 router.use('/companies', authenticateToken, companyRoutes);
-router.use((req, res, _next) => {
+router.use((_req, res, _next) => {
   res.status(404).json({ message: "Route not found" });
 });
 export default router;

@@ -296,15 +296,15 @@ paths:
                 items:
                   $ref: "#/components/schemas/Itinerary"
     post:
-      summary: Create a new itinerary
+      summary: Create a new itinerary with optional image uploads
       security:
         - bearerAuth: []
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: "#/components/schemas/Itinerary"
+              $ref: "#/components/schemas/ItineraryCreateWithImagesRequest"
       responses:
         "201":
           description: The created itinerary
@@ -609,6 +609,35 @@ components:
           format: date
         price:
           type: number
+    ItineraryCreateWithImagesRequest:
+      type: object
+      required:
+        - company_id
+        - title
+        - date
+        - price
+      properties:
+        company_id:
+          type: string
+        title:
+          type: string
+        activity:
+          type: string
+        description:
+          type: string
+        location:
+          type: string
+        date:
+          type: string
+          format: date
+        price:
+          type: number
+        images:
+          type: array
+          description: One or more image files for the itinerary (field name must be `images`).
+          items:
+            type: string
+            format: binary
     Booking:
       type: object
       properties:

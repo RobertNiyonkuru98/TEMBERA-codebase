@@ -12,8 +12,10 @@ export class ItineraryService {
     return this.itineraryRepository.findById(id);
   }
 
-  async create(data: Prisma.ItineraryCreateInput): Promise<Itinerary> {
-    return this.itineraryRepository.create(data);
+  async create(data: Prisma.ItineraryCreateInput, imagePaths: string[] = []): Promise<Itinerary> {
+    const itinerary = await this.itineraryRepository.create(data);
+    await this.itineraryRepository.createImages(itinerary.id, imagePaths);
+    return itinerary;
   }
 
   async update(id: string, data: Prisma.ItineraryUpdateInput): Promise<Itinerary | null> {

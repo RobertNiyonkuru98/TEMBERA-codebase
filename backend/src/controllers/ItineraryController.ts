@@ -18,7 +18,16 @@ export const getItineraryById = async (req: Request, res: Response) => {
 };
 
 export const createItinerary = async (req: Request, res: Response) => {
-  const itinerary = await itineraryService.create(req.body);
+  const files = (req.files as Express.Multer.File[] | undefined) ?? [];
+  const imagePaths = files.map((file) => `/uploads/${file.filename}`);
+
+  const itineraryPayload = {
+    ...req.body,
+    price: Number(req.body.price),
+    date: new Date(req.body.date),
+  };
+
+  const itinerary = await itineraryService.create(itineraryPayload, imagePaths);
   ResponseHandler.success(res, 201, 'Itinerary created successfully', itinerary);
 };
 

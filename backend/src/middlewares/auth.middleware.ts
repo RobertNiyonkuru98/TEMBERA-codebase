@@ -26,3 +26,23 @@ export const authenticateToken = asyncWrapper(
     }
   }
 );
+
+export const verifyAdmin = asyncWrapper(
+  async (req: Request, _res: Response, next: NextFunction) => {
+    const user = (req as any).user;
+    if (!user || user.role !== 'admin') {
+      throw new UnauthorizedError('Admin access required');
+    }
+    next();
+  }
+);
+
+export const verifyCompany = asyncWrapper(
+  async (req: Request, _res: Response, next: NextFunction) => {
+    const user = (req as any).user;
+    if (!user || user.role !== 'company') {
+      throw new UnauthorizedError('Company access required');
+    }
+    next();
+  }
+);

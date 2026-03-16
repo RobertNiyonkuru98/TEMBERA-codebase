@@ -116,4 +116,17 @@ export class ItineraryRepository implements IItineraryRepository {
   async count(): Promise<number> {
     return await prisma.itinerary.count();
   }
+
+  async createImages(itineraryId: string, imagePaths: string[]): Promise<void> {
+    if (imagePaths.length === 0) {
+      return;
+    }
+
+    await prisma.itineraryImage.createMany({
+      data: imagePaths.map((imagePath) => ({
+        itinerary_id: itineraryId,
+        image_path: imagePath,
+      })),
+    });
+  }
 }

@@ -4,6 +4,7 @@ import {
     getUserById,
     createUser,
     updateUser,
+    alterUserRole,
     deleteUser,
 } from '../controllers/UserController';
 import { asyncWrapper } from '@/utils/async.wrapper';
@@ -14,6 +15,7 @@ router.get('/', asyncWrapper(getAllUsers));
 router.get('/:id', asyncWrapper(getUserById));
 router.post('/', asyncWrapper(createUser));
 router.put('/:id', asyncWrapper(updateUser));
+router.patch('/:id/role', asyncWrapper(alterUserRole));
 router.delete('/:id', asyncWrapper(deleteUser));
 
 export default router;

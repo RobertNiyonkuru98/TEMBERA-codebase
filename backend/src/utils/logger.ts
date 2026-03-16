@@ -1,6 +1,6 @@
 import { createLogger, format, transports } from "winston";
 import type { TransformableInfo } from "logform";
-import { LOG_LEVEL, APP_ENV } from "./constants";
+import { LOG_LEVEL } from "./constants";
 import { serializeBigInt } from "./serialize";
 
 
