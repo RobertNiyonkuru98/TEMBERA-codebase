@@ -1,4 +1,5 @@
-import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { useEffect, type ReactNode } from "react";
 import HomePage from "./pages/HomePage";
 import ItinerariesPage from "./pages/ItinerariesPage";
 import ItineraryDetailPage from "./pages/ItineraryDetailPage";
@@ -6,138 +7,266 @@ import BookingsPage from "./pages/BookingsPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import CreateBookingPage from "./pages/CreateBookingPage";
-import ProtectedRoute from "./components/ProtectedRoute";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "./AuthContext.tsx";
 import { useI18n, type Lang } from "./i18n";
+import type { UserRole } from "./types";
+import AdminBookingsPage from "./pages/AdminBookingsPage";
+import AdminUsersPage from "./pages/AdminUsersPage";
+import AdminItinerariesPage from "./pages/AdminItinerariesPage";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
+import AdminCompaniesPage from "./pages/AdminCompaniesPage";
+import CompanyItinerariesPage from "./pages/CompanyItinerariesPage";
+import CompanyDashboardPage from "./pages/CompanyDashboardPage";
+import CompanyAttendeesPage from "./pages/CompanyAttendeesPage";
+import CompanyStatisticsPage from "./pages/CompanyStatisticsPage";
+import VisitorShowcasePage from "./pages/VisitorShowcasePage";
+import ProfilePage from "./pages/ProfilePage";
+import AuthenticatedSidebar from "./components/AuthenticatedSidebar";
+import GuestTopNav from "./components/GuestTopNav";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+
+type RoleProtectedRouteProps = {
+  allowedRoles: UserRole[];
+  children: ReactNode;
+};
+
+function RoleProtectedRoute({ allowedRoles, children }: RoleProtectedRouteProps) {
+  const { user } = useAuth();
+  const location = useLocation();
+
+  if (!user) {
+    return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+  }
+
+  if (!allowedRoles.includes(user.role)) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <>{children}</>;
+}
+
+function AdminRoute({ children }: { children: ReactNode }) {
+  return <RoleProtectedRoute allowedRoles={["admin"]}>{children}</RoleProtectedRoute>;
+}
+
+function CompanyRoute({ children }: { children: ReactNode }) {
+  return <RoleProtectedRoute allowedRoles={["company"]}>{children}</RoleProtectedRoute>;
+}
+
+function UserRoute({ children }: { children: ReactNode }) {
+  return <RoleProtectedRoute allowedRoles={["user"]}>{children}</RoleProtectedRoute>;
+}
+
+function AppRoutes() {
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/itineraries" element={<ItinerariesPage />} />
+      <Route path="/itinerary/:id" element={<ItineraryDetailPage />} />
+      <Route path="/itineraries/:id" element={<ItineraryDetailPage />} />
+      <Route path="/visitor/showcase" element={<VisitorShowcasePage />} />
+
+      <Route
+        path="/profile"
+        element={
+          <RoleProtectedRoute
+            allowedRoles={["admin", "company", "user", "visitor"]}
+          >
+            <ProfilePage />
+          </RoleProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/bookings"
+        element={
+          <UserRoute>
+            <BookingsPage />
+          </UserRoute>
+        }
+      />
+      <Route
+        path="/my-registrations"
+        element={
+          <UserRoute>
+            <BookingsPage />
+          </UserRoute>
+        }
+      />
+      <Route
+        path="/bookings/new"
+        element={
+          <UserRoute>
+            <CreateBookingPage />
+          </UserRoute>
+        }
+      />
+
+      <Route
+        path="/admin/dashboard"
+        element={
+          <AdminRoute>
+            <AdminDashboardPage />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/bookings"
+        element={
+          <AdminRoute>
+            <AdminBookingsPage />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/users"
+        element={
+          <AdminRoute>
+            <AdminUsersPage />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/companies"
+        element={
+          <AdminRoute>
+            <AdminCompaniesPage />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/itineraries"
+        element={
+          <AdminRoute>
+            <AdminItinerariesPage />
+          </AdminRoute>
+        }
+      />
+
+      <Route
+        path="/company/dashboard"
+        element={
+          <CompanyRoute>
+            <CompanyDashboardPage />
+          </CompanyRoute>
+        }
+      />
+      <Route
+        path="/company/itineraries"
+        element={
+          <CompanyRoute>
+            <CompanyItinerariesPage />
+          </CompanyRoute>
+        }
+      />
+      <Route
+        path="/company/itinerary/:id/attendees"
+        element={
+          <CompanyRoute>
+            <CompanyAttendeesPage />
+          </CompanyRoute>
+        }
+      />
+      <Route
+        path="/company/statistics"
+        element={
+          <CompanyRoute>
+            <CompanyStatisticsPage />
+          </CompanyRoute>
+        }
+      />
+
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+}
+
+function AuthenticatedLayout({
+  role,
+  displayName,
+  logout,
+  lang,
+  setLang,
+}: {
+  role: UserRole;
+  displayName: string;
+  logout: () => void;
+  lang: Lang;
+  setLang: (lang: Lang) => void;
+}) {
+  return (
+    <SidebarProvider defaultOpen>
+      <AuthenticatedSidebar
+        role={role}
+        displayName={displayName}
+        onLogout={logout}
+        lang={lang}
+        onLangChange={setLang}
+      />
+
+      <SidebarInset className="min-h-screen overflow-x-hidden bg-slate-950 text-slate-50">
+        <main className="flex-1 px-4 py-6 md:px-8 md:py-8">
+          <AppRoutes />
+        </main>
+        <footer className="border-t border-slate-900 bg-slate-950 px-4 py-3 text-center text-[11px] text-slate-400">
+          © 2026 Tembera Travel Platform
+        </footer>
+      </SidebarInset>
+    </SidebarProvider>
+  );
+}
+
+function GuestLayout({ heroTitle }: { heroTitle: string }) {
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-50 flex flex-col">
+      <GuestTopNav brandTitle={heroTitle} />
+
+      <main className="flex-1">
+        <div className="mx-auto max-w-6xl px-4 py-8">
+          <AppRoutes />
+        </div>
+      </main>
+
+      <footer className="mt-auto bg-slate-950 border-t border-slate-900">
+        <div className="px-4 py-3 text-center text-[11px] text-slate-400">
+          © 2026 Tembera Travel Platform
+        </div>
+      </footer>
+    </div>
+  );
+}
 
 function App() {
-  const { user, logout } = useAuth();
+  const { user, logout, initialize, isInitialized } = useAuth();
   const { lang, setLang, t } = useI18n();
+
+  useEffect(() => {
+    void initialize();
+  }, [initialize]);
+
+  if (!isInitialized) {
+    return (
+      <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center">
+        <p className="text-sm text-slate-300">Loading session...</p>
+      </div>
+    );
+  }
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-slate-950 text-slate-50 flex flex-col">
-        <header className="border-b border-slate-800 bg-slate-900/80 backdrop-blur">
-          <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-            <Link to="/" className="flex items-center gap-2">
-              <span className="rounded-lg bg-emerald-500 px-2 py-1 text-sm font-semibold text-slate-950">
-                TEMBERA
-              </span>
-              <span className="text-sm text-slate-300 hidden sm:inline">
-                {t("home.heroTitle")}
-              </span>
-            </Link>
-            <nav className="flex items-center gap-2 sm:gap-4 text-sm">
-              <Link
-                to="/"
-                className="rounded-md px-3 py-1.5 text-slate-200 hover:bg-slate-800 hover:text-white transition"
-              >
-                {t("nav.home")}
-              </Link>
-              <Link
-                to="/itineraries"
-                className="rounded-md px-3 py-1.5 text-slate-200 hover:bg-slate-800 hover:text-white transition"
-              >
-                {t("nav.itineraries")}
-              </Link>
-              {user && (
-                <>
-                  <Link
-                    to="/bookings"
-                    className="rounded-md px-3 py-1.5 text-slate-200 hover:bg-slate-800 hover:text-white transition"
-                  >
-                    {t("nav.myBookings")}
-                  </Link>
-                  <Link
-                    to="/bookings/new"
-                    className="rounded-md px-3 py-1.5 text-emerald-200 border border-emerald-400/60 hover:bg-emerald-500 hover:text-slate-950 transition"
-                  >
-                    {t("nav.newBooking")}
-                  </Link>
-                </>
-              )}
-              {!user ? (
-                <>
-                  <Link
-                    to="/login"
-                    className="rounded-md px-3 py-1.5 text-slate-200 hover:bg-slate-800 hover:text-white transition"
-                  >
-                    {t("nav.login")}
-                  </Link>
-                  <Link
-                    to="/register"
-                    className="rounded-md px-3 py-1.5 text-emerald-200 border border-emerald-400/60 hover:bg-emerald-500 hover:text-slate-950 transition"
-                  >
-                    {t("nav.register")}
-                  </Link>
-                </>
-              ) : (
-                <button
-                  type="button"
-                  onClick={logout}
-                  className="rounded-md px-3 py-1.5 text-xs text-slate-300 border border-slate-700 hover:bg-slate-800 hover:text-white transition"
-                >
-                  {t("nav.logout")}
-                </button>
-              )}
-              <div className="flex items-center gap-1">
-                <label
-                  htmlFor="lang"
-                  className="hidden sm:inline text-[11px] text-slate-400"
-                >
-                  {t("nav.languageLabel")}
-                </label>
-                <select
-                  id="lang"
-                  value={lang}
-                  onChange={(e) => setLang(e.target.value as Lang)}
-                  className="rounded-md bg-slate-900 border border-slate-700 px-2 py-1 text-[11px] text-slate-100"
-                >
-                  <option value="en">English</option>
-                  <option value="fr">Français</option>
-                  <option value="rw">Kinyarwanda</option>
-                </select>
-              </div>
-            </nav>
-          </div>
-        </header>
-
-        <main className="flex-1">
-          <div className="mx-auto max-w-6xl px-4 py-8">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/itineraries" element={<ItinerariesPage />} />
-              <Route path="/itineraries/:id" element={<ItineraryDetailPage />} />
-
-              <Route
-                path="/bookings"
-                element={
-                  <ProtectedRoute>
-                    <BookingsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/bookings/new"
-                element={
-                  <ProtectedRoute>
-                    <CreateBookingPage />
-                  </ProtectedRoute>
-                }
-              />
-
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-            </Routes>
-          </div>
-        </main>
-
-        <footer className="mt-auto bg-slate-950 border-t border-slate-900">
-          <div className="px-4 py-3 text-center text-[11px] text-slate-400">
-            © 2026 Tembera Travel Platform
-          </div>
-        </footer>
-      </div>
+      {user ? (
+        <AuthenticatedLayout
+          role={user.role}
+          displayName={user.name}
+          logout={logout}
+          lang={lang}
+          setLang={setLang}
+        />
+      ) : (
+        <GuestLayout heroTitle={t("home.heroTitle")} />
+      )}
     </BrowserRouter>
   );
 }

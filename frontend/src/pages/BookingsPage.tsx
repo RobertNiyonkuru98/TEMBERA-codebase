@@ -1,16 +1,77 @@
-import { bookingItems, bookings, itineraries } from "../mockData";
+import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../AuthContext";
 import { useI18n } from "../i18n";
+import {
+  fetchBookingItems,
+  fetchBookings,
+  fetchCompanies,
+  fetchItineraries,
+} from "../api/platformApi";
+import type { Booking, BookingItem, Company, Itinerary } from "../types";
 
 function BookingsPage() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const { t } = useI18n();
+
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [bookingItems, setBookingItems] = useState<BookingItem[]>([]);
+  const [itineraries, setItineraries] = useState<Itinerary[]>([]);
+  const [companies, setCompanies] = useState<Company[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadData() {
+      if (!token || !user) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        setError(null);
+        const [allBookings, allBookingItems, allItineraries, allCompanies] = await Promise.all([
+          fetchBookings(token),
+          fetchBookingItems(token),
+          fetchItineraries(token),
+          fetchCompanies(token),
+        ]);
+
+        setBookings(allBookings);
+        setBookingItems(allBookingItems);
+        setItineraries(allItineraries);
+        setCompanies(allCompanies);
+      } catch (loadError) {
+        setError(
+          loadError instanceof Error ? loadError.message : "Failed to load bookings",
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    void loadData();
+  }, [token, user]);
+
+  const userBookings = useMemo(() => {
+    if (!user) return [];
+
+    return bookings.filter(
+      (booking) => String(booking.userId) === String(user.id),
+    );
+  }, [bookings, user]);
 
   if (!user) {
     return null;
   }
 
-  const userBookings = bookings.filter((b) => b.userId === user.id);
+  if (isLoading) {
+    return <p className="text-sm text-slate-300">Loading your bookings...</p>;
+  }
+
+  if (error) {
+    return <p className="text-sm text-red-300">{error}</p>;
+  }
 
   return (
     <div className="space-y-6">
@@ -19,24 +80,26 @@ function BookingsPage() {
           {t("bookings.title")}
         </h1>
         <p className="text-sm text-slate-300">
-          {t("bookings.subtitle")}{" "}
-          <span className="font-semibold">{user.name}</span>
+          {t("bookings.subtitle")} <span className="font-semibold">{user.name}</span>
         </p>
       </header>
 
       {userBookings.length === 0 ? (
-        <p className="text-sm text-slate-300">
-          {t("bookings.empty")}
-        </p>
+        <p className="text-sm text-slate-300">{t("bookings.empty")}</p>
       ) : (
         <div className="space-y-4">
           {userBookings.map((booking) => {
             const items = bookingItems.filter(
-              (bi) => bi.bookingId === booking.id,
+              (item) => String(item.bookingId) === String(booking.id),
             );
+
             const linkedItineraries = items
-              .map((bi) => itineraries.find((i) => i.id === bi.itineraryId))
-              .filter((i): i is NonNullable<typeof i> => Boolean(i));
+              .map((item) =>
+                itineraries.find(
+                  (itinerary) => String(itinerary.id) === String(item.itineraryId),
+                ),
+              )
+              .filter((itinerary): itinerary is Itinerary => Boolean(itinerary));
 
             return (
               <section
@@ -49,8 +112,7 @@ function BookingsPage() {
                       Booking #{booking.id}
                     </p>
                     <p className="text-xs text-slate-400">
-                      Created on{" "}
-                      {new Date(booking.date).toLocaleDateString()}
+                      Created on {new Date(booking.date).toLocaleDateString()}
                     </p>
                   </div>
                   <span className="inline-flex items-center rounded-full border border-slate-700 bg-slate-900 px-2 py-0.5 text-[11px] font-medium capitalize text-slate-200">
@@ -59,9 +121,7 @@ function BookingsPage() {
                 </div>
 
                 {booking.description && (
-                  <p className="text-xs text-slate-300">
-                    “{booking.description}”
-                  </p>
+                  <p className="text-xs text-slate-300">"{booking.description}"</p>
                 )}
 
                 <div className="space-y-2">
@@ -76,17 +136,15 @@ function BookingsPage() {
                           className="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-900/80 px-3 py-2"
                         >
                           <div>
-                            <p className="font-medium text-slate-100">
-                              {itinerary.title}
+                            <p className="font-medium text-slate-100">{itinerary.title}</p>
+                            <p className="text-slate-400">
+                              {itinerary.location} · {new Date(itinerary.date).toLocaleDateString()}
                             </p>
                             <p className="text-slate-400">
-                              {itinerary.location} ·{" "}
-                              {new Date(
-                                itinerary.date,
-                              ).toLocaleDateString()}
+                              {companies.find((company) => String(company.id) === String(itinerary.companyId))?.name ?? "Unknown company"}
                             </p>
                           </div>
-                          <p className="text-emerald-300 font-semibold">
+                          <p className="font-semibold text-emerald-300">
                             {itinerary.price.toLocaleString()} RWF
                           </p>
                         </li>
@@ -94,8 +152,7 @@ function BookingsPage() {
                     </ul>
                   ) : (
                     <p className="text-xs text-slate-400">
-                      This booking currently has no linked itineraries in the
-                      mock dataset.
+                      This booking currently has no linked itineraries.
                     </p>
                   )}
                 </div>
@@ -109,4 +166,3 @@ function BookingsPage() {
 }
 
 export default BookingsPage;
-

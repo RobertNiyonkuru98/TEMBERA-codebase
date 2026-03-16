@@ -1,9 +1,10 @@
-import { FormEvent, useState } from "react";
+import { useEffect, useState } from "react";
+import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
-import { bookingItems, bookings, itineraries } from "../mockData";
-import type { Booking, BookingItem } from "../types";
 import { useI18n } from "../i18n";
+import { createBooking, createBookingItem, fetchItineraries } from "../api/platformApi";
+import type { Itinerary } from "../types";
 
 type GroupMember = {
   name: string;
@@ -15,21 +16,54 @@ type GroupMember = {
 type GroupType = "personal" | "couple" | "family" | "other";
 
 function CreateBookingPage() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const navigate = useNavigate();
   const { t } = useI18n();
 
-  const [selectedItineraryId, setSelectedItineraryId] = useState<number>(
-    itineraries[0]?.id ?? 0,
-  );
+  const [itineraries, setItineraries] = useState<Itinerary[]>([]);
+  const [selectedItineraryId, setSelectedItineraryId] = useState<string>("");
   const [description, setDescription] = useState("");
   const [isGroup, setIsGroup] = useState(false);
   const [groupType, setGroupType] = useState<GroupType>("personal");
   const [groupMembers, setGroupMembers] = useState<GroupMember[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadItineraries() {
+      if (!token) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        setError(null);
+        const fetched = await fetchItineraries(token);
+        setItineraries(fetched);
+        if (fetched[0]) {
+          setSelectedItineraryId(String(fetched[0].id));
+        }
+      } catch (loadError) {
+        setError(
+          loadError instanceof Error
+            ? loadError.message
+            : "Failed to load itineraries",
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    void loadItineraries();
+  }, [token]);
 
   if (!user) {
     return null;
   }
+
+  const currentUserId = String(user.id);
 
   function handleMemberChange(
     index: number,
@@ -54,45 +88,52 @@ function CreateBookingPage() {
     setGroupMembers((prev) => prev.filter((_, i) => i !== index));
   }
 
-  function handleSubmit(event: FormEvent) {
+  async function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    const newBookingId =
-      bookings.reduce((max, b) => (b.id > max ? b.id : max), 0) + 1;
-    const newItemId =
-      bookingItems.reduce((max, i) => (i.id > max ? i.id : max), 0) + 1;
+    if (!token) {
+      setError("Missing authentication token");
+      return;
+    }
 
-    const baseDescription = description || (isGroup ? "Group booking" : "Personal booking");
+    if (!selectedItineraryId) {
+      setError("Please select an itinerary");
+      return;
+    }
 
-    const newBooking: Booking = {
-      id: newBookingId,
-      userId: user.id,
-      description: isGroup ? `${baseDescription} (${groupType})` : baseDescription,
-      status: "pending",
-      date: new Date().toISOString().slice(0, 10),
-    };
+    try {
+      setIsSubmitting(true);
+      setError(null);
 
-    const newBookingItem: BookingItem = {
-      id: newItemId,
-      bookingId: newBookingId,
-      itineraryId: selectedItineraryId,
-    };
+      const baseDescription =
+        description || (isGroup ? "Group booking" : "Personal booking");
 
-    bookings.push(newBooking);
-    bookingItems.push(newBookingItem);
+      const booking = await createBooking(token, {
+        user_id: currentUserId,
+        description: isGroup ? `${baseDescription} (${groupType})` : baseDescription,
+        status: "pending",
+        date: new Date().toISOString().slice(0, 10),
+      });
 
-    // groupMembers are only kept in-memory here to illustrate the structure
-    // eslint-disable-next-line no-console
-    console.log("Mock group members saved with booking:", {
-      bookingId: newBookingId,
-      groupMembers: isGroup ? groupMembers : [],
-    });
+      await createBookingItem(token, {
+        booking_id: String(booking.id),
+        itinerary_id: selectedItineraryId,
+      });
 
-    navigate("/bookings");
+      navigate("/my-registrations");
+    } catch (submitError) {
+      setError(
+        submitError instanceof Error
+          ? submitError.message
+          : "Failed to create booking",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   const selectedItinerary = itineraries.find(
-    (i) => i.id === selectedItineraryId,
+    (itinerary) => String(itinerary.id) === selectedItineraryId,
   );
 
   return (
@@ -101,13 +142,21 @@ function CreateBookingPage() {
         <h1 className="text-2xl font-semibold tracking-tight text-slate-50">
           {t("booking.createTitle")}
         </h1>
-        <p className="text-sm text-slate-300">
-          {t("booking.createSubtitle")}
-        </p>
+        <p className="text-sm text-slate-300">{t("booking.createSubtitle")}</p>
       </div>
 
+      {isLoading && <p className="text-sm text-slate-300">Loading itineraries...</p>}
+
+      {!isLoading && itineraries.length === 0 && (
+        <p className="text-sm text-slate-300">No itineraries available for booking yet.</p>
+      )}
+
+      {error && <p className="text-sm text-red-300">{error}</p>}
+
       <form
-        onSubmit={handleSubmit}
+        onSubmit={(event) => {
+          void handleSubmit(event);
+        }}
         className="space-y-6 rounded-xl border border-slate-800 bg-slate-900/60 p-5"
       >
         <div className="space-y-1 text-sm">
@@ -120,18 +169,19 @@ function CreateBookingPage() {
           <select
             id="itinerary"
             value={selectedItineraryId}
-            onChange={(e) => setSelectedItineraryId(Number(e.target.value))}
+            onChange={(event) => setSelectedItineraryId(event.target.value)}
             className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-50 outline-none ring-emerald-500/60 focus:border-emerald-400 focus:ring-2"
+            disabled={isLoading || itineraries.length === 0}
           >
             {itineraries.map((itinerary) => (
-              <option key={itinerary.id} value={itinerary.id}>
-                {itinerary.title} — {itinerary.location} (
+              <option key={itinerary.id} value={String(itinerary.id)}>
+                {itinerary.title} - {itinerary.location} (
                 {new Date(itinerary.date).toLocaleDateString()})
               </option>
             ))}
           </select>
           {selectedItinerary && (
-            <p className="text-xs text-slate-400 pt-1">
+            <p className="pt-1 text-xs text-slate-400">
               Selected itinerary price:{" "}
               <span className="font-semibold text-emerald-300">
                 {selectedItinerary.price.toLocaleString()} RWF
@@ -150,7 +200,7 @@ function CreateBookingPage() {
           <textarea
             id="description"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(event) => setDescription(event.target.value)}
             className="min-h-[80px] w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-50 outline-none ring-emerald-500/60 focus:border-emerald-400 focus:ring-2"
             placeholder={t("booking.notePlaceholder")}
           />
@@ -161,14 +211,12 @@ function CreateBookingPage() {
             <input
               type="checkbox"
               checked={isGroup}
-              onChange={(e) => setIsGroup(e.target.checked)}
+              onChange={(event) => setIsGroup(event.target.checked)}
               className="h-3 w-3 rounded border-slate-700 bg-slate-950 text-emerald-500 focus:ring-emerald-500"
             />
             {t("booking.groupCheckbox")}
           </label>
-          <p className="text-xs text-slate-400">
-            {t("booking.groupHelper")}
-          </p>
+          <p className="text-xs text-slate-400">{t("booking.groupHelper")}</p>
         </div>
 
         {isGroup && (
@@ -179,21 +227,13 @@ function CreateBookingPage() {
               </p>
               <select
                 value={groupType}
-                onChange={(e) => setGroupType(e.target.value as GroupType)}
+                onChange={(event) => setGroupType(event.target.value as GroupType)}
                 className="rounded-md border border-slate-700 bg-slate-950 px-2 py-1 text-[11px] text-slate-50 outline-none ring-emerald-500/60 focus:border-emerald-400 focus:ring-2"
-                >
-                <option value="personal">
-                  {t("booking.groupType.personal")}
-                </option>
-                <option value="couple">
-                  {t("booking.groupType.couple")}
-                </option>
-                <option value="family">
-                  {t("booking.groupType.family")}
-                </option>
-                <option value="other">
-                  {t("booking.groupType.other")}
-                </option>
+              >
+                <option value="personal">{t("booking.groupType.personal")}</option>
+                <option value="couple">{t("booking.groupType.couple")}</option>
+                <option value="family">{t("booking.groupType.family")}</option>
+                <option value="other">{t("booking.groupType.other")}</option>
               </select>
             </div>
             {groupMembers.map((member, index) => (
@@ -220,8 +260,8 @@ function CreateBookingPage() {
                     type="text"
                     placeholder={t("booking.memberName")}
                     value={member.name}
-                    onChange={(e) =>
-                      handleMemberChange(index, "name", e.target.value)
+                    onChange={(event) =>
+                      handleMemberChange(index, "name", event.target.value)
                     }
                     className="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-slate-50 outline-none ring-emerald-500/60 focus:border-emerald-400 focus:ring-2"
                   />
@@ -229,8 +269,8 @@ function CreateBookingPage() {
                     type="tel"
                     placeholder={t("booking.memberPhone")}
                     value={member.phoneNumber}
-                    onChange={(e) =>
-                      handleMemberChange(index, "phoneNumber", e.target.value)
+                    onChange={(event) =>
+                      handleMemberChange(index, "phoneNumber", event.target.value)
                     }
                     className="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-slate-50 outline-none ring-emerald-500/60 focus:border-emerald-400 focus:ring-2"
                   />
@@ -238,8 +278,8 @@ function CreateBookingPage() {
                     type="email"
                     placeholder={t("booking.memberEmail")}
                     value={member.email}
-                    onChange={(e) =>
-                      handleMemberChange(index, "email", e.target.value)
+                    onChange={(event) =>
+                      handleMemberChange(index, "email", event.target.value)
                     }
                     className="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-slate-50 outline-none ring-emerald-500/60 focus:border-emerald-400 focus:ring-2"
                   />
@@ -247,8 +287,8 @@ function CreateBookingPage() {
                     type="text"
                     placeholder={t("booking.memberId")}
                     value={member.nationalId}
-                    onChange={(e) =>
-                      handleMemberChange(index, "nationalId", e.target.value)
+                    onChange={(event) =>
+                      handleMemberChange(index, "nationalId", event.target.value)
                     }
                     className="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-slate-50 outline-none ring-emerald-500/60 focus:border-emerald-400 focus:ring-2"
                   />
@@ -267,9 +307,10 @@ function CreateBookingPage() {
 
         <button
           type="submit"
-          className="w-full rounded-md bg-emerald-500 px-3 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-400 transition"
+          disabled={isSubmitting || itineraries.length === 0}
+          className="w-full rounded-md bg-emerald-500 px-3 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {t("booking.submit")}
+          {isSubmitting ? "Submitting..." : t("booking.submit")}
         </button>
       </form>
     </div>
@@ -277,4 +318,3 @@ function CreateBookingPage() {
 }
 
 export default CreateBookingPage;
-

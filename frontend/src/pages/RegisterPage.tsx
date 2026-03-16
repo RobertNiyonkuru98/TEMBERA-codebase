@@ -1,10 +1,11 @@
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import { useI18n } from "../i18n";
 
 function RegisterPage() {
-  const { register } = useAuth();
+  const { register, isLoading, clearError } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,8 +14,9 @@ function RegisterPage() {
   const navigate = useNavigate();
   const { t } = useI18n();
 
-  function handleSubmit(event: FormEvent) {
+  async function handleSubmit(event: FormEvent) {
     event.preventDefault();
+    clearError();
     setError(null);
 
     if (!name.trim() || !email.trim() || !password.trim()) {
@@ -22,8 +24,17 @@ function RegisterPage() {
       return;
     }
 
-    register(name.trim(), email.trim(), password.trim(), phoneNumber.trim() || undefined);
-    navigate("/bookings", { replace: true });
+    try {
+      await register(
+        name.trim(),
+        email.trim(),
+        password.trim(),
+        phoneNumber.trim() || undefined,
+      );
+      navigate("/", { replace: true });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Registration failed");
+    }
   }
 
   return (
@@ -115,9 +126,10 @@ function RegisterPage() {
 
         <button
           type="submit"
+          disabled={isLoading}
           className="w-full rounded-md bg-emerald-500 px-3 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-400 transition"
         >
-          {t("auth.registerButton")}
+          {isLoading ? "Creating account..." : t("auth.registerButton")}
         </button>
 
         <p className="text-xs text-slate-400 text-center">

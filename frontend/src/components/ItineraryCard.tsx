@@ -1,19 +1,25 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import type { Company, Itinerary } from "../types";
 
 interface ItineraryCardProps {
 	itinerary: Itinerary;
 	company?: Company;
 	as?: "link" | "a";
+	onAttend?: (itinerary: Itinerary) => void;
+	attendLabel?: string;
+	isAttending?: boolean;
 }
 
-const ItineraryCard: React.FC<ItineraryCardProps> = ({ itinerary, company }) => {
+const ItineraryCard: React.FC<ItineraryCardProps> = ({
+	itinerary,
+	company,
+	onAttend,
+	attendLabel = "Attend",
+	isAttending = false,
+}) => {
 	return (
-		<a
-			key={itinerary.id}
-			href={`/itineraries/${itinerary.id}`}
-			className="group flex flex-col rounded-xl border border-slate-800 bg-slate-900/60 p-4 hover:border-emerald-400/70 hover:bg-slate-900 transition"
-		>
+		<div className="group flex flex-col rounded-xl border border-slate-800 bg-slate-900/60 p-4 transition hover:border-emerald-400/70 hover:bg-slate-900">
 			{itinerary.imageUrl && (
 				<img
 					src={itinerary.imageUrl}
@@ -29,9 +35,12 @@ const ItineraryCard: React.FC<ItineraryCardProps> = ({ itinerary, company }) => 
 					{new Date(itinerary.date).toLocaleDateString()}
 				</p>
 			</div>
-			<h3 className="text-sm font-semibold text-slate-50 group-hover:text-emerald-200">
+			<Link
+				to={`/itinerary/${itinerary.id}`}
+				className="text-sm font-semibold text-slate-50 transition group-hover:text-emerald-200"
+			>
 				{itinerary.title}
-			</h3>
+			</Link>
 			<p className="mt-1 line-clamp-2 text-xs text-slate-400">
 				{itinerary.description}
 			</p>
@@ -48,7 +57,18 @@ const ItineraryCard: React.FC<ItineraryCardProps> = ({ itinerary, company }) => 
 					</p>
 				)}
 			</div>
-		</a>
+
+			{onAttend && (
+				<button
+					type="button"
+					onClick={() => onAttend(itinerary)}
+					disabled={isAttending}
+					className="mt-3 inline-flex items-center justify-center rounded-md bg-emerald-500 px-3 py-2 text-xs font-semibold text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
+				>
+					{isAttending ? "Attending..." : attendLabel}
+				</button>
+			)}
+		</div>
 	);
 };
 

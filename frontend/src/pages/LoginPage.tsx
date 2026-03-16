@@ -2,9 +2,16 @@ import { type SubmitEventHandler, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import { useI18n } from "../i18n";
+import type { UserRole } from "../types";
+
+function routeByRole(role: UserRole): string {
+  if (role === "admin") return "/admin/dashboard";
+  if (role === "company") return "/company/dashboard";
+  return "/";
+}
 
 function LoginPage() {
-  const { login } = useAuth();
+  const { login, isLoading, clearError } = useAuth();
   const [email, setEmail] = useState("alice@example.com");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -12,10 +19,11 @@ function LoginPage() {
   const location = useLocation();
   const { t } = useI18n();
 
-  const from = (location.state as { from?: string } | null)?.from ?? "/bookings";
+  const from = (location.state as { from?: string } | null)?.from ?? "/";
 
-  const handleSubmit: SubmitEventHandler<HTMLFormElement> = function (event) {
+  const handleSubmit: SubmitEventHandler<HTMLFormElement> = async function (event) {
     event.preventDefault();
+    clearError();
     setError(null);
 
     if (!email.trim() || !password.trim()) {
@@ -23,9 +31,18 @@ function LoginPage() {
       return;
     }
 
-    login(email, password);
+    try {
+      const result = (await login(email.trim(), password.trim())) as {
+        user?: { role?: UserRole };
+      };
 
-    navigate(from, { replace: true });
+      const role = result?.user?.role;
+      const fallbackRoute = role ? routeByRole(role) : "/";
+      const destination = from !== "/" ? from : fallbackRoute;
+      navigate(destination, { replace: true });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : typeof err == "string" ? err :  "Login failed");
+    }
   }
 
   return (
@@ -84,9 +101,10 @@ function LoginPage() {
 
         <button
           type="submit"
+          disabled={isLoading}
           className="w-full rounded-md bg-emerald-500 px-3 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-400 transition"
         >
-          {t("auth.loginButton")}
+          {isLoading ? "Signing in..." : t("auth.loginButton")}
         </button>
 
         <p className="text-xs text-slate-400 text-center">
