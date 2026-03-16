@@ -4,6 +4,7 @@ import { Prisma, Booking } from '@prisma/client';
 export class BookingService {
   private bookingRepository = new BookingRepository();
 
+  // Booking methods
   async getAll(): Promise<Booking[]> {
     return this.bookingRepository.findAll();
   }
@@ -27,6 +28,36 @@ export class BookingService {
   async delete(id: string): Promise<boolean> {
     try {
       await this.bookingRepository.delete(id);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  // BookingItem methods
+  async getAllItems() {
+    return this.bookingRepository.findAllItems();
+  }
+
+  async getItemById(id: string) {
+    return this.bookingRepository.findItemById(id);
+  }
+
+  async createItem(data: Prisma.BookingItemCreateInput) {
+    return this.bookingRepository.createItem(data);
+  }
+
+  async updateItem(id: string, data: Prisma.BookingItemUpdateInput) {
+    try {
+      return await this.bookingRepository.updateItem(id, data);
+    } catch {
+      return null;
+    }
+  }
+
+  async deleteItem(id: string) {
+    try {
+      await this.bookingRepository.deleteItem(id);
       return true;
     } catch {
       return false;

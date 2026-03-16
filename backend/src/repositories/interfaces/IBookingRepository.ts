@@ -1,6 +1,12 @@
 import { Booking, Prisma } from '@prisma/client';
 
 export interface IBookingRepository {
+  // BookingItem methods
+  findAllItems(skip?: number, take?: number): Promise<any[]>;
+  findItemById(id: string): Promise<any | null>;
+  createItem(data: any): Promise<any>;
+  updateItem(id: string, data: any): Promise<any>;
+  deleteItem(id: string): Promise<void>;
   // Create
   create(data: Prisma.BookingCreateInput): Promise<Booking>;
 
