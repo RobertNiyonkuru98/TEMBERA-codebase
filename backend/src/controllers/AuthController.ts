@@ -3,9 +3,10 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { UserRepository } from '../repositories/implementations/UserRepository';
 import { ResponseHandler } from "../utils/response";
+import { JWT_SECRET } from "@/utils/constants";
+import { logger } from "@/utils/logger";
 
 const userRepository = new UserRepository();
-const JWT_SECRET = process.env.JWT_SECRET || 'Tembera@2026';
 
 export class AuthController {
 
@@ -18,7 +19,8 @@ export class AuthController {
             // User in existance
             const existingUser = await userRepository.findByEmail(email);
             if (existingUser) {
-                return res.status(400).json({message: 'User already exists'});
+                logger.warn(`User registration failed for email: ${email}`);
+                return ResponseHandler.error(res,  'User already exists', 409);
             }
 
             // Password Hashing
@@ -36,8 +38,8 @@ export class AuthController {
 
             return ResponseHandler.success(res, 201, 'User creation and registration is successful', { userId: newUser.id});
         } catch (error) {
-            console.error('AuthController.ts\'s register has an Error:', error);
-            return res.status(500).json({ message: 'Internal server error during registration' });
+            logger.error('AuthController.ts\'s register has an Error:', error);
+            return ResponseHandler.error(res, 'Internal server error during registration', 500);
         }
     }
 
@@ -69,8 +71,8 @@ export class AuthController {
 
             return ResponseHandler.success(res, 200, 'Login successful', { token });
         } catch (error) {
-            console.error('AuthController.ts\'s login has an Error:', error);
-            return res.status(500).json({ message: 'Internal server error during login' });
+            logger.error('AuthController.ts\'s login has an Error:', error);
+            return ResponseHandler.error(res, 'Internal server error during login', 500);
         }
     }
 }

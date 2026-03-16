@@ -1,12 +1,19 @@
 import { Router } from 'express';
-import * as UserController from '../controllers/UserController';
+import {
+    getAllUsers,
+    getUserById,
+    createUser,
+    updateUser,
+    deleteUser,
+} from '../controllers/UserController';
+import { asyncWrapper } from '@/utils/async.wrapper';
 
 const router = Router();
 
-router.get('/', UserController.getAllUsers);
-router.get('/:id', UserController.getUserById);
-router.post('/', UserController.createUser);
-router.put('/:id', UserController.updateUser);
-router.delete('/:id', UserController.deleteUser);
+router.get('/', asyncWrapper(getAllUsers));
+router.get('/:id', asyncWrapper(getUserById));
+router.post('/', asyncWrapper(createUser));
+router.put('/:id', asyncWrapper(updateUser));
+router.delete('/:id', asyncWrapper(deleteUser));
 
 export default router;

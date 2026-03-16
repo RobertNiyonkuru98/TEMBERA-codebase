@@ -1,12 +1,12 @@
 import { ExceptionProcessor, HttpError } from "./http-error";
 import { ResponseHandler } from "./response";
 import { mapPrismaError } from "../utils/prisma.error";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
-export function asyncWrapper(fn: (request: Request, response: Response) => Promise<any>) {
-  return async (request: Request, reply: Response) => {
+export function asyncWrapper(fn: (request: Request, response: Response, next: NextFunction) => Promise<any>) {
+  return async (request: Request, reply: Response, next: NextFunction) => {
     try {
-      return await fn(request, reply);
+      return await fn(request, reply, next);
     } catch (err: any) {
       // Check for Prisma errors first
       const prismaErr = mapPrismaError(err);

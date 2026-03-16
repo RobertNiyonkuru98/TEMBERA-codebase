@@ -20,7 +20,11 @@ export class BadRequestError extends HttpError {
     super(400, message);
   }
 }
-
+export class UnauthorizedError extends HttpError {
+  constructor(message: string = "Unauthorized") {
+    super(401, message);
+  }
+}
 export class ConflictError extends HttpError {
   constructor(message: string = "Resource conflict") {
     super(409, message);
