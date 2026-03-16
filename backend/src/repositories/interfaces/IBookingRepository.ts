@@ -18,6 +18,9 @@ export interface IBookingRepository {
   update(id: string, data: Prisma.BookingUpdateInput): Promise<Booking>;
   updateStatus(id: string, status: string): Promise<Booking>;
 
+  // Delete
+  delete(id: string): Promise<void>;
+
   // Count
   count(): Promise<number>;
   countByStatus(status: string): Promise<number>;
