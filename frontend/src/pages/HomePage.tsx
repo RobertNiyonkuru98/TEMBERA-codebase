@@ -1,4 +1,5 @@
 import { itineraries, companies } from "../mockData";
+import ItineraryCard from "../components/ItineraryCard";
 import { useI18n } from "../i18n";
 
 function HomePage() {
@@ -7,17 +8,33 @@ function HomePage() {
 
   return (
     <div className="space-y-10">
+      <div className="relative w-screen h-[60vh] max-h-[420px] mb-8 left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden">
+        <iframe
+          src="https://www.youtube.com/embed/bX_wOIZW1RM?autoplay=1&mute=1&controls=0&loop=1&playlist=bX_wOIZW1RM"
+          title="Visit Rwanda Hero Video"
+          className="absolute top-1/2 left-1/2 w-[120vw] h-[67.5vw] min-h-full min-w-full -translate-x-1/2 -translate-y-1/2"
+          frameBorder="0"
+          allow="autoplay; encrypted-media"
+          allowFullScreen
+        />
+
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-slate-900/30 to-slate-900/80 z-10" />
+
+        <div className="absolute inset-0 flex flex-col justify-center items-center z-20">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-white text-center drop-shadow-lg">
+            Discover Rwanda with
+            <span className="block bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
+              Curated Local Experience
+            </span>
+          </h1>
+        </div>
+      </div>  
       <section className="grid gap-8 md:grid-cols-[1.1fr,0.9fr] items-center">
         <div className="space-y-5">
           <p className="inline-flex rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-300">
             {t("home.badge")}
           </p>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight">
-            Discover Rwanda with curated{" "}
-            <span className="bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
-              local experiences
-            </span>
-          </h1>
+          {/* Hero title is now overlaid on the video above */}
           <p className="text-sm md:text-base text-slate-300 max-w-xl">
             {t("home.heroSubtitle")}
           </p>
@@ -73,43 +90,9 @@ function HomePage() {
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {featuredItineraries.map((itinerary) => {
-            const company = companies.find(
-              (c) => c.id === itinerary.companyId,
-            );
+            const company = companies.find((c) => c.id === itinerary.companyId);
             return (
-              <a
-                key={itinerary.id}
-                href={`/itineraries/${itinerary.id}`}
-                className="group flex flex-col rounded-xl border border-slate-800 bg-slate-900/60 p-4 hover:border-emerald-400/70 hover:bg-slate-900 transition"
-              >
-                <div className="flex items-center justify-between gap-2 pb-2">
-                  <p className="text-xs font-medium uppercase tracking-wide text-emerald-300">
-                    {itinerary.activity ?? "Experience"}
-                  </p>
-                  <p className="rounded-full bg-slate-900 px-2 py-0.5 text-[10px] font-medium text-slate-300 border border-slate-700">
-                    {new Date(itinerary.date).toLocaleDateString()}
-                  </p>
-                </div>
-                <h3 className="text-sm font-semibold text-slate-50 group-hover:text-emerald-200">
-                  {itinerary.title}
-                </h3>
-                <p className="mt-1 line-clamp-2 text-xs text-slate-400">
-                  {itinerary.description}
-                </p>
-                <p className="mt-2 text-xs text-slate-400">
-                  {itinerary.location}
-                </p>
-                <div className="mt-3 flex items-center justify-between">
-                  <p className="text-sm font-semibold text-emerald-300">
-                    {itinerary.price.toLocaleString()} RWF
-                  </p>
-                  {company && (
-                    <p className="text-[11px] text-slate-400">
-                      by <span className="text-slate-200">{company.name}</span>
-                    </p>
-                  )}
-                </div>
-              </a>
+              <ItineraryCard key={itinerary.id} itinerary={itinerary} company={company} as="a" />
             );
           })}
         </div>

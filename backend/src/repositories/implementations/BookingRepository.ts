@@ -3,6 +3,26 @@ import prisma from '../../db/prisma.client';
 import { IBookingRepository } from '../interfaces/IBookingRepository';
 
 export class BookingRepository implements IBookingRepository {
+  // BookingItem methods
+  async findAllItems(skip?: number, take?: number) {
+    return await prisma.bookingItem.findMany({ skip, take, orderBy: { id: 'desc' } });
+  }
+
+  async findItemById(id: string) {
+    return await prisma.bookingItem.findUnique({ where: { id } });
+  }
+
+  async createItem(data: Prisma.BookingItemCreateInput) {
+    return await prisma.bookingItem.create({ data });
+  }
+
+  async updateItem(id: string, data: Prisma.BookingItemUpdateInput) {
+    return await prisma.bookingItem.update({ where: { id }, data });
+  }
+
+  async deleteItem(id: string) {
+    await prisma.bookingItem.delete({ where: { id } });
+  }
   // Create
   async create(data: Prisma.BookingCreateInput): Promise<Booking> {
     return await prisma.booking.create({ data });
@@ -106,6 +126,11 @@ export class BookingRepository implements IBookingRepository {
       where: { id },
       data: { status },
     });
+  }
+
+  // Delete
+  async delete(id: string): Promise<void> {
+    await prisma.booking.delete({ where: { id } });
   }
 
   // Count

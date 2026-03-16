@@ -16,6 +16,9 @@ export interface IUserRepository {
   updateEmail(id: string, email: string): Promise<User>;
   updatePassword(id: string, password: string): Promise<User>;
 
+  // Delete
+  delete(id: string): Promise<void>;
+
   // Count
   count(): Promise<number>;
 }

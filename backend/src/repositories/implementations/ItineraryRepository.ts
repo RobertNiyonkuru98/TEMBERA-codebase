@@ -107,6 +107,11 @@ export class ItineraryRepository implements IItineraryRepository {
     });
   }
 
+  // Delete
+  async delete(id: string): Promise<void> {
+    await prisma.itinerary.delete({ where: { id } });
+  }
+
   // Count
   async count(): Promise<number> {
     return await prisma.itinerary.count();

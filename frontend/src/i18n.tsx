@@ -325,7 +325,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>(() => {
     const saved = window.localStorage.getItem(LANG_STORAGE_KEY);
     if (saved === "fr" || saved === "rw" || saved === "en") return saved;
-    return "en";
+    return "rw";
   });
 
   const setLang = (next: Lang) => {

@@ -43,6 +43,7 @@ export const itineraries: Itinerary[] = [
     location: "Kigali, Rwanda",
     date: "2026-04-01",
     price: 40000,
+    imageUrl: "https://www.akageranationalparkrwanda.org/wp-content/uploads/2022/04/d1d38124-c2a6-4b1a-963e-54ef8600bb53.jpg"
   },
   {
     id: 2,
@@ -53,6 +54,7 @@ export const itineraries: Itinerary[] = [
     location: "Mount Kigali, Rwanda",
     date: "2026-04-05",
     price: 30000,
+    imageUrl: "https://www.volcanoesparkrwanda.org/wp-content/uploads/2021/10/0d-720x450.jpg"
   },
   {
     id: 3,
@@ -63,6 +65,7 @@ export const itineraries: Itinerary[] = [
     location: "Gisenyi, Rwanda",
     date: "2026-04-10",
     price: 250000,
+    imageUrl: "https://www.safarisrwandasafari.com/wp-content/uploads/2023/03/lake-kivu-rwanda-750x450.jpg"
   },
 ];
 

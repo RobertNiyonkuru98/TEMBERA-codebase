@@ -18,6 +18,9 @@ export interface IItineraryRepository {
   updatePrice(id: string, price: number): Promise<Itinerary>;
   updateDate(id: string, date: Date): Promise<Itinerary>;
 
+  // Delete
+  delete(id: string): Promise<void>;
+
   // Count
   count(): Promise<number>;
 }

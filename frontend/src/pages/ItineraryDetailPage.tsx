@@ -50,7 +50,14 @@ function ItineraryDetailPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 rounded-xl overflow-hidden">
+      {itinerary.imageUrl && (
+        <img
+          src={itinerary.imageUrl}
+          alt={itinerary.title}
+          className="w-full h-64 object-cover mb-6 rounded-t-xl shadow-lg"
+        />
+      )}
       <div className="space-y-2">
         <p className="text-xs font-medium uppercase tracking-wide text-emerald-300">
           {itinerary.activity ?? "Experience"}

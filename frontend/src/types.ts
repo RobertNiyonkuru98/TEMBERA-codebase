@@ -23,6 +23,7 @@ export type Itinerary = {
   location?: string;
   date: string; // ISO date string
   price: number;
+  imageUrl?: string;
 };
 
 export type BookingStatus = "pending" | "confirmed" | "cancelled";

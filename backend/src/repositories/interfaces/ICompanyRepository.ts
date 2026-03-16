@@ -15,6 +15,9 @@ export interface ICompanyRepository {
   update(id: string, data: Prisma.CompanyUpdateInput): Promise<Company>;
   updateContact(id: string, contact: string): Promise<Company>;
 
+  // Delete
+  delete(id: string): Promise<void>;
+
   // Count
   count(): Promise<number>;
 }
