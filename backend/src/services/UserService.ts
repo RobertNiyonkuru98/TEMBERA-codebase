@@ -1,0 +1,35 @@
+import { UserRepository } from '../repositories/implementations/UserRepository';
+import { Prisma, User } from '@prisma/client';
+
+export class UserService {
+  private userRepository = new UserRepository();
+
+  async getAll(): Promise<User[]> {
+    return this.userRepository.findAll();
+  }
+
+  async getById(id: string): Promise<User | null> {
+    return this.userRepository.findById(id);
+  }
+
+  async create(data: Prisma.UserCreateInput): Promise<User> {
+    return this.userRepository.create(data);
+  }
+
+  async update(id: string, data: Prisma.UserUpdateInput): Promise<User | null> {
+    try {
+      return await this.userRepository.update(id, data);
+    } catch {
+      return null;
+    }
+  }
+
+  async delete(id: string): Promise<boolean> {
+    try {
+      await this.userRepository.delete(id);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+}
