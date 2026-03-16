@@ -8,6 +8,13 @@ function HomePage() {
 
   return (
     <div className="space-y-10">
+      <div className="w-full mb-8">
+        <img
+          src="https://media.licdn.com/dms/image/v2/C4D1BAQEqv_efZjJcqw/company-background_10000/company-background_10000/0/1583341278510/visitrwanda_cover?e=2147483647&v=beta&t=TxrBiPPxEX-R0r7y-bwySDqGBOm6pNlrccfzYI5DLK4"
+          alt="Visit Rwanda Hero"
+          className="w-full h-72 object-cover rounded-xl shadow-lg"
+        />
+      </div>
       <section className="grid gap-8 md:grid-cols-[1.1fr,0.9fr] items-center">
         <div className="space-y-5">
           <p className="inline-flex rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-300">
