@@ -76,12 +76,18 @@ function HomePage() {
             const company = companies.find(
               (c) => c.id === itinerary.companyId,
             );
+            
             return (
               <a
                 key={itinerary.id}
                 href={`/itineraries/${itinerary.id}`}
                 className="group flex flex-col rounded-xl border border-slate-800 bg-slate-900/60 p-4 hover:border-emerald-400/70 hover:bg-slate-900 transition"
               >
+                <img
+                  src={itinerary.imageUrl}
+                  alt={itinerary.activity ?? "Itinerary"}
+                  className="rounded-lg mb-3 w-full h-40 object-cover"
+                />
                 <div className="flex items-center justify-between gap-2 pb-2">
                   <p className="text-xs font-medium uppercase tracking-wide text-emerald-300">
                     {itinerary.activity ?? "Experience"}
