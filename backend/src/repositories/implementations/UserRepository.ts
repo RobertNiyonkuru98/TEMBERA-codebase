@@ -9,7 +9,7 @@ export class UserRepository implements IUserRepository {
   }
 
   // Read
-  async findById(id: bigint): Promise<User | null> {
+  async findById(id: string): Promise<User | null> {
     return await prisma.user.findUnique({
       where: { id },
     });
@@ -31,7 +31,7 @@ export class UserRepository implements IUserRepository {
     });
   }
 
-  async findWithBookings(id: bigint): Promise<User | null> {
+  async findWithBookings(id: string): Promise<User | null> {
     return await prisma.user.findUnique({
       where: { id },
       include: {
@@ -40,7 +40,7 @@ export class UserRepository implements IUserRepository {
     });
   }
 
-  async findWithCompanies(id: bigint): Promise<User | null> {
+  async findWithCompanies(id: string): Promise<User | null> {
     return await prisma.user.findUnique({
       where: { id },
       include: {
@@ -50,21 +50,21 @@ export class UserRepository implements IUserRepository {
   }
 
   // Update
-  async update(id: bigint, data: Prisma.UserUpdateInput): Promise<User> {
+  async update(id: string, data: Prisma.UserUpdateInput): Promise<User> {
     return await prisma.user.update({
       where: { id },
       data,
     });
   }
 
-  async updateEmail(id: bigint, email: string): Promise<User> {
+  async updateEmail(id: string, email: string): Promise<User> {
     return await prisma.user.update({
       where: { id },
       data: { email },
     });
   }
 
-  async updatePassword(id: bigint, password: string): Promise<User> {
+  async updatePassword(id: string, password: string): Promise<User> {
     return await prisma.user.update({
       where: { id },
       data: { password },

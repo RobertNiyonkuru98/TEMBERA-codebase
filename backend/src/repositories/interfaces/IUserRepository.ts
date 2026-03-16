@@ -5,16 +5,16 @@ export interface IUserRepository {
   create(data: Prisma.UserCreateInput): Promise<User>;
 
   // Read
-  findById(id: bigint): Promise<User | null>;
+  findById(id: string): Promise<User | null>;
   findByEmail(email: string): Promise<User | null>;
   findAll(skip?: number, take?: number): Promise<User[]>;
-  findWithBookings(id: bigint): Promise<User | null>;
-  findWithCompanies(id: bigint): Promise<User | null>;
+  findWithBookings(id: string): Promise<User | null>;
+  findWithCompanies(id: string): Promise<User | null>;
 
   // Update
-  update(id: bigint, data: Prisma.UserUpdateInput): Promise<User>;
-  updateEmail(id: bigint, email: string): Promise<User>;
-  updatePassword(id: bigint, password: string): Promise<User>;
+  update(id: string, data: Prisma.UserUpdateInput): Promise<User>;
+  updateEmail(id: string, email: string): Promise<User>;
+  updatePassword(id: string, password: string): Promise<User>;
 
   // Count
   count(): Promise<number>;

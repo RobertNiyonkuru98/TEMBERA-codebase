@@ -6,18 +6,18 @@ export interface IBookingItemRepository {
   createMany(data: Prisma.BookingItemCreateManyInput[]): Promise<number>;
 
   // Read
-  findById(id: bigint): Promise<BookingItem | null>;
-  findByBookingId(bookingId: bigint): Promise<BookingItem[]>;
-  findByItineraryId(itineraryId: bigint): Promise<BookingItem[]>;
-  findByBookingAndItinerary(bookingId: bigint, itineraryId: bigint): Promise<BookingItem | null>;
+  findById(id: string): Promise<BookingItem | null>;
+  findByBookingId(bookingId: string): Promise<BookingItem[]>;
+  findByItineraryId(itineraryId: string): Promise<BookingItem[]>;
+  findByBookingAndItinerary(bookingId: string, itineraryId: string): Promise<BookingItem | null>;
   findAll(skip?: number, take?: number): Promise<BookingItem[]>;
-  findWithItinerary(id: bigint): Promise<BookingItem | null>;
-  findWithBooking(id: bigint): Promise<BookingItem | null>;
+  findWithItinerary(id: string): Promise<BookingItem | null>;
+  findWithBooking(id: string): Promise<BookingItem | null>;
 
   // Update
-  update(id: bigint, data: Prisma.BookingItemUpdateInput): Promise<BookingItem>;
+  update(id: string, data: Prisma.BookingItemUpdateInput): Promise<BookingItem>;
 
   // Count
   count(): Promise<number>;
-  countByBooking(bookingId: bigint): Promise<number>;
+  countByBooking(bookingId: string): Promise<number>;
 }

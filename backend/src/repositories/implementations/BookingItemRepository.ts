@@ -17,13 +17,13 @@ export class BookingItemRepository implements IBookingItemRepository {
   }
 
   // Read
-  async findById(id: bigint): Promise<BookingItem | null> {
+  async findById(id: string): Promise<BookingItem | null> {
     return await prisma.bookingItem.findUnique({
       where: { id },
     });
   }
 
-  async findByBookingId(bookingId: bigint): Promise<BookingItem[]> {
+  async findByBookingId(bookingId: string): Promise<BookingItem[]> {
     return await prisma.bookingItem.findMany({
       where: { booking_id: bookingId },
       include: {
@@ -32,7 +32,7 @@ export class BookingItemRepository implements IBookingItemRepository {
     });
   }
 
-  async findByItineraryId(itineraryId: bigint): Promise<BookingItem[]> {
+  async findByItineraryId(itineraryId: string): Promise<BookingItem[]> {
     return await prisma.bookingItem.findMany({
       where: { itinerary_id: itineraryId },
       include: {
@@ -42,8 +42,8 @@ export class BookingItemRepository implements IBookingItemRepository {
   }
 
   async findByBookingAndItinerary(
-    bookingId: bigint,
-    itineraryId: bigint
+    bookingId: string,
+    itineraryId: string
   ): Promise<BookingItem | null> {
     return await prisma.bookingItem.findUnique({
       where: {
@@ -65,7 +65,7 @@ export class BookingItemRepository implements IBookingItemRepository {
     });
   }
 
-  async findWithItinerary(id: bigint): Promise<BookingItem | null> {
+  async findWithItinerary(id: string): Promise<BookingItem | null> {
     return await prisma.bookingItem.findUnique({
       where: { id },
       include: {
@@ -74,7 +74,7 @@ export class BookingItemRepository implements IBookingItemRepository {
     });
   }
 
-  async findWithBooking(id: bigint): Promise<BookingItem | null> {
+  async findWithBooking(id: string): Promise<BookingItem | null> {
     return await prisma.bookingItem.findUnique({
       where: { id },
       include: {
@@ -84,7 +84,7 @@ export class BookingItemRepository implements IBookingItemRepository {
   }
 
   // Update
-  async update(id: bigint, data: Prisma.BookingItemUpdateInput): Promise<BookingItem> {
+  async update(id: string, data: Prisma.BookingItemUpdateInput): Promise<BookingItem> {
     return await prisma.bookingItem.update({
       where: { id },
       data,
@@ -96,7 +96,7 @@ export class BookingItemRepository implements IBookingItemRepository {
     return await prisma.bookingItem.count();
   }
 
-  async countByBooking(bookingId: bigint): Promise<number> {
+  async countByBooking(bookingId: string): Promise<number> {
     return await prisma.bookingItem.count({
       where: { booking_id: bookingId },
     });

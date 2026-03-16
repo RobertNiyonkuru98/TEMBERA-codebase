@@ -5,15 +5,15 @@ export interface ICompanyRepository {
   create(data: Prisma.CompanyCreateInput): Promise<Company>;
 
   // Read
-  findById(id: bigint): Promise<Company | null>;
-  findByOwnerId(ownerId: bigint): Promise<Company[]>;
+  findById(id: string): Promise<Company | null>;
+  findByOwnerId(ownerId: string): Promise<Company[]>;
   findAll(skip?: number, take?: number): Promise<Company[]>;
-  findWithItineraries(id: bigint): Promise<Company | null>;
-  findWithOwner(id: bigint): Promise<Company | null>;
+  findWithItineraries(id: string): Promise<Company | null>;
+  findWithOwner(id: string): Promise<Company | null>;
 
   // Update
-  update(id: bigint, data: Prisma.CompanyUpdateInput): Promise<Company>;
-  updateContact(id: bigint, contact: string): Promise<Company>;
+  update(id: string, data: Prisma.CompanyUpdateInput): Promise<Company>;
+  updateContact(id: string, contact: string): Promise<Company>;
 
   // Count
   count(): Promise<number>;
