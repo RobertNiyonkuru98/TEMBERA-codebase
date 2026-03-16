@@ -1,20 +1,32 @@
 import { Router } from 'express';
-import * as BookingController from '../controllers/BookingController';
+import {
+    getAllBookings,
+getBookingById,
+createBooking,
+updateBooking,
+deleteBooking,
+getAllBookingItems,
+getBookingItemById,
+createBookingItem,
+updateBookingItem,
+deleteBookingItem
+}  from '../controllers/BookingController';
+import { asyncWrapper } from '@/utils/async.wrapper';
 
 const router = Router();
 
 // Booking endpoints
-router.get('/', BookingController.getAllBookings);
-router.get('/:id', BookingController.getBookingById);
-router.post('/', BookingController.createBooking);
-router.put('/:id', BookingController.updateBooking);
-router.delete('/:id', BookingController.deleteBooking);
+router.get('/', asyncWrapper(getAllBookings));
+router.get('/:id', asyncWrapper(getBookingById));
+router.post('/', asyncWrapper(createBooking));
+router.put('/:id', asyncWrapper(updateBooking));
+router.delete('/:id', asyncWrapper(deleteBooking));
 
 // BookingItem endpoints
-router.get('/items', BookingController.getAllBookingItems);
-router.get('/items/:id', BookingController.getBookingItemById);
-router.post('/items', BookingController.createBookingItem);
-router.put('/items/:id', BookingController.updateBookingItem);
-router.delete('/items/:id', BookingController.deleteBookingItem);
+router.get('/items', asyncWrapper(getAllBookingItems));
+router.get('/items/:id', asyncWrapper(getBookingItemById));
+router.post('/items', asyncWrapper(createBookingItem));
+router.put('/items/:id', asyncWrapper(updateBookingItem));
+router.delete('/items/:id', asyncWrapper(deleteBookingItem));
 
 export default router;

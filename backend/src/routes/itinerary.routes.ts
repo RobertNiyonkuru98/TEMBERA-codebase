@@ -1,12 +1,19 @@
 import { Router } from 'express';
-import * as ItineraryController from '../controllers/ItineraryController';
+import {
+    getAllItineraries,
+getItineraryById,
+createItinerary,
+updateItinerary,
+deleteItinerary,
+}  from '../controllers/ItineraryController';
+import { asyncWrapper } from '@/utils/async.wrapper';
 
 const router = Router();
 
-router.get('/', ItineraryController.getAllItineraries);
-router.get('/:id', ItineraryController.getItineraryById);
-router.post('/', ItineraryController.createItinerary);
-router.put('/:id', ItineraryController.updateItinerary);
-router.delete('/:id', ItineraryController.deleteItinerary);
+router.get('/', asyncWrapper(getAllItineraries));
+router.get('/:id', asyncWrapper(getItineraryById));
+router.post('/', asyncWrapper(createItinerary));
+router.put('/:id', asyncWrapper(updateItinerary));
+router.delete('/:id', asyncWrapper(deleteItinerary));
 
 export default router;
