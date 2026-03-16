@@ -67,6 +67,11 @@ export class CompanyRepository implements ICompanyRepository {
     });
   }
 
+  // Delete
+  async delete(id: string): Promise<void> {
+    await prisma.company.delete({ where: { id } });
+  }
+
   // Count
   async count(): Promise<number> {
     return await prisma.company.count();

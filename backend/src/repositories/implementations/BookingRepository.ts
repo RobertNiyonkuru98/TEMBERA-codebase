@@ -108,6 +108,11 @@ export class BookingRepository implements IBookingRepository {
     });
   }
 
+  // Delete
+  async delete(id: string): Promise<void> {
+    await prisma.booking.delete({ where: { id } });
+  }
+
   // Count
   async count(): Promise<number> {
     return await prisma.booking.count();
