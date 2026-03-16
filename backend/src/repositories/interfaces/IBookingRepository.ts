@@ -5,18 +5,18 @@ export interface IBookingRepository {
   create(data: Prisma.BookingCreateInput): Promise<Booking>;
 
   // Read
-  findById(id: bigint): Promise<Booking | null>;
-  findByUserId(userId: bigint): Promise<Booking[]>;
+  findById(id: string): Promise<Booking | null>;
+  findByUserId(userId: string): Promise<Booking[]>;
   findByStatus(status: string): Promise<Booking[]>;
   findByDateRange(startDate: Date, endDate: Date): Promise<Booking[]>;
   findAll(skip?: number, take?: number): Promise<Booking[]>;
-  findWithUser(id: bigint): Promise<Booking | null>;
-  findWithItems(id: bigint): Promise<Booking | null>;
-  findComplete(id: bigint): Promise<Booking | null>;
+  findWithUser(id: string): Promise<Booking | null>;
+  findWithItems(id: string): Promise<Booking | null>;
+  findComplete(id: string): Promise<Booking | null>;
 
   // Update
-  update(id: bigint, data: Prisma.BookingUpdateInput): Promise<Booking>;
-  updateStatus(id: bigint, status: string): Promise<Booking>;
+  update(id: string, data: Prisma.BookingUpdateInput): Promise<Booking>;
+  updateStatus(id: string, status: string): Promise<Booking>;
 
   // Count
   count(): Promise<number>;

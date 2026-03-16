@@ -9,13 +9,13 @@ export class BookingRepository implements IBookingRepository {
   }
 
   // Read
-  async findById(id: bigint): Promise<Booking | null> {
+  async findById(id: string): Promise<Booking | null> {
     return await prisma.booking.findUnique({
       where: { id },
     });
   }
 
-  async findByUserId(userId: bigint): Promise<Booking[]> {
+  async findByUserId(userId: string): Promise<Booking[]> {
     return await prisma.booking.findMany({
       where: { user_id: userId },
       orderBy: {
@@ -57,7 +57,7 @@ export class BookingRepository implements IBookingRepository {
     });
   }
 
-  async findWithUser(id: bigint): Promise<Booking | null> {
+  async findWithUser(id: string): Promise<Booking | null> {
     return await prisma.booking.findUnique({
       where: { id },
       include: {
@@ -66,7 +66,7 @@ export class BookingRepository implements IBookingRepository {
     });
   }
 
-  async findWithItems(id: bigint): Promise<Booking | null> {
+  async findWithItems(id: string): Promise<Booking | null> {
     return await prisma.booking.findUnique({
       where: { id },
       include: {
@@ -75,7 +75,7 @@ export class BookingRepository implements IBookingRepository {
     });
   }
 
-  async findComplete(id: bigint): Promise<Booking | null> {
+  async findComplete(id: string): Promise<Booking | null> {
     return await prisma.booking.findUnique({
       where: { id },
       include: {
@@ -94,14 +94,14 @@ export class BookingRepository implements IBookingRepository {
   }
 
   // Update
-  async update(id: bigint, data: Prisma.BookingUpdateInput): Promise<Booking> {
+  async update(id: string, data: Prisma.BookingUpdateInput): Promise<Booking> {
     return await prisma.booking.update({
       where: { id },
       data,
     });
   }
 
-  async updateStatus(id: bigint, status: string): Promise<Booking> {
+  async updateStatus(id: string, status: string): Promise<Booking> {
     return await prisma.booking.update({
       where: { id },
       data: { status },

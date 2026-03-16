@@ -9,13 +9,13 @@ export class CompanyRepository implements ICompanyRepository {
   }
 
   // Read
-  async findById(id: bigint): Promise<Company | null> {
+  async findById(id: string): Promise<Company | null> {
     return await prisma.company.findUnique({
       where: { id },
     });
   }
 
-  async findByOwnerId(ownerId: bigint): Promise<Company[]> {
+  async findByOwnerId(ownerId: string): Promise<Company[]> {
     return await prisma.company.findMany({
       where: { owner_id: ownerId },
       orderBy: {
@@ -34,7 +34,7 @@ export class CompanyRepository implements ICompanyRepository {
     });
   }
 
-  async findWithItineraries(id: bigint): Promise<Company | null> {
+  async findWithItineraries(id: string): Promise<Company | null> {
     return await prisma.company.findUnique({
       where: { id },
       include: {
@@ -43,7 +43,7 @@ export class CompanyRepository implements ICompanyRepository {
     });
   }
 
-  async findWithOwner(id: bigint): Promise<Company | null> {
+  async findWithOwner(id: string): Promise<Company | null> {
     return await prisma.company.findUnique({
       where: { id },
       include: {
@@ -53,14 +53,14 @@ export class CompanyRepository implements ICompanyRepository {
   }
 
   // Update
-  async update(id: bigint, data: Prisma.CompanyUpdateInput): Promise<Company> {
+  async update(id: string, data: Prisma.CompanyUpdateInput): Promise<Company> {
     return await prisma.company.update({
       where: { id },
       data,
     });
   }
 
-  async updateContact(id: bigint, contact: string): Promise<Company> {
+  async updateContact(id: string, contact: string): Promise<Company> {
     return await prisma.company.update({
       where: { id },
       data: { contact },

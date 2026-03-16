@@ -9,13 +9,13 @@ export class ItineraryRepository implements IItineraryRepository {
   }
 
   // Read
-  async findById(id: bigint): Promise<Itinerary | null> {
+  async findById(id: string): Promise<Itinerary | null> {
     return await prisma.itinerary.findUnique({
       where: { id },
     });
   }
 
-  async findByCompanyId(companyId: bigint): Promise<Itinerary[]> {
+  async findByCompanyId(companyId: string): Promise<Itinerary[]> {
     return await prisma.itinerary.findMany({
       where: { company_id: companyId },
       orderBy: {
@@ -76,7 +76,7 @@ export class ItineraryRepository implements IItineraryRepository {
     });
   }
 
-  async findWithCompany(id: bigint): Promise<Itinerary | null> {
+  async findWithCompany(id: string): Promise<Itinerary | null> {
     return await prisma.itinerary.findUnique({
       where: { id },
       include: {
@@ -86,21 +86,21 @@ export class ItineraryRepository implements IItineraryRepository {
   }
 
   // Update
-  async update(id: bigint, data: Prisma.ItineraryUpdateInput): Promise<Itinerary> {
+  async update(id: string, data: Prisma.ItineraryUpdateInput): Promise<Itinerary> {
     return await prisma.itinerary.update({
       where: { id },
       data,
     });
   }
 
-  async updatePrice(id: bigint, price: number): Promise<Itinerary> {
+  async updatePrice(id: string, price: number): Promise<Itinerary> {
     return await prisma.itinerary.update({
       where: { id },
       data: { price },
     });
   }
 
-  async updateDate(id: bigint, date: Date): Promise<Itinerary> {
+  async updateDate(id: string, date: Date): Promise<Itinerary> {
     return await prisma.itinerary.update({
       where: { id },
       data: { date },

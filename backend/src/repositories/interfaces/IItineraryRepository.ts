@@ -5,18 +5,18 @@ export interface IItineraryRepository {
   create(data: Prisma.ItineraryCreateInput): Promise<Itinerary>;
 
   // Read
-  findById(id: bigint): Promise<Itinerary | null>;
-  findByCompanyId(companyId: bigint): Promise<Itinerary[]>;
+  findById(id: string): Promise<Itinerary | null>;
+  findByCompanyId(companyId: string): Promise<Itinerary[]>;
   findByLocation(location: string): Promise<Itinerary[]>;
   findByDateRange(startDate: Date, endDate: Date): Promise<Itinerary[]>;
   findByPriceRange(minPrice: number, maxPrice: number): Promise<Itinerary[]>;
   findAll(skip?: number, take?: number): Promise<Itinerary[]>;
-  findWithCompany(id: bigint): Promise<Itinerary | null>;
+  findWithCompany(id: string): Promise<Itinerary | null>;
 
   // Update
-  update(id: bigint, data: Prisma.ItineraryUpdateInput): Promise<Itinerary>;
-  updatePrice(id: bigint, price: number): Promise<Itinerary>;
-  updateDate(id: bigint, date: Date): Promise<Itinerary>;
+  update(id: string, data: Prisma.ItineraryUpdateInput): Promise<Itinerary>;
+  updatePrice(id: string, price: number): Promise<Itinerary>;
+  updateDate(id: string, date: Date): Promise<Itinerary>;
 
   // Count
   count(): Promise<number>;
