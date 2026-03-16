@@ -8,24 +8,33 @@ function HomePage() {
 
   return (
     <div className="space-y-10">
-      <div className="w-full mb-8">
-        <img
-          src="https://media.licdn.com/dms/image/v2/C4D1BAQEqv_efZjJcqw/company-background_10000/company-background_10000/0/1583341278510/visitrwanda_cover?e=2147483647&v=beta&t=TxrBiPPxEX-R0r7y-bwySDqGBOm6pNlrccfzYI5DLK4"
-          alt="Visit Rwanda Hero"
-          className="w-full h-72 object-cover rounded-xl shadow-lg"
+      <div className="relative w-screen h-[60vh] max-h-[420px] mb-8 left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden">
+        <iframe
+          src="https://www.youtube.com/embed/bX_wOIZW1RM?autoplay=1&mute=1&controls=0&loop=1&playlist=bX_wOIZW1RM"
+          title="Visit Rwanda Hero Video"
+          className="absolute top-1/2 left-1/2 w-[120vw] h-[67.5vw] min-h-full min-w-full -translate-x-1/2 -translate-y-1/2"
+          frameBorder="0"
+          allow="autoplay; encrypted-media"
+          allowFullScreen
         />
-      </div>
+
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-slate-900/30 to-slate-900/80 z-10" />
+
+        <div className="absolute inset-0 flex flex-col justify-center items-center z-20">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-white text-center drop-shadow-lg">
+            Discover Rwanda with
+            <span className="block bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
+              Curated Local Experience
+            </span>
+          </h1>
+        </div>
+      </div>  
       <section className="grid gap-8 md:grid-cols-[1.1fr,0.9fr] items-center">
         <div className="space-y-5">
           <p className="inline-flex rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-300">
             {t("home.badge")}
           </p>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight">
-            Discover Rwanda with curated{" "}
-            <span className="bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
-              local experiences
-            </span>
-          </h1>
+          {/* Hero title is now overlaid on the video above */}
           <p className="text-sm md:text-base text-slate-300 max-w-xl">
             {t("home.heroSubtitle")}
           </p>
