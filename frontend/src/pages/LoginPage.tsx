@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { type SubmitEventHandler, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import { useI18n } from "../i18n";
@@ -14,7 +14,7 @@ function LoginPage() {
 
   const from = (location.state as { from?: string } | null)?.from ?? "/bookings";
 
-  function handleSubmit(event: FormEvent) {
+  const handleSubmit: SubmitEventHandler<HTMLFormElement> = function (event) {
     event.preventDefault();
     setError(null);
 
