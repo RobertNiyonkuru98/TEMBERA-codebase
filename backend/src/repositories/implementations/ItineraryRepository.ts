@@ -12,12 +12,18 @@ export class ItineraryRepository implements IItineraryRepository {
   async findById(id: string): Promise<Itinerary | null> {
     return await prisma.itinerary.findUnique({
       where: { id },
+      include: {
+        images: true,
+      },
     });
   }
 
   async findByCompanyId(companyId: string): Promise<Itinerary[]> {
     return await prisma.itinerary.findMany({
       where: { company_id: companyId },
+      include: {
+        images: true,
+      },
       orderBy: {
         date: 'asc',
       },
@@ -70,6 +76,9 @@ export class ItineraryRepository implements IItineraryRepository {
     return await prisma.itinerary.findMany({
       skip,
       take,
+      include: {
+        images: true,
+      },
       orderBy: {
         date: 'desc',
       },

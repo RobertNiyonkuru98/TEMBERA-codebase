@@ -56,6 +56,7 @@ model Itinerary {
   price       Float
 
   company      Company       @relation(fields: [company_id], references: [id])
+  bookings     Booking[]
   bookingItems BookingItem[]
   images       ItineraryImage[]
 }
@@ -73,12 +74,26 @@ model ItineraryImage {
 model Booking {
   id          String   @id @default(uuid()) @db.Uuid
   user_id     String   @db.Uuid
+  itinerary_id String?  @db.Uuid
+  type        String   @default("personal") @db.VarChar(20)
   description String?  @db.VarChar(255)
   status      String   @db.VarChar(10)
   date        DateTime @db.Date
 
   user        User          @relation(fields: [user_id], references: [id])
+  itinerary   Itinerary?    @relation(fields: [itinerary_id], references: [id])
   items       BookingItem[]
+  members     BookingMember[]
+}
+
+model BookingMember {
+  id         String   @id @default(uuid()) @db.Uuid
+  booking_id String   @db.Uuid
+  name       String   @db.VarChar(255)
+  email      String?  @db.VarChar(255)
+  phone      String?  @db.VarChar(50)
+
+  booking    Booking  @relation(fields: [booking_id], references: [id], onDelete: Cascade)
 }
 
 // BookingItem Model - Junction table connecting bookings and itineraries

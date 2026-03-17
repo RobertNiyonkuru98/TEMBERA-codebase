@@ -70,9 +70,9 @@ export const updateUser = async (req: Request, res: Response) => {
 
 export const alterUserRole = async (req: Request, res: Response) => {
   const requestUser = getRequestUser(req);
-  // if (!requestUser.roles.includes('admin')) {
-  //   throw new UnauthorizedError('Only admin users can manage roles');
-  // }
+  if (!requestUser.roles.includes('admin')) {
+    throw new UnauthorizedError('Only admin users can manage roles');
+  }
 
   const id = String(req.params.id);
   validateUserId(id);
@@ -86,7 +86,6 @@ export const alterUserRole = async (req: Request, res: Response) => {
   }
 
   const user = await userService.updateRole(id, { role, accessStatus: access_status });
-  console.log(user, "==================") 
 
   if (!user) throw new NotFoundError('User not found');
   return ResponseHandler.success(res, 200, 'User role updated successfully', user);

@@ -9,9 +9,9 @@ const router = express.Router();
 
 router.use('/auth', authRoutes);
 router.use('/users', authenticateToken, userRoutes);
-router.use('/itineraries', authenticateToken, itineraryRoutes);
+router.use('/itineraries', itineraryRoutes);
 router.use('/bookings', authenticateToken, bookingRoutes);
-router.use('/companies', authenticateToken, companyRoutes);
+router.use('/companies', companyRoutes);
 router.use((_req, res, _next) => {
   res.status(404).json({ message: "Route not found" });
 });

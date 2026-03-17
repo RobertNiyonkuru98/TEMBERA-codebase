@@ -3,18 +3,21 @@ import {
     getAllItineraries,
 getItineraryById,
 createItinerary,
+createItineraryImages,
 updateItinerary,
 deleteItinerary,
 }  from '../controllers/ItineraryController';
 import { asyncWrapper } from '@/utils/async.wrapper';
 import { uploadItineraryImages } from '@/middlewares/upload.middleware';
+import { authenticateToken } from '@/middlewares/auth.middleware';
 
 const router = Router();
 
 router.get('/', asyncWrapper(getAllItineraries));
 router.get('/:id', asyncWrapper(getItineraryById));
-router.post('/', uploadItineraryImages.array('images', 10), asyncWrapper(createItinerary));
-router.put('/:id', asyncWrapper(updateItinerary));
-router.delete('/:id', asyncWrapper(deleteItinerary));
+router.post('/',authenticateToken, asyncWrapper(createItinerary));
+router.post('/:id/images',authenticateToken, uploadItineraryImages.array('images', 10), asyncWrapper(createItineraryImages));
+router.put('/:id', authenticateToken, asyncWrapper(updateItinerary));
+router.delete('/:id', authenticateToken, asyncWrapper(deleteItinerary));
 
 export default router;
