@@ -48,7 +48,7 @@ function mapBackendUser(user: BackendUser): User {
     name: user.name,
     email: user.email,
     phoneNumber: user.phone_number ?? undefined,
-    role: user.role,
+    role: user.roles?.[0].access_level || "user",
     roles: user.roles.map((r) => r.access_level),
   };
 }
@@ -145,16 +145,3 @@ export async function deleteAccountRequest(
   await parseResponse<EmptyResponseData>(response);
 }
 
-export async function switchRoleRequest(
-  token: string,
-  role: UserRole
-): Promise<string> {
-  const response = await fetch(`${API_BASE_URL}/api/users/me/switch-role`, {
-    method: "POST",
-    headers: getAuthHeaders(token),
-    body: JSON.stringify({ role }),
-  });
-
-  const parsed = await parseResponse<LoginResponseData>(response);
-  return parsed.data.token;
-}

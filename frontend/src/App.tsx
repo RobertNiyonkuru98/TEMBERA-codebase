@@ -31,14 +31,14 @@ type RoleProtectedRouteProps = {
 };
 
 function RoleProtectedRoute({ allowedRoles, children }: RoleProtectedRouteProps) {
-  const { user } = useAuth();
+  const { user, activeRole } = useAuth();
   const location = useLocation();
 
   if (!user) {
     return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   }
 
-  if (!allowedRoles.includes(user.role)) {
+  if (!activeRole || !allowedRoles.includes(activeRole)) {
     return <Navigate to="/" replace />;
   }
 
@@ -239,7 +239,7 @@ function GuestLayout({ heroTitle }: { heroTitle: string }) {
 }
 
 function App() {
-  const { user, logout, initialize, isInitialized } = useAuth();
+  const { user, activeRole, logout, initialize, isInitialized } = useAuth();
   const { lang, setLang, t } = useI18n();
 
   useEffect(() => {
@@ -258,7 +258,7 @@ function App() {
     <BrowserRouter>
       {user ? (
         <AuthenticatedLayout
-          role={user.role}
+          role={activeRole ?? user.role}
           displayName={user.name}
           logout={logout}
           lang={lang}

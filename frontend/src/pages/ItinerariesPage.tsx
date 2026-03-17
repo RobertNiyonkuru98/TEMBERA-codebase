@@ -11,7 +11,7 @@ import {
 import { useAuth } from "../AuthContext";
 
 function ItinerariesPage() {
-  const { token, user } = useAuth();
+  const { token, user, activeRole } = useAuth();
   const { t } = useI18n();
   const [itineraries, setItineraries] = useState<Itinerary[]>([]);
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -108,7 +108,7 @@ function ItinerariesPage() {
               itinerary={itinerary}
               company={company}
               as="link"
-              onAttend={user?.role === "user" ? handleAttend : undefined}
+              onAttend={activeRole === "user" ? handleAttend : undefined}
               isAttending={attendingItineraryId === String(itinerary.id)}
             />
           );

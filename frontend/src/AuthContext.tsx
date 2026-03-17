@@ -6,13 +6,15 @@ import {
   loginUser,
   logout as logoutAction,
   registerUser,
+  setActiveRole,
   updateProfile,
 } from "./store/authSlice";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
+import type { UserRole } from "./types";
 
 export function useAuth() {
   const dispatch = useAppDispatch();
-  const { user, isLoading, error, isInitialized } = useAppSelector(
+  const { user, allRoles, activeRole, hasSwitchedRole, isLoading, error, isInitialized } = useAppSelector(
     (state) => state.auth,
   );
   const token = useAppSelector((state) => state.auth.token);
@@ -52,10 +54,17 @@ export function useAuth() {
     [dispatch],
   );
   const clearError = useCallback(() => dispatch(clearAuthError()), [dispatch]);
+  const switchRole = useCallback(
+    (role: UserRole) => dispatch(setActiveRole(role)),
+    [dispatch],
+  );
 
   return useMemo(
     () => ({
       user,
+      allRoles,
+      activeRole,
+      hasSwitchedRole,
       token,
       isLoading,
       error,
@@ -67,10 +76,14 @@ export function useAuth() {
       saveProfile,
       removeAccount,
       clearError,
+      switchRole,
     }),
     [
+      activeRole,
+      allRoles,
       clearError,
       error,
+      hasSwitchedRole,
       initialize,
       isInitialized,
       isLoading,
@@ -79,6 +92,7 @@ export function useAuth() {
       register,
       removeAccount,
       saveProfile,
+      switchRole,
       user,
       token,
     ],

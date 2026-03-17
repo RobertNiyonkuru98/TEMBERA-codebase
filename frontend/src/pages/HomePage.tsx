@@ -12,7 +12,7 @@ import type { Company, Itinerary } from "../types";
 import { useAuth } from "../AuthContext";
 
 function HomePage() {
-  const { token, user } = useAuth();
+  const { token, user, activeRole } = useAuth();
   const { t } = useI18n();
   const [itineraries, setItineraries] = useState<Itinerary[]>([]);
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -218,7 +218,7 @@ function HomePage() {
                 itinerary={itinerary}
                 company={company}
                 as="a"
-                onAttend={user?.role === "user" ? handleAttend : undefined}
+                onAttend={activeRole === "user" ? handleAttend : undefined}
                 isAttending={attendingItineraryId === String(itinerary.id)}
               />
             );

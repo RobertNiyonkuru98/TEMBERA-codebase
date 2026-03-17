@@ -20,7 +20,7 @@ type BookingSummaryRow = {
 
 function ItineraryDetailPage() {
   const { t } = useI18n();
-  const { token, user } = useAuth();
+  const { token, user, activeRole } = useAuth();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
@@ -245,7 +245,7 @@ function ItineraryDetailPage() {
             <p className="text-xs text-slate-400">{t("detail.noBookings")}</p>
           )}
 
-          {user?.role === "user" && (
+          {activeRole === "user" && (
             <button
               type="button"
               onClick={() => {

@@ -5,32 +5,30 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { switchRole } from "@/store/authSlice";
+import { useAuth } from "@/AuthContext";
 import type { UserRole } from "@/types";
 
 export function RoleSwitcher() {
-  const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.auth.user);
+  const { allRoles, activeRole, switchRole } = useAuth();
 
-  if (!user || !user.roles || user.roles.length <= 1) {
+  if (!allRoles || allRoles.length <= 1 || !activeRole) {
     return null;
   }
 
   const handleRoleSwitch = (role: UserRole) => {
-    dispatch(switchRole(role));
+    switchRole(role);
   };
 
   return (
     <Menubar className="border-none bg-transparent">
       <MenubarMenu>
-        <MenubarTrigger>Switch Role</MenubarTrigger>
+        <MenubarTrigger>{`Role: ${activeRole}`}</MenubarTrigger>
         <MenubarContent>
-          {user.roles.map((role) => (
+          {allRoles.map((role) => (
             <MenubarItem
               key={role}
               onClick={() => handleRoleSwitch(role)}
-              disabled={role === user.role}
+              disabled={role === activeRole}
             >
               {role}
             </MenubarItem>

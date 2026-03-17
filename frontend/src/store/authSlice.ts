@@ -5,16 +5,38 @@ import {
   fetchSessionUser,
   loginRequest,
   registerRequest,
-  switchRoleRequest,
   updateProfileRequest,
 } from "../api/authApi";
 import type { User, UserRole } from "../types";
 
 const TOKEN_STORAGE_KEY = "tembera_auth_token";
 const USER_STORAGE_KEY = "tembera_auth_user";
+const ACTIVE_ROLE_STORAGE_KEY = "tembera_active_role";
+
+function isUserRole(value: string | null): value is UserRole {
+  return value === "admin" || value === "company" || value === "user" || value === "visitor";
+}
+
+function extractRoles(user: User | null): UserRole[] {
+  if (!user) return [];
+  const fromUser = user.roles?.length ? user.roles : [user.role];
+  return Array.from(new Set(fromUser));
+}
+
+function resolveActiveRole(roles: UserRole[]): UserRole | null {
+  if (roles.length === 0) return null;
+  const stored = window.localStorage.getItem(ACTIVE_ROLE_STORAGE_KEY);
+  if (isUserRole(stored) && roles.includes(stored)) {
+    return stored;
+  }
+  return roles[0];
+}
 
 type AuthState = {
   user: User | null;
+  allRoles: UserRole[];
+  activeRole: UserRole | null;
+  hasSwitchedRole: boolean;
   token: string | null;
   isLoading: boolean;
   isInitialized: boolean;
@@ -23,6 +45,9 @@ type AuthState = {
 
 const initialState: AuthState = {
   user: null,
+  allRoles: [],
+  activeRole: null,
+  hasSwitchedRole: false,
   token: window.localStorage.getItem(TOKEN_STORAGE_KEY),
   isLoading: false,
   isInitialized: false,
@@ -45,32 +70,6 @@ export const initializeAuth = createAsyncThunk(
       window.localStorage.removeItem(USER_STORAGE_KEY);
       return rejectWithValue(
         error instanceof Error ? error.message : "Failed to initialize session",
-      );
-    }
-  },
-);
-
-export const switchRole = createAsyncThunk(
-  "auth/switchRole",
-  async (role: UserRole, { getState, rejectWithValue }) => {
-    const state = getState() as { auth: AuthState };
-    const { token } = state.auth;
-
-    if (!token) {
-      return rejectWithValue("No token found");
-    }
-
-    try {
-      const newToken = await switchRoleRequest(token, role);
-      const user = await fetchSessionUser(newToken);
-
-      window.localStorage.setItem(TOKEN_STORAGE_KEY, newToken);
-      window.localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
-
-      return { token: newToken, user };
-    } catch (error) {
-      return rejectWithValue(
-        error instanceof Error ? error.message : "Role switch failed"
       );
     }
   },
@@ -193,13 +192,30 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    setActiveRole(state, action: PayloadAction<UserRole>) {
+      const nextRole = action.payload;
+      if (!state.allRoles.includes(nextRole)) {
+        return;
+      }
+
+      state.activeRole = nextRole;
+      state.hasSwitchedRole = true;
+      if (state.user) {
+        state.user.role = nextRole;
+      }
+      window.localStorage.setItem(ACTIVE_ROLE_STORAGE_KEY, nextRole);
+    },
     logout(state) {
       state.user = null;
+      state.allRoles = [];
+      state.activeRole = null;
+      state.hasSwitchedRole = false;
       state.token = null;
       state.error = null;
       state.isInitialized = true;
       window.localStorage.removeItem(TOKEN_STORAGE_KEY);
       window.localStorage.removeItem(USER_STORAGE_KEY);
+      window.localStorage.removeItem(ACTIVE_ROLE_STORAGE_KEY);
     },
     clearAuthError(state) {
       state.error = null;
@@ -220,28 +236,23 @@ const authSlice = createSlice({
         state.isInitialized = true;
         state.token = action.payload.token;
         state.user = action.payload.user;
+        state.allRoles = extractRoles(action.payload.user);
+        state.activeRole = resolveActiveRole(state.allRoles);
+        state.hasSwitchedRole = false;
+        if (state.user && state.activeRole) {
+          state.user.role = state.activeRole;
+          window.localStorage.setItem(ACTIVE_ROLE_STORAGE_KEY, state.activeRole);
+        }
       })
       .addCase(initializeAuth.rejected, (state, action) => {
         state.isInitialized = true;
         state.user = null;
+        state.allRoles = [];
+        state.activeRole = null;
+        state.hasSwitchedRole = false;
         state.token = null;
         state.error = action.payload as string;
-      })
-      .addCase(switchRole.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(
-        switchRole.fulfilled,
-        (state, action: PayloadAction<{ token: string; user: User }>) => {
-          state.isLoading = false;
-          state.token = action.payload.token;
-          state.user = action.payload.user;
-        },
-      )
-      .addCase(switchRole.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
+        window.localStorage.removeItem(ACTIVE_ROLE_STORAGE_KEY);
       })
       .addCase(loginUser.pending, (state) => {
         state.isLoading = true;
@@ -250,6 +261,13 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload.user;
+        state.allRoles = extractRoles(action.payload.user);
+        state.activeRole = state.allRoles[0] ?? null;
+        state.hasSwitchedRole = false;
+        if (state.user && state.activeRole) {
+          state.user.role = state.activeRole;
+          window.localStorage.setItem(ACTIVE_ROLE_STORAGE_KEY, state.activeRole);
+        }
         state.token = action.payload.token;
         state.error = null;
       })
@@ -276,6 +294,18 @@ const authSlice = createSlice({
       .addCase(updateProfile.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload;
+        const nextRoles = extractRoles(action.payload);
+        state.allRoles = nextRoles;
+
+        if (!state.activeRole || !nextRoles.includes(state.activeRole)) {
+          state.activeRole = nextRoles[0] ?? null;
+          state.hasSwitchedRole = false;
+        }
+
+        if (state.user && state.activeRole) {
+          state.user.role = state.activeRole;
+          window.localStorage.setItem(ACTIVE_ROLE_STORAGE_KEY, state.activeRole);
+        }
       })
       .addCase(updateProfile.rejected, (state, action) => {
         state.isLoading = false;
@@ -288,8 +318,12 @@ const authSlice = createSlice({
       .addCase(deleteAccount.fulfilled, (state) => {
         state.isLoading = false;
         state.user = null;
+        state.allRoles = [];
+        state.activeRole = null;
+        state.hasSwitchedRole = false;
         state.token = null;
         state.error = null;
+        window.localStorage.removeItem(ACTIVE_ROLE_STORAGE_KEY);
       })
       .addCase(deleteAccount.rejected, (state, action) => {
         state.isLoading = false;
@@ -298,5 +332,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout, clearAuthError, hydrateFromStorage } = authSlice.actions;
+export const { setActiveRole, logout, clearAuthError, hydrateFromStorage } = authSlice.actions;
 export default authSlice.reducer;
