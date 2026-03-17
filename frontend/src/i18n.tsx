@@ -42,6 +42,7 @@ type TranslationKey =
   | "auth.loginSubtitle"
   | "auth.email"
   | "auth.phone"
+  | "auth.phoneNumber"
   | "auth.password"
   | "auth.loginButton"
   | "auth.noAccount"
@@ -73,7 +74,99 @@ type TranslationKey =
   | "booking.memberEmail"
   | "booking.memberId"
   | "booking.addMember"
-  | "booking.submit";
+  | "booking.submit"
+  | "nav.explore"
+  | "nav.whyTembera"
+  | "nav.signIn"
+  | "nav.getStarted"
+  | "nav.language"
+  | "nav.theme"
+  | "theme.light"
+  | "theme.dark"
+  | "theme.system"
+  | "home.heroMainTitle"
+  | "home.heroMainSubtitle"
+  | "home.heroBadge"
+  | "home.exploreExperiences"
+  | "home.getStarted"
+  | "home.scrollToExplore"
+  | "home.popularDestinations"
+  | "home.popularDestinationsSubtitle"
+  | "home.destinationVolcanoes"
+  | "home.destinationKivu"
+  | "home.destinationNyungwe"
+  | "home.destinationAkagera"
+  | "home.tagGorillaTrekking"
+  | "home.tagBeachRelaxation"
+  | "home.tagCanopyWalks"
+  | "home.tagSafariAdventures"
+  | "home.statsTourOperators"
+  | "home.statsExperiences"
+  | "home.statsSupport"
+  | "home.statsLocalExpertise"
+  | "home.howItWorks"
+  | "home.howItWorksSubtitle"
+  | "home.stepExplore"
+  | "home.stepExploreDesc"
+  | "home.stepChoose"
+  | "home.stepChooseDesc"
+  | "home.stepBook"
+  | "home.stepBookDesc"
+  | "home.stepExperience"
+  | "home.stepExperienceDesc"
+  | "home.featuredExperiences"
+  | "home.featuredExperiencesSubtitle"
+  | "home.viewAll"
+  | "home.ctaTitle"
+  | "home.ctaSubtitle"
+  | "home.signUpNow"
+  | "home.browseExperiences"
+  | "auth.welcomeBack"
+  | "auth.continueAdventure"
+  | "auth.continueAdventureDesc"
+  | "auth.startJourney"
+  | "auth.discoverRwanda"
+  | "auth.discoverRwandaDesc"
+  | "auth.or"
+  | "itineraries.pageTitle"
+  | "itineraries.pageSubtitle"
+  | "itineraries.loading"
+  | "itineraries.noResults"
+  | "itineraries.error"
+  | "itineraries.registered"
+  | "itineraries.loginRequired"
+  | "itineraries.filterAll"
+  | "itineraries.searchPlaceholder"
+  | "detail.tripInfo"
+  | "detail.bookingsTitle"
+  | "detail.noBookings"
+  | "detail.goBack"
+  | "detail.notFound"
+  | "detail.loadingDetails"
+  | "detail.attendButton"
+  | "detail.attending"
+  | "detail.bookingNumber"
+  | "detail.createdOn"
+  | "detail.by"
+  | "card.by"
+  | "card.attend"
+  | "card.attending"
+  | "showcase.title"
+  | "showcase.subtitle"
+  | "showcase.feature1"
+  | "showcase.feature2"
+  | "showcase.feature3"
+  | "showcase.whyChooseUs"
+  | "showcase.whySubtitle"
+  | "showcase.reason1Title"
+  | "showcase.reason1Desc"
+  | "showcase.reason2Title"
+  | "showcase.reason2Desc"
+  | "showcase.reason3Title"
+  | "showcase.reason3Desc"
+  | "showcase.ctaTitle"
+  | "showcase.ctaSubtitle"
+  | "showcase.ctaButton";
 
 const translations: Record<Lang, Record<TranslationKey, string>> = {
   en: {
@@ -113,6 +206,7 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
       "Use email (for example alice@example.com) to sign in.",
     "auth.email": "Email",
     "auth.phone": "Phone number (optional)",
+    "auth.phoneNumber": "Phone Number",
     "auth.password": "Password",
     "auth.loginButton": "Login",
     "auth.noAccount": "No account?",
@@ -150,6 +244,98 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
     "booking.memberId": "National ID / Passport",
     "booking.addMember": "+ Add another member",
     "booking.submit": "Create  booking",
+    "nav.explore": "Explore",
+    "nav.whyTembera": "Why Tembera",
+    "nav.signIn": "Sign In",
+    "nav.getStarted": "Get Started",
+    "nav.language": "Language",
+    "nav.theme": "Theme",
+    "theme.light": "Light",
+    "theme.dark": "Dark",
+    "theme.system": "System",
+    "home.heroMainTitle": "Experience the Land of a Thousand Hills",
+    "home.heroMainSubtitle": "Book authentic local experiences, connect with trusted tour operators, and create memories that last a lifetime.",
+    "home.heroBadge": "Discover Rwanda's Hidden Gems",
+    "home.exploreExperiences": "Explore Experiences",
+    "home.getStarted": "Get Started",
+    "home.scrollToExplore": "Scroll to explore",
+    "home.popularDestinations": "Popular Destinations",
+    "home.popularDestinationsSubtitle": "Explore Rwanda's most breathtaking locations",
+    "home.destinationVolcanoes": "Volcanoes National Park",
+    "home.destinationKivu": "Lake Kivu",
+    "home.destinationNyungwe": "Nyungwe Forest",
+    "home.destinationAkagera": "Akagera National Park",
+    "home.tagGorillaTrekking": "Gorilla Trekking",
+    "home.tagBeachRelaxation": "Beach & Relaxation",
+    "home.tagCanopyWalks": "Canopy Walks",
+    "home.tagSafariAdventures": "Safari Adventures",
+    "home.statsTourOperators": "Trusted Tour Operators",
+    "home.statsExperiences": "Unique Experiences",
+    "home.statsSupport": "Customer Support",
+    "home.statsLocalExpertise": "Local Expertise",
+    "home.howItWorks": "How It Works",
+    "home.howItWorksSubtitle": "Your journey to unforgettable experiences in 4 simple steps",
+    "home.stepExplore": "Explore",
+    "home.stepExploreDesc": "Browse curated Rwanda experiences",
+    "home.stepChoose": "Choose",
+    "home.stepChooseDesc": "Select your perfect adventure",
+    "home.stepBook": "Book",
+    "home.stepBookDesc": "Secure your spot instantly",
+    "home.stepExperience": "Experience",
+    "home.stepExperienceDesc": "Create unforgettable memories",
+    "home.featuredExperiences": "Featured Experiences",
+    "home.featuredExperiencesSubtitle": "Handpicked adventures just for you",
+    "home.viewAll": "View All",
+    "home.ctaTitle": "Ready to Start Your Adventure?",
+    "home.ctaSubtitle": "Join thousands of travelers discovering Rwanda's beauty",
+    "home.signUpNow": "Sign Up Now",
+    "home.browseExperiences": "Browse All Experiences",
+    "auth.welcomeBack": "Welcome Back",
+    "auth.continueAdventure": "Continue Your Adventure",
+    "auth.continueAdventureDesc": "Sign in to access your bookings and discover new experiences in Rwanda.",
+    "auth.startJourney": "Start Your Journey",
+    "auth.discoverRwanda": "Discover Rwanda's Hidden Gems",
+    "auth.discoverRwandaDesc": "Join thousands of travelers exploring the land of a thousand hills.",
+    "auth.or": "or",
+    "itineraries.pageTitle": "Explore Experiences",
+    "itineraries.pageSubtitle": "Discover amazing adventures and activities across Rwanda",
+    "itineraries.loading": "Loading experiences...",
+    "itineraries.noResults": "No experiences found.",
+    "itineraries.error": "Failed to load experiences",
+    "itineraries.registered": "Successfully registered!",
+    "itineraries.loginRequired": "Please login to register for an experience.",
+    "itineraries.filterAll": "All Experiences",
+    "itineraries.searchPlaceholder": "Search experiences...",
+    "detail.tripInfo": "Trip Information",
+    "detail.bookingsTitle": "Bookings",
+    "detail.noBookings": "No bookings yet for this experience.",
+    "detail.goBack": "Go back",
+    "detail.notFound": "The requested experience could not be found.",
+    "detail.loadingDetails": "Loading experience details...",
+    "detail.attendButton": "Book Now",
+    "detail.attending": "Booking...",
+    "detail.bookingNumber": "Booking",
+    "detail.createdOn": "Created on",
+    "detail.by": "By",
+    "card.by": "by",
+    "card.attend": "Book Now",
+    "card.attending": "Booking...",
+    "showcase.title": "Why Choose Tembera",
+    "showcase.subtitle": "Your trusted partner for unforgettable Rwanda experiences",
+    "showcase.feature1": "Curated local experiences from verified tour operators",
+    "showcase.feature2": "Secure booking platform with 24/7 customer support",
+    "showcase.feature3": "Authentic Rwanda adventures at competitive prices",
+    "showcase.whyChooseUs": "What Makes Us Different",
+    "showcase.whySubtitle": "Experience Rwanda like never before",
+    "showcase.reason1Title": "Local Expertise",
+    "showcase.reason1Desc": "Work directly with Rwanda's best tour operators who know every hidden gem",
+    "showcase.reason2Title": "Verified Quality",
+    "showcase.reason2Desc": "All experiences are vetted and reviewed by real travelers",
+    "showcase.reason3Title": "Best Prices",
+    "showcase.reason3Desc": "Direct booking means no middleman fees - just great value",
+    "showcase.ctaTitle": "Ready to Explore Rwanda?",
+    "showcase.ctaSubtitle": "Join thousands of travelers discovering the land of a thousand hills",
+    "showcase.ctaButton": "Browse Experiences",
   },
   fr: {
     "nav.home": "Accueil",
@@ -191,6 +377,7 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
       "Utilisez n'importe quel email du jeu de données fictif (par exemple alice@example.com) pour vous connecter.",
     "auth.email": "Email",
     "auth.phone": "Numéro de téléphone (optionnel)",
+    "auth.phoneNumber": "Numéro de Téléphone",
     "auth.password": "Mot de passe",
     "auth.loginButton": "Connexion",
     "auth.noAccount": "Pas de compte ?",
@@ -229,6 +416,98 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
     "booking.memberId": "Carte d'identité / Passeport",
     "booking.addMember": "+ Ajouter un membre",
     "booking.submit": "Créer une réservation fictive",
+    "nav.explore": "Explorer",
+    "nav.whyTembera": "Pourquoi Tembera",
+    "nav.signIn": "Se connecter",
+    "nav.getStarted": "Commencer",
+    "nav.language": "Langue",
+    "nav.theme": "Thème",
+    "theme.light": "Clair",
+    "theme.dark": "Sombre",
+    "theme.system": "Système",
+    "home.heroMainTitle": "Découvrez le Pays aux Mille Collines",
+    "home.heroMainSubtitle": "Réservez des expériences locales authentiques, connectez-vous avec des opérateurs de confiance et créez des souvenirs inoubliables.",
+    "home.heroBadge": "Découvrez les Trésors Cachés du Rwanda",
+    "home.exploreExperiences": "Explorer les Expériences",
+    "home.getStarted": "Commencer",
+    "home.scrollToExplore": "Faites défiler pour explorer",
+    "home.popularDestinations": "Destinations Populaires",
+    "home.popularDestinationsSubtitle": "Explorez les lieux les plus époustouflants du Rwanda",
+    "home.destinationVolcanoes": "Parc National des Volcans",
+    "home.destinationKivu": "Lac Kivu",
+    "home.destinationNyungwe": "Forêt de Nyungwe",
+    "home.destinationAkagera": "Parc National d'Akagera",
+    "home.tagGorillaTrekking": "Trekking des Gorilles",
+    "home.tagBeachRelaxation": "Plage & Détente",
+    "home.tagCanopyWalks": "Promenades en Canopée",
+    "home.tagSafariAdventures": "Aventures Safari",
+    "home.statsTourOperators": "Opérateurs de Confiance",
+    "home.statsExperiences": "Expériences Uniques",
+    "home.statsSupport": "Support Client",
+    "home.statsLocalExpertise": "Expertise Locale",
+    "home.howItWorks": "Comment Ça Marche",
+    "home.howItWorksSubtitle": "Votre voyage vers des expériences inoubliables en 4 étapes simples",
+    "home.stepExplore": "Explorer",
+    "home.stepExploreDesc": "Parcourez les expériences rwandaises organisées",
+    "home.stepChoose": "Choisir",
+    "home.stepChooseDesc": "Sélectionnez votre aventure parfaite",
+    "home.stepBook": "Réserver",
+    "home.stepBookDesc": "Sécurisez votre place instantanément",
+    "home.stepExperience": "Vivre",
+    "home.stepExperienceDesc": "Créez des souvenirs inoubliables",
+    "home.featuredExperiences": "Expériences en Vedette",
+    "home.featuredExperiencesSubtitle": "Aventures sélectionnées rien que pour vous",
+    "home.viewAll": "Voir Tout",
+    "home.ctaTitle": "Prêt à Commencer Votre Aventure?",
+    "home.ctaSubtitle": "Rejoignez des milliers de voyageurs découvrant la beauté du Rwanda",
+    "home.signUpNow": "S'inscrire Maintenant",
+    "home.browseExperiences": "Parcourir Toutes les Expériences",
+    "auth.welcomeBack": "Bon Retour",
+    "auth.continueAdventure": "Continuez Votre Aventure",
+    "auth.continueAdventureDesc": "Connectez-vous pour accéder à vos réservations et découvrir de nouvelles expériences au Rwanda.",
+    "auth.startJourney": "Commencez Votre Voyage",
+    "auth.discoverRwanda": "Découvrez les Trésors Cachés du Rwanda",
+    "auth.discoverRwandaDesc": "Rejoignez des milliers de voyageurs explorant le pays aux mille collines.",
+    "auth.or": "ou",
+    "itineraries.pageTitle": "Explorer les Expériences",
+    "itineraries.pageSubtitle": "Découvrez des aventures et activités incroyables à travers le Rwanda",
+    "itineraries.loading": "Chargement des expériences...",
+    "itineraries.noResults": "Aucune expérience trouvée.",
+    "itineraries.error": "Échec du chargement des expériences",
+    "itineraries.registered": "Inscription réussie!",
+    "itineraries.loginRequired": "Veuillez vous connecter pour vous inscrire à une expérience.",
+    "itineraries.filterAll": "Toutes les Expériences",
+    "itineraries.searchPlaceholder": "Rechercher des expériences...",
+    "detail.tripInfo": "Informations sur le Voyage",
+    "detail.bookingsTitle": "Réservations",
+    "detail.noBookings": "Aucune réservation pour cette expérience.",
+    "detail.goBack": "Retour",
+    "detail.notFound": "L'expérience demandée est introuvable.",
+    "detail.loadingDetails": "Chargement des détails de l'expérience...",
+    "detail.attendButton": "Réserver Maintenant",
+    "detail.attending": "Réservation...",
+    "detail.bookingNumber": "Réservation",
+    "detail.createdOn": "Créé le",
+    "detail.by": "Par",
+    "card.by": "par",
+    "card.attend": "Réserver",
+    "card.attending": "Réservation...",
+    "showcase.title": "Pourquoi Choisir Tembera",
+    "showcase.subtitle": "Votre partenaire de confiance pour des expériences inoubliables au Rwanda",
+    "showcase.feature1": "Expériences locales sélectionnées par des opérateurs vérifiés",
+    "showcase.feature2": "Plateforme de réservation sécurisée avec support client 24/7",
+    "showcase.feature3": "Aventures authentiques au Rwanda à prix compétitifs",
+    "showcase.whyChooseUs": "Ce Qui Nous Rend Différents",
+    "showcase.whySubtitle": "Découvrez le Rwanda comme jamais auparavant",
+    "showcase.reason1Title": "Expertise Locale",
+    "showcase.reason1Desc": "Travaillez directement avec les meilleurs opérateurs du Rwanda qui connaissent chaque joyau caché",
+    "showcase.reason2Title": "Qualité Vérifiée",
+    "showcase.reason2Desc": "Toutes les expériences sont vérifiées et évaluées par de vrais voyageurs",
+    "showcase.reason3Title": "Meilleurs Prix",
+    "showcase.reason3Desc": "Réservation directe signifie pas de frais d'intermédiaire - juste un excellent rapport qualité-prix",
+    "showcase.ctaTitle": "Prêt à Explorer le Rwanda?",
+    "showcase.ctaSubtitle": "Rejoignez des milliers de voyageurs découvrant le pays aux mille collines",
+    "showcase.ctaButton": "Parcourir les Expériences",
   },
   rw: {
     "nav.home": "Ahabanza",
@@ -270,6 +549,7 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
       "Koresha email iri mu makuru yo kugerageza (urugero alice@example.com) kugira ngo winjire.",
     "auth.email": "Email",
     "auth.phone": "Numero ya telefoni (si ngombwa)",
+    "auth.phoneNumber": "Numero ya Telefoni",
     "auth.password": "Ijambobanga",
     "auth.loginButton": "Injira",
     "auth.noAccount": "Nta konti ufite?",
@@ -308,6 +588,98 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
     "booking.memberId": "Indangamuntu / Pasiporo",
     "booking.addMember": "+ Ongeraho undi muntu",
     "booking.submit": "Kora rezervasi yo kugerageza",
+    "nav.explore": "Shakisha",
+    "nav.whyTembera": "Kuki Tembera",
+    "nav.signIn": "Injira",
+    "nav.getStarted": "Tangira",
+    "nav.language": "Ururimi",
+    "nav.theme": "Imiterere",
+    "theme.light": "Urumuri",
+    "theme.dark": "Umwijima",
+    "theme.system": "Sisitemu",
+    "home.heroMainTitle": "Menya Igihugu cy'Imisozi Igihumbi",
+    "home.heroMainSubtitle": "Bika ingendo z'imbere mu gihugu, uhuze n'abakora ingendo bizewe, kandi ukore ibintu bizaguma mu bwenge bwawe.",
+    "home.heroBadge": "Menya Ubutunzi bw'u Rwanda buhishe",
+    "home.exploreExperiences": "Shakisha Ingendo",
+    "home.getStarted": "Tangira",
+    "home.scrollToExplore": "Kanda hasi kugira ngo urebe",
+    "home.popularDestinations": "Ahantu Hazwi Cyane",
+    "home.popularDestinationsSubtitle": "Shakisha ahantu heza cyane mu Rwanda",
+    "home.destinationVolcanoes": "Pariki y'Ibirunga",
+    "home.destinationKivu": "Ikiyaga cya Kivu",
+    "home.destinationNyungwe": "Ishyamba rya Nyungwe",
+    "home.destinationAkagera": "Pariki ya Akagera",
+    "home.tagGorillaTrekking": "Gusura Ingagi",
+    "home.tagBeachRelaxation": "Ikiyaga & Kuruhuka",
+    "home.tagCanopyWalks": "Kugenda mu Mashyamba",
+    "home.tagSafariAdventures": "Safari",
+    "home.statsTourOperators": "Abakora Ingendo Bizewe",
+    "home.statsExperiences": "Ingendo Zidasanzwe",
+    "home.statsSupport": "Ubufasha bwa 24/7",
+    "home.statsLocalExpertise": "Ubumenyi bw'imbere mu gihugu",
+    "home.howItWorks": "Uburyo Bikora",
+    "home.howItWorksSubtitle": "Urugendo rwawe ku ngendo zidashobora kwibagirwa mu ntambwe 4 zoroshye",
+    "home.stepExplore": "Shakisha",
+    "home.stepExploreDesc": "Reba ingendo z'u Rwanda zateguwe",
+    "home.stepChoose": "Hitamo",
+    "home.stepChooseDesc": "Hitamo urugendo rukwiye",
+    "home.stepBook": "Bika",
+    "home.stepBookDesc": "Emeza umwanya wawe ako kanya",
+    "home.stepExperience": "Ubunararibonye",
+    "home.stepExperienceDesc": "Kora ibintu bizaguma mu bwenge bwawe",
+    "home.featuredExperiences": "Ingendo Zigaragajwe",
+    "home.featuredExperiencesSubtitle": "Ingendo zatorewe wenyine",
+    "home.viewAll": "Reba Byose",
+    "home.ctaTitle": "Witeguye Gutangira Urugendo Rwawe?",
+    "home.ctaSubtitle": "Jya mu bantu babarirwa mu bihumbi bashakisha ubwiza bw'u Rwanda",
+    "home.signUpNow": "Iyandikishe Ubu",
+    "home.browseExperiences": "Reba Ingendo Zose",
+    "auth.welcomeBack": "Murakaza Neza",
+    "auth.continueAdventure": "Komeza Urugendo Rwawe",
+    "auth.continueAdventureDesc": "Injira kugira ngo ubone amarezervasi yawe no kumenya ingendo nshya mu Rwanda.",
+    "auth.startJourney": "Tangira Urugendo Rwawe",
+    "auth.discoverRwanda": "Menya Ubutunzi bw'u Rwanda buhishe",
+    "auth.discoverRwandaDesc": "Jya mu bantu babarirwa mu bihumbi bashakisha igihugu cy'imisozi igihumbi.",
+    "auth.or": "cyangwa",
+    "itineraries.pageTitle": "Shakisha Ingendo",
+    "itineraries.pageSubtitle": "Menya ingendo n'ibikorwa byiza mu Rwanda",
+    "itineraries.loading": "Gupakira ingendo...",
+    "itineraries.noResults": "Nta ngendo zabonetse.",
+    "itineraries.error": "Byanze gupakira ingendo",
+    "itineraries.registered": "Iyandikishe neza!",
+    "itineraries.loginRequired": "Nyamuneka injira kugira ngo wiyandikishe ku ngendo.",
+    "itineraries.filterAll": "Ingendo Zose",
+    "itineraries.searchPlaceholder": "Shakisha ingendo...",
+    "detail.tripInfo": "Amakuru y'Urugendo",
+    "detail.bookingsTitle": "Amarezervasi",
+    "detail.noBookings": "Nta marezervasi kuri iyi ngendo.",
+    "detail.goBack": "Subira inyuma",
+    "detail.notFound": "Ingendo wasabye ntiyabonetse.",
+    "detail.loadingDetails": "Gupakira amakuru y'ingendo...",
+    "detail.attendButton": "Bika Ubu",
+    "detail.attending": "Gukora rezervasi...",
+    "detail.bookingNumber": "Rezervasi",
+    "detail.createdOn": "Yaremwe ku wa",
+    "detail.by": "Na",
+    "card.by": "na",
+    "card.attend": "Bika",
+    "card.attending": "Gukora...",
+    "showcase.title": "Kuki Uhitamo Tembera",
+    "showcase.subtitle": "Umufatanyabikorwa wawe wizewe mu ngendo zidashobora kwibagirwa mu Rwanda",
+    "showcase.feature1": "Ingendo z'imbere mu gihugu zatorewe n'abakora ingendo bemejwe",
+    "showcase.feature2": "Urubuga rw'amarezervasi rufite umutekano hamwe n'ubufasha bwa 24/7",
+    "showcase.feature3": "Ingendo nyakuri zo mu Rwanda ku biciro byiza",
+    "showcase.whyChooseUs": "Icyo Dutandukaniyeho",
+    "showcase.whySubtitle": "Menya u Rwanda nk'uko utigeze ubimenya",
+    "showcase.reason1Title": "Ubumenyi bw'Imbere mu Gihugu",
+    "showcase.reason1Desc": "Kora na ba nyir'ingendo beza mu Rwanda bazi ahantu hose heza",
+    "showcase.reason2Title": "Ubuziranenge Bwemejwe",
+    "showcase.reason2Desc": "Ingendo zose zirebwa kandi zisuzumwa n'abagenzi nyakuri",
+    "showcase.reason3Title": "Ibiciro Byiza",
+    "showcase.reason3Desc": "Gukora rezervasi itaziguye bisobanura nta mafaranga y'umuhuza - gusa agaciro keza",
+    "showcase.ctaTitle": "Witeguye Gushakisha u Rwanda?",
+    "showcase.ctaSubtitle": "Jya mu bantu babarirwa mu bihumbi bashakisha igihugu cy'imisozi igihumbi",
+    "showcase.ctaButton": "Reba Ingendo",
   },
 };
 

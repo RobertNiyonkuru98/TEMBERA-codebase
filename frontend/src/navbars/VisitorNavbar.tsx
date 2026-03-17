@@ -13,6 +13,7 @@ function VisitorNavbar({ isAuthenticated = false }: VisitorNavbarProps) {
       items={[
         { to: "/", label: t("nav.home") },
         { to: "/itineraries", label: t("nav.itineraries") },
+        { to: "/login", label: t("nav.login") },
         ...(isAuthenticated ? [{ to: "/profile", label: "Profile" }] : []),
         { to: "/visitor/showcase", label: "Why Tembera", emphasis: true },
       ]}

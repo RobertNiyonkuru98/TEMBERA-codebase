@@ -13,6 +13,7 @@ import {
 } from "../api/platformApi";
 import type { Booking, BookingItem, Company, Itinerary, User } from "../types";
 import { toast } from "sonner";
+import { MapPin, Calendar, DollarSign, Building2, Users, ArrowLeft, Loader2 } from "lucide-react";
 
 type BookingSummaryRow = {
   booking: Booking;
@@ -137,128 +138,207 @@ function ItineraryDetailPage() {
   }
 
   if (isLoading) {
-    return <p className="text-sm text-slate-300">Loading itinerary details...</p>;
+    return (
+      <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 flex items-center justify-center">
+        <div className="flex flex-col items-center">
+          <Loader2 className="h-12 w-12 animate-spin text-emerald-500" />
+          <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">{t("detail.loadingDetails")}</p>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
     return (
-      <div className="space-y-4">
-        <p className="text-sm text-red-300">{error}</p>
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="rounded-md border border-slate-700 px-3 py-1.5 text-xs font-medium text-slate-100 transition hover:bg-slate-800"
-        >
-          Go back
-        </button>
+      <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+        <div className="mx-auto w-[95%] max-w-[1920px] py-12">
+          <div className="rounded-xl border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/10 p-8 text-center space-y-4">
+            <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-6 py-3 text-sm font-medium text-slate-700 dark:text-slate-300 transition-all hover:bg-slate-50 dark:hover:bg-slate-800"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              {t("detail.goBack")}
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
 
   if (!itinerary) {
     return (
-      <div className="space-y-4">
-        <p className="text-sm text-slate-300">The requested itinerary could not be found.</p>
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="rounded-md border border-slate-700 px-3 py-1.5 text-xs font-medium text-slate-100 transition hover:bg-slate-800"
-        >
-          Go back
-        </button>
+      <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+        <div className="mx-auto w-[95%] max-w-[1920px] py-12">
+          <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8 text-center space-y-4">
+            <p className="text-sm text-slate-600 dark:text-slate-400">{t("detail.notFound")}</p>
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-6 py-3 text-sm font-medium text-slate-700 dark:text-slate-300 transition-all hover:bg-slate-50 dark:hover:bg-slate-800"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              {t("detail.goBack")}
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 overflow-hidden rounded-xl">
-      {itinerary.imageUrl && (
-        <img
-          src={itinerary.imageUrl}
-          alt={itinerary.title}
-          className="mb-6 h-64 w-full rounded-t-xl object-cover shadow-lg"
-        />
-      )}
-      <div className="space-y-2">
-        <p className="text-xs font-medium uppercase tracking-wide text-emerald-300">
-          {itinerary.activity ?? "Experience"}
-        </p>
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-50">
-          {itinerary.title}
-        </h1>
-        <p className="max-w-2xl text-sm text-slate-300">{itinerary.description}</p>
-        {actionMessage && <p className="text-sm text-emerald-300">{actionMessage}</p>}
-      </div>
+    <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+      <div className="mx-auto w-[95%] max-w-[1920px] py-12">
+        {/* Back Button */}
+        <button
+          onClick={() => navigate(-1)}
+          className="inline-flex items-center gap-2 mb-6 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          {t("detail.goBack")}
+        </button>
 
-      <div className="grid items-start gap-6 md:grid-cols-[2fr,1.1fr]">
-        <section className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-          <h2 className="text-sm font-semibold text-slate-100">{t("detail.tripInfo")}</h2>
-          <dl className="grid grid-cols-1 gap-3 text-xs text-slate-300 sm:grid-cols-2">
-            <div>
-              <dt className="text-slate-400">{t("detail.date")}</dt>
-              <dd className="font-medium">{new Date(itinerary.date).toLocaleDateString()}</dd>
-            </div>
-            <div>
-              <dt className="text-slate-400">{t("detail.location")}</dt>
-              <dd className="font-medium">{itinerary.location}</dd>
-            </div>
-            <div>
-              <dt className="text-slate-400">{t("detail.priceLabel")}</dt>
-              <dd className="font-medium text-emerald-300">
-                {itinerary.price.toLocaleString()} RWF
-              </dd>
-            </div>
-            {company && (
-              <div>
-                <dt className="text-slate-400">{t("detail.company")}</dt>
-                <dd className="font-medium">{company.name}</dd>
+        <div className="space-y-8">
+          {/* Hero Image */}
+          {itinerary.imageUrl && (
+            <div className="relative overflow-hidden rounded-3xl h-96 shadow-2xl">
+              <img
+                src={itinerary.imageUrl}
+                alt={itinerary.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-linear-to-t from-slate-900 via-slate-900/40 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-8">
+                <span className="inline-block rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-lg mb-4">
+                  {itinerary.activity ?? "Experience"}
+                </span>
+                <h1 className="text-4xl font-bold text-white sm:text-5xl mb-3">
+                  {itinerary.title}
+                </h1>
               </div>
-            )}
-          </dl>
-        </section>
+            </div>
+          )}
 
-        <aside className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-          <h2 className="text-sm font-semibold text-slate-100">
-            {t("detail.bookingsTitle")}
-          </h2>
+          {/* Description */}
+          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
+            <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">{itinerary.description}</p>
+          </div>
 
-          {bookingSummary.length > 0 ? (
-            <ul className="space-y-3 text-xs text-slate-300">
-              {bookingSummary.map(({ booking, userName }) => (
-                <li
-                  key={booking.id}
-                  className="rounded-lg border border-slate-800 bg-slate-900/80 p-3"
+          {/* Success Message */}
+          {actionMessage && (
+            <div className="rounded-xl border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50 dark:bg-emerald-900/10 p-4">
+              <p className="text-sm text-emerald-600 dark:text-emerald-400">{actionMessage}</p>
+            </div>
+          )}
+
+          {/* Main Content Grid */}
+          <div className="grid items-start gap-8 lg:grid-cols-[2fr,1fr]">
+            {/* Trip Information */}
+            <section className="space-y-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t("detail.tripInfo")}</h2>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                <div className="flex items-start gap-4">
+                  <div className="rounded-xl bg-emerald-100 dark:bg-emerald-900/20 p-3">
+                    <Calendar className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+                  </div>
+                  <div>
+                    <dt className="text-sm font-medium text-slate-500 dark:text-slate-400">{t("detail.date")}</dt>
+                    <dd className="mt-1 text-lg font-semibold text-slate-900 dark:text-white">
+                      {new Date(itinerary.date).toLocaleDateString()}
+                    </dd>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="rounded-xl bg-emerald-100 dark:bg-emerald-900/20 p-3">
+                    <MapPin className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+                  </div>
+                  <div>
+                    <dt className="text-sm font-medium text-slate-500 dark:text-slate-400">{t("detail.location")}</dt>
+                    <dd className="mt-1 text-lg font-semibold text-slate-900 dark:text-white">{itinerary.location}</dd>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="rounded-xl bg-emerald-100 dark:bg-emerald-900/20 p-3">
+                    <DollarSign className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+                  </div>
+                  <div>
+                    <dt className="text-sm font-medium text-slate-500 dark:text-slate-400">{t("detail.priceLabel")}</dt>
+                    <dd className="mt-1 text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+                      {itinerary.price.toLocaleString()} RWF
+                    </dd>
+                  </div>
+                </div>
+                {company && (
+                  <div className="flex items-start gap-4">
+                    <div className="rounded-xl bg-emerald-100 dark:bg-emerald-900/20 p-3">
+                      <Building2 className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-slate-500 dark:text-slate-400">{t("detail.company")}</dt>
+                      <dd className="mt-1 text-lg font-semibold text-slate-900 dark:text-white">{company.name}</dd>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </section>
+
+            {/* Bookings Sidebar */}
+            <aside className="space-y-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
+              <div className="flex items-center gap-3">
+                <Users className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                  {t("detail.bookingsTitle")}
+                </h2>
+              </div>
+
+              {bookingSummary.length > 0 ? (
+                <ul className="space-y-4">
+                  {bookingSummary.map(({ booking, userName }) => (
+                    <li
+                      key={booking.id}
+                      className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 p-4 space-y-2"
+                    >
+                      <p className="font-semibold text-slate-900 dark:text-white">
+                        {t("detail.bookingNumber")} #{booking.id}
+                      </p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">
+                        <span className="capitalize inline-block rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-400">
+                          {booking.status}
+                        </span>
+                      </p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">
+                        {t("detail.by")} <span className="font-medium text-slate-900 dark:text-white">{userName}</span>
+                      </p>
+                      <p className="text-xs text-slate-500 dark:text-slate-500">
+                        {t("detail.createdOn")} {new Date(booking.date).toLocaleDateString()}
+                      </p>
+                      {booking.description && (
+                        <p className="mt-2 text-sm italic text-slate-600 dark:text-slate-400">"{booking.description}"</p>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-slate-500 dark:text-slate-400">{t("detail.noBookings")}</p>
+              )}
+
+              {activeRole === "user" && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    void handleAttend();
+                  }}
+                  disabled={isAttending}
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-emerald-500 to-emerald-600 px-6 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-emerald-500/50 hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  <p className="font-medium text-slate-100">
-                    Booking #{booking.id} · <span className="capitalize">{booking.status}</span>
-                  </p>
-                  <p className="text-slate-400">By {userName}</p>
-                  <p className="text-slate-400">
-                    Created on {new Date(booking.date).toLocaleDateString()}
-                  </p>
-                  {booking.description && (
-                    <p className="mt-1 text-slate-400">"{booking.description}"</p>
-                  )}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-xs text-slate-400">{t("detail.noBookings")}</p>
-          )}
-
-          {activeRole === "user" && (
-            <button
-              type="button"
-              onClick={() => {
-                void handleAttend();
-              }}
-              disabled={isAttending}
-              className="mt-2 inline-flex w-full items-center justify-center rounded-md bg-emerald-500 px-3 py-2 text-xs font-semibold text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {isAttending ? "Attending..." : "Attend"}
-            </button>
-          )}
-        </aside>
+                  {isAttending ? t("detail.attending") : t("detail.attendButton")}
+                </button>
+              )}
+            </aside>
+          </div>
+        </div>
       </div>
     </div>
   );
