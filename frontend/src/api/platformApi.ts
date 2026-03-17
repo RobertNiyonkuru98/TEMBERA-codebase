@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
   Booking,
   BookingItem,
@@ -453,26 +454,31 @@ export async function createItinerary(
   token: string,
   payload: CreateItineraryPayload,
 ): Promise<Itinerary> {
-  const body = new FormData();
-  body.append("company_id", payload.company_id);
-  body.append("title", payload.title);
-  body.append("date", payload.date);
-  body.append("price", String(payload.price));
+  // Build JSON body
+  const body: any = {
+    company_id: payload.company_id,
+    title: payload.title,
+    date: payload.date,
+    price: payload.price,
+  };
 
-  if (payload.activity) body.append("activity", payload.activity);
-  if (payload.description) body.append("description", payload.description);
-  if (payload.location) body.append("location", payload.location);
-  payload.images?.forEach((image) => body.append("images", image));
+  if (payload.activity) body.activity = payload.activity;
+  if (payload.description) body.description = payload.description;
+  if (payload.location) body.location = payload.location;
 
+  // Send request as JSON
   const parsed = await requestHelper<BackendItinerary>({
     method: "POST",
     url: `${API_BASE_URL}/api/itineraries`,
     token,
     data: body,
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
+
   return mapItinerary(parsed.data);
 }
-
 export async function uploadItineraryImages(
   token: string,
   itineraryId: string,

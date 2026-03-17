@@ -1,6 +1,6 @@
 import { ItineraryService } from '@/services/ItineraryService';
 import { ResponseHandler } from '@/utils/response';
-import { NotFoundError } from '@/utils/http-error';
+import { BadRequestError, NotFoundError } from '@/utils/http-error';
 import { normalizeDate } from '@/utils/date.validator';
 import { Request, Response } from 'express';
 import fs from 'fs/promises';
@@ -105,11 +105,12 @@ export const getItineraryById = async (req: Request, res: Response) => {
 };
 
 export const createItinerary = async (req: Request, res: Response) => {
-  if (!req.body.date) {
-    throw new Error('Date is required to create an itinerary');
+  console.log('Received itinerary creation request with body:', req.body);
+  if (!req.body?.date) {
+    throw new  BadRequestError('Date is required to create an itinerary');
   }
   if (!req.body.price) {
-    throw new Error('Price is required to create an itinerary');
+    throw new  BadRequestError('Price is required to create an itinerary');
   }
     const normalizedDate = normalizeDate(req.body.date);
     const itineraryPayload = {
