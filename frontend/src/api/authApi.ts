@@ -1,11 +1,5 @@
 import type { User, UserRole } from "../types";
-
-type ApiResponse<T> = {
-  success: boolean;
-  message: string;
-  resp_code: number;
-  data: T;
-};
+import { requestHelper } from "./requestHelper";
 
 type LoginResponseData = {
   token: string;
@@ -53,22 +47,13 @@ function mapBackendUser(user: BackendUser): User {
   };
 }
 
-async function parseResponse<T>(response: Response): Promise<ApiResponse<T>> {
-  const parsed = (await response.json()) as ApiResponse<T>;
-  if (!response.ok || !parsed.success) {
-    throw new Error(parsed.message || "Request failed");
-  }
-  return parsed;
-}
-
 export async function loginRequest(email: string, password: string): Promise<string> {
-  const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+  const parsed = await requestHelper<LoginResponseData>({
     method: "POST",
+    url: `${API_BASE_URL}/api/auth/login`,
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
+    data: { email, password },
   });
-
-  const parsed = await parseResponse<LoginResponseData>(response);
   return parsed.data.token;
 }
 
@@ -78,38 +63,38 @@ export async function registerRequest(
   password: string,
   phoneNumber?: string,
 ): Promise<string> {
-  const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+  const parsed = await requestHelper<RegisterResponseData>({
     method: "POST",
+    url: `${API_BASE_URL}/api/auth/register`,
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
+    data: {
       name,
       email,
       password,
       phone_number: phoneNumber,
-    }),
+    },
   });
-
-  const parsed = await parseResponse<RegisterResponseData>(response);
   return parsed.data.userId;
 }
 
 export async function fetchSessionUser(token: string): Promise<User> {
-  const authHeaders = getAuthHeaders(token);
-
-  const verifyResponse = await fetch(`${API_BASE_URL}/api/auth/verify`, {
-    headers: authHeaders,
+  const verifyPayload = await requestHelper<VerifyResponseData>({
+    method: "GET",
+    url: `${API_BASE_URL}/api/auth/verify`,
+    token,
+    headers: getAuthHeaders(token),
   });
-  const verifyPayload = await parseResponse<VerifyResponseData>(verifyResponse);
 
   if (!verifyPayload.data.userId) {
     throw new Error("Token payload is missing user id");
   }
 
-  const userResponse = await fetch(
-    `${API_BASE_URL}/api/users/${verifyPayload.data.userId}`,
-    { headers: authHeaders },
-  );
-  const userPayload = await parseResponse<BackendUser>(userResponse);
+  const userPayload = await requestHelper<BackendUser>({
+    method: "GET",
+    url: `${API_BASE_URL}/api/users/${verifyPayload.data.userId}`,
+    token,
+    headers: getAuthHeaders(token),
+  });
 
   return mapBackendUser(userPayload.data);
 }
@@ -119,17 +104,17 @@ export async function updateProfileRequest(
   userId: string,
   payload: { name: string; email: string; phoneNumber?: string },
 ): Promise<User> {
-  const response = await fetch(`${API_BASE_URL}/api/users/${userId}`, {
+  const parsed = await requestHelper<BackendUser>({
     method: "PUT",
+    url: `${API_BASE_URL}/api/users/${userId}`,
+    token,
     headers: getAuthHeaders(token),
-    body: JSON.stringify({
+    data: {
       name: payload.name,
       email: payload.email,
       phone_number: payload.phoneNumber,
-    }),
+    },
   });
-
-  const parsed = await parseResponse<BackendUser>(response);
   return mapBackendUser(parsed.data);
 }
 
@@ -137,11 +122,11 @@ export async function deleteAccountRequest(
   token: string,
   userId: string,
 ): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/api/users/${userId}`, {
+  await requestHelper<EmptyResponseData>({
     method: "DELETE",
+    url: `${API_BASE_URL}/api/users/${userId}`,
+    token,
     headers: getAuthHeaders(token),
   });
-
-  await parseResponse<EmptyResponseData>(response);
 }
 

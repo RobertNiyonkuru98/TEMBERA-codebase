@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { Toaster, toast } from "sonner";
 import HomePage from "./pages/HomePage";
 import ItinerariesPage from "./pages/ItinerariesPage";
 import ItineraryDetailPage from "./pages/ItineraryDetailPage";
@@ -21,9 +22,19 @@ import CompanyAttendeesPage from "./pages/CompanyAttendeesPage";
 import CompanyStatisticsPage from "./pages/CompanyStatisticsPage";
 import VisitorShowcasePage from "./pages/VisitorShowcasePage";
 import ProfilePage from "./pages/ProfilePage";
+import AdminCreateCompanyPage from "./pages/AdminCreateCompanyPage";
+import AdminCreateItineraryPage from "./pages/AdminCreateItineraryPage";
+import CompanyRegisterPage from "./pages/CompanyRegisterPage";
+import CompanyCreateItineraryPage from "./pages/CompanyCreateItineraryPage";
+import CompanyItineraryImagesPage from "./pages/CompanyItineraryImagesPage";
 import AuthenticatedSidebar from "./components/AuthenticatedSidebar";
 import GuestTopNav from "./components/GuestTopNav";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import {
+  getMyCompanyState,
+  hasCompanyItineraries,
+  type CompanyState,
+} from "./api/platformApi";
 
 type RoleProtectedRouteProps = {
   allowedRoles: UserRole[];
@@ -57,6 +68,96 @@ function UserRoute({ children }: { children: ReactNode }) {
   return <RoleProtectedRoute allowedRoles={["user"]}>{children}</RoleProtectedRoute>;
 }
 
+type CompanyOnboardingRouteProps = {
+  children: ReactNode;
+  allowWithoutCompany?: boolean;
+  allowWithoutItinerary?: boolean;
+};
+
+function CompanyOnboardingRoute({
+  children,
+  allowWithoutCompany = false,
+  allowWithoutItinerary = false,
+}: CompanyOnboardingRouteProps) {
+  const { user, token, activeRole } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
+  const [companyState, setCompanyState] = useState<CompanyState>({ hasCompany: false });
+  const [hasItineraries, setHasItineraries] = useState(false);
+
+  useEffect(() => {
+    async function loadCompanyState() {
+      if (!user || !token || activeRole !== "company") {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        const nextState = await getMyCompanyState(token, String(user.id));
+        setCompanyState(nextState);
+
+        if (!nextState.hasCompany || !nextState.companyId) {
+          setHasItineraries(false);
+          return;
+        }
+
+        const nextHasItineraries = await hasCompanyItineraries(
+          token,
+          nextState.companyId,
+        );
+        setHasItineraries(nextHasItineraries);
+      } catch (loadError) {
+        toast.error(
+          loadError instanceof Error
+            ? loadError.message
+            : "Failed to validate company onboarding",
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    void loadCompanyState();
+  }, [activeRole, token, user]);
+
+  const destination = useMemo(() => {
+    if (!companyState.hasCompany) {
+      toast.warning("You must register a company first", {
+        description: "Complete your company profile to unlock your workspace.",
+      });
+      return "/company/register";
+    }
+
+    if (!hasItineraries) {
+
+      toast.info("Create your first itinerary to continue", {
+        description: "After creating one, you'll have full access to your dashboard.",
+      });
+      console.log("No itineraries found for company, redirecting to create page",);
+      return "/company/itineraries/create";
+    }
+
+    return null;
+  }, [companyState.hasCompany, hasItineraries]);
+
+  if (isLoading) {
+    return <p className="text-sm text-slate-300">Checking company setup...</p>;
+  }
+  if (!companyState.hasCompany && allowWithoutCompany) {
+    return <>{children}</>;
+  }
+
+  if (companyState.hasCompany && !hasItineraries && allowWithoutItinerary) {
+    return <>{children}</>;
+  }
+
+  if (destination) {
+    return <Navigate to={destination} replace />;
+  }
+
+  return <>{children}</>;
+}
+
 function AppRoutes() {
   return (
     <Routes>
@@ -86,7 +187,7 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/my-registrations"
+        path="/my-bookings"
         element={
           <UserRoute>
             <BookingsPage />
@@ -135,6 +236,14 @@ function AppRoutes() {
         }
       />
       <Route
+        path="/admin/companies/create"
+        element={
+          <AdminRoute>
+            <AdminCreateCompanyPage />
+          </AdminRoute>
+        }
+      />
+      <Route
         path="/admin/itineraries"
         element={
           <AdminRoute>
@@ -142,12 +251,43 @@ function AppRoutes() {
           </AdminRoute>
         }
       />
+      <Route
+        path="/admin/itineraries/create"
+        element={
+          <AdminRoute>
+            <AdminCreateItineraryPage />
+          </AdminRoute>
+        }
+      />
+
+      <Route
+        path="/company/register"
+        element={
+          <CompanyRoute>
+            <CompanyOnboardingRoute allowWithoutCompany>
+              <CompanyRegisterPage />
+            </CompanyOnboardingRoute>
+          </CompanyRoute>
+        }
+      />
+      <Route
+        path="/company/itineraries/create"
+        element={
+          <CompanyRoute>
+            <CompanyOnboardingRoute allowWithoutItinerary>
+              <CompanyCreateItineraryPage />
+            </CompanyOnboardingRoute>
+          </CompanyRoute>
+        }
+      />
 
       <Route
         path="/company/dashboard"
         element={
           <CompanyRoute>
-            <CompanyDashboardPage />
+            <CompanyOnboardingRoute>
+              <CompanyDashboardPage />
+            </CompanyOnboardingRoute>
           </CompanyRoute>
         }
       />
@@ -155,7 +295,9 @@ function AppRoutes() {
         path="/company/itineraries"
         element={
           <CompanyRoute>
-            <CompanyItinerariesPage />
+            <CompanyOnboardingRoute>
+              <CompanyItinerariesPage />
+            </CompanyOnboardingRoute>
           </CompanyRoute>
         }
       />
@@ -163,7 +305,19 @@ function AppRoutes() {
         path="/company/itinerary/:id/attendees"
         element={
           <CompanyRoute>
-            <CompanyAttendeesPage />
+            <CompanyOnboardingRoute>
+              <CompanyAttendeesPage />
+            </CompanyOnboardingRoute>
+          </CompanyRoute>
+        }
+      />
+      <Route
+        path="/company/itinerary/:id/images"
+        element={
+          <CompanyRoute>
+            <CompanyOnboardingRoute>
+              <CompanyItineraryImagesPage />
+            </CompanyOnboardingRoute>
           </CompanyRoute>
         }
       />
@@ -171,7 +325,9 @@ function AppRoutes() {
         path="/company/statistics"
         element={
           <CompanyRoute>
-            <CompanyStatisticsPage />
+            <CompanyOnboardingRoute>
+              <CompanyStatisticsPage />
+            </CompanyOnboardingRoute>
           </CompanyRoute>
         }
       />
@@ -255,19 +411,22 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      {user ? (
-        <AuthenticatedLayout
-          role={activeRole ?? user.role}
-          displayName={user.name}
-          logout={logout}
-          lang={lang}
-          setLang={setLang}
-        />
-      ) : (
-        <GuestLayout heroTitle={t("home.heroTitle")} />
-      )}
-    </BrowserRouter>
+    <>
+      <BrowserRouter>
+        {user ? (
+          <AuthenticatedLayout
+            role={activeRole ?? user.role}
+            displayName={user.name}
+            logout={logout}
+            lang={lang}
+            setLang={setLang}
+          />
+        ) : (
+          <GuestLayout heroTitle={t("home.heroTitle")} />
+        )}
+      </BrowserRouter>
+      <Toaster position="top-right" theme="dark" expand richColors />
+    </>
   );
 }
 

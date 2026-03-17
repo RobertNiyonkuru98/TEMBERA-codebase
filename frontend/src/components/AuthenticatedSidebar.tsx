@@ -43,7 +43,9 @@ function linksByRole(role: UserRole): SidebarLink[] {
       { to: "/admin/bookings", label: "Admin Bookings" },
       { to: "/admin/users", label: "Admin Users" },
       { to: "/admin/companies", label: "Admin Companies" },
+      { to: "/admin/companies/create", label: "Create Company" },
       { to: "/admin/itineraries", label: "Admin Itineraries" },
+      { to: "/admin/itineraries/create", label: "Create Itinerary" },
       { to: "/profile", label: "Profile" },
     ];
   }
@@ -52,6 +54,7 @@ function linksByRole(role: UserRole): SidebarLink[] {
     return [
       { to: "/company/dashboard", label: "Dashboard" },
       { to: "/company/itineraries", label: "Company Itineraries" },
+      { to: "/company/itineraries/create", label: "Create Itinerary" },
       { to: "/company/statistics", label: "Statistics" },
       { to: "/profile", label: "Profile" },
     ];
@@ -61,7 +64,7 @@ function linksByRole(role: UserRole): SidebarLink[] {
     return [
       { to: "/", label: "Home" },
       { to: "/itineraries", label: "Itineraries" },
-      { to: "/my-registrations", label: "My Registrations" },
+      { to: "/my-bookings", label: "My Bookings" },
       { to: "/bookings/new", label: "New Booking" },
       { to: "/profile", label: "Profile" },
     ];

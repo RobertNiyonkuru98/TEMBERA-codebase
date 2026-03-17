@@ -32,17 +32,30 @@ export type Itinerary = {
   date: string; // ISO date string
   price: number;
   imageUrl?: string;
+  imageUrls?: string[];
   createdAt?: string;
 };
 
 export type BookingStatus = "pending" | "confirmed" | "cancelled";
+export type BookingType = "personal" | "group";
+
+export type BookingMember = {
+  id: string | number;
+  bookingId: string | number;
+  name: string;
+  email?: string;
+  phone?: string;
+};
 
 export type Booking = {
   id: string | number;
   userId: string | number;
+  itineraryId?: string | number;
+  type: BookingType;
   description?: string;
   status: BookingStatus;
   date: string; // ISO date string
+  members?: BookingMember[];
   createdAt?: string;
 };
 

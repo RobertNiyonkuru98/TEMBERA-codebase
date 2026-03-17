@@ -12,6 +12,7 @@ import {
   fetchUsers,
 } from "../api/platformApi";
 import type { Booking, BookingItem, Company, Itinerary, User } from "../types";
+import { toast } from "sonner";
 
 type BookingSummaryRow = {
   booking: Booking;
@@ -123,7 +124,7 @@ function ItineraryDetailPage() {
         itinerary_id: String(itinerary.id),
       });
 
-      setActionMessage("Registration successful. You can review it under My Registrations.");
+      toast.info("Registration successful. You can review it under My Bookings.");
     } catch (attendError) {
       setError(
         attendError instanceof Error

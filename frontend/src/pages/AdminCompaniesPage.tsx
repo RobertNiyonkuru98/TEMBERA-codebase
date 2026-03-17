@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import { fetchCompanies, fetchItineraries, fetchUsers } from "../api/platformApi";
 import type { Company, Itinerary, User } from "../types";
@@ -66,12 +67,25 @@ function AdminCompaniesPage() {
   return (
     <div className="space-y-4">
       <header>
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-50">Admin Companies</h1>
-        <p className="text-sm text-slate-300">Registered companies and ownership details.</p>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-semibold tracking-tight text-slate-50">Admin Companies</h1>
+            <p className="text-sm text-slate-300">Registered companies and ownership details.</p>
+          </div>
+          <Link
+            to="/admin/companies/create"
+            className="rounded-md bg-emerald-500 px-3 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400"
+          >
+            Create Company
+          </Link>
+        </div>
       </header>
 
       {companies.length === 0 ? (
-        <p className="text-sm text-slate-300">No companies found.</p>
+        <div className="rounded-xl border border-amber-900 bg-amber-950/30 p-4 text-sm text-amber-100">
+          <p className="font-medium">No companies found.</p>
+          <p className="mt-1 text-amber-200">Create a company to get started.</p>
+        </div>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/60">
           <table className="w-full min-w-[820px] text-left text-sm text-slate-200">

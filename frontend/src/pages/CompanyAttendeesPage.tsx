@@ -78,16 +78,29 @@ function CompanyAttendeesPage() {
 
     return bookings
       .filter((booking) => relevantBookingIds.has(String(booking.id)))
-      .map((booking) => {
+      .flatMap((booking) => {
+        if (booking.type === "group" && booking.members && booking.members.length > 0) {
+          return booking.members.map((member) => ({
+            id: `${String(booking.id)}-${String(member.id)}`,
+            name: member.name,
+            email: member.email ?? "-",
+            phone: member.phone ?? "-",
+            status: booking.status,
+            registrationDate: booking.date,
+          }));
+        }
+
         const attendee = users.find((user) => String(user.id) === String(booking.userId));
-        return {
-          id: String(booking.id),
-          name: attendee?.name ?? "Unknown",
-          email: attendee?.email ?? "-",
-          phone: attendee?.phoneNumber ?? "-",
-          status: booking.status,
-          registrationDate: booking.date,
-        };
+        return [
+          {
+            id: String(booking.id),
+            name: attendee?.name ?? "Unknown",
+            email: attendee?.email ?? "-",
+            phone: attendee?.phoneNumber ?? "-",
+            status: booking.status,
+            registrationDate: booking.date,
+          },
+        ];
       });
   }, [bookingItems, bookings, itinerary, users]);
 
