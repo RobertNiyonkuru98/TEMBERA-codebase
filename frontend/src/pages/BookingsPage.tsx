@@ -6,12 +6,21 @@ import {
   deleteBooking,
   fetchBookingItems,
   fetchBookings,
-  fetchCompanies,
   fetchItineraries,
+  fetchCompanies,
   updateBooking,
 } from "../api/platformApi";
-import type { Booking, BookingItem, Company, Itinerary } from "../types";
-import { Calendar, MapPin, Users, Edit2, Trash2, Save, X, Plus, Loader2, Package } from "lucide-react";
+import type { Booking, BookingItem, Itinerary, Company } from "../types";
+import { 
+  Trash2, 
+  Save, 
+  X, 
+  Plus, 
+  Loader2,
+  Package,
+  Edit2,
+  Users
+} from "lucide-react";
 
 type DraftMember = {
   name: string;
@@ -479,19 +488,6 @@ function BookingsPage() {
         </div>
       )}
       </div>
-    </div>
-  );
-}
-
-export default BookingsPage;
-                  </>
-                )}
-                </div>
-              </section>
-            );
-          })}
-        </div>
-      )}
     </div>
   );
 }

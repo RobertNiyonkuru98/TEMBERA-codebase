@@ -29,12 +29,20 @@ function ItineraryImageCarousel({ itinerary }: { itinerary: Itinerary }) {
       return;
     }
 
-    setCount(api.scrollSnapList().length);
-    setCurrent(api.selectedScrollSnap() + 1);
+    const updateCounts = () => {
+      setCount(api.scrollSnapList().length);
+      setCurrent(api.selectedScrollSnap() + 1);
+    };
+
+    updateCounts();
 
     api.on("select", () => {
       setCurrent(api.selectedScrollSnap() + 1);
     });
+
+    return () => {
+      api.off("select", updateCounts);
+    };
   }, [api]);
 
   if (images.length === 0) {
@@ -168,7 +176,48 @@ function CompanyItinerariesPage() {
         </div>
       </header>
 
-      {isLoading && <p className="text-sm text-slate-300">Loading itineraries...</p>}
+      {isLoading && (
+        <div className="space-y-4">
+          {/* Header Skeleton */}
+          <div className="animate-pulse space-y-3">
+            <div className="h-8 w-64 rounded-lg bg-slate-800"></div>
+            <div className="h-4 w-96 rounded-lg bg-slate-800/60"></div>
+          </div>
+          
+          {/* Table Skeleton */}
+          <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900/60">
+            <div className="border-b border-slate-800 bg-slate-900/80 px-4 py-3">
+              <div className="flex gap-4">
+                <div className="h-4 w-24 animate-pulse rounded bg-slate-700"></div>
+                <div className="h-4 w-24 animate-pulse rounded bg-slate-700"></div>
+                <div className="h-4 w-24 animate-pulse rounded bg-slate-700"></div>
+                <div className="h-4 w-24 animate-pulse rounded bg-slate-700"></div>
+                <div className="h-4 w-24 animate-pulse rounded bg-slate-700"></div>
+                <div className="h-4 w-24 animate-pulse rounded bg-slate-700"></div>
+              </div>
+            </div>
+            <div className="divide-y divide-slate-800/60">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="px-4 py-4">
+                  <div className="flex items-center gap-4">
+                    <div className="h-6 w-48 animate-pulse rounded-lg bg-slate-800"></div>
+                    <div className="h-6 w-32 animate-pulse rounded-lg bg-slate-800"></div>
+                    <div className="h-20 w-20 animate-pulse rounded-lg bg-slate-800"></div>
+                    <div className="h-6 w-24 animate-pulse rounded-lg bg-slate-800"></div>
+                    <div className="h-6 w-24 animate-pulse rounded-lg bg-slate-800"></div>
+                    <div className="h-6 w-20 animate-pulse rounded-lg bg-slate-800"></div>
+                    <div className="h-6 w-16 animate-pulse rounded-lg bg-slate-800"></div>
+                    <div className="flex gap-2">
+                      <div className="h-8 w-24 animate-pulse rounded-md bg-slate-700"></div>
+                      <div className="h-8 w-24 animate-pulse rounded-md bg-slate-700"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
       {error && <p className="text-sm text-red-300">{error}</p>}
 
       {!isLoading && !error && companies.length === 0 && (

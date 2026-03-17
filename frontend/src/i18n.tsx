@@ -137,9 +137,6 @@ type TranslationKey =
   | "itineraries.loginRequired"
   | "itineraries.filterAll"
   | "itineraries.searchPlaceholder"
-  | "detail.tripInfo"
-  | "detail.bookingsTitle"
-  | "detail.noBookings"
   | "detail.goBack"
   | "detail.notFound"
   | "detail.loadingDetails"
@@ -265,7 +262,56 @@ type TranslationKey =
   | "newBooking.personal"
   | "newBooking.couple"
   | "newBooking.family"
-  | "newBooking.other";
+  | "newBooking.other"
+  | "company.dashboard.title"
+  | "company.dashboard.subtitle"
+  | "company.dashboard.totalItineraries"
+  | "company.dashboard.totalAttendees"
+  | "company.dashboard.upcomingEvents"
+  | "company.dashboard.totalRevenue"
+  | "company.dashboard.upcomingItineraries"
+  | "company.dashboard.viewAll"
+  | "company.dashboard.noUpcoming"
+  | "company.dashboard.attendees"
+  | "company.dashboard.view"
+  | "company.register.title"
+  | "company.register.subtitle"
+  | "company.register.setupRequired"
+  | "company.register.setupMessage"
+  | "company.register.companyName"
+  | "company.register.companyNamePlaceholder"
+  | "company.register.contact"
+  | "company.register.contactPlaceholder"
+  | "company.register.description"
+  | "company.register.descriptionPlaceholder"
+  | "company.register.creating"
+  | "company.register.createButton"
+  | "company.register.success"
+  | "company.register.loginRequired"
+  | "company.register.nameRequired"
+  | "company.createItinerary.title"
+  | "company.createItinerary.subtitle"
+  | "company.createItinerary.companyRequired"
+  | "company.createItinerary.companyRequiredMessage"
+  | "company.createItinerary.createCompany"
+  | "company.createItinerary.itineraryTitle"
+  | "company.createItinerary.titlePlaceholder"
+  | "company.createItinerary.details"
+  | "company.createItinerary.activity"
+  | "company.createItinerary.activityPlaceholder"
+  | "company.createItinerary.location"
+  | "company.createItinerary.locationPlaceholder"
+  | "company.createItinerary.schedule"
+  | "company.createItinerary.date"
+  | "company.createItinerary.price"
+  | "company.createItinerary.description"
+  | "company.createItinerary.descriptionPlaceholder"
+  | "company.createItinerary.creating"
+  | "company.createItinerary.createButton"
+  | "company.createItinerary.success"
+  | "company.createItinerary.noCompany"
+  | "company.createItinerary.requiredFields"
+  | "company.createItinerary.invalidPrice";
 
 const translations: Record<Lang, Record<TranslationKey, string>> = {
   en: {
@@ -405,9 +451,6 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
     "itineraries.loginRequired": "Please login to register for an experience.",
     "itineraries.filterAll": "All Experiences",
     "itineraries.searchPlaceholder": "Search experiences...",
-    "detail.tripInfo": "Trip Information",
-    "detail.bookingsTitle": "Bookings",
-    "detail.noBookings": "No bookings yet for this experience.",
     "detail.goBack": "Go back",
     "detail.notFound": "The requested experience could not be found.",
     "detail.loadingDetails": "Loading experience details...",
@@ -494,8 +537,6 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
     "admin.role": "Role",
     "admin.createdAt": "Created At",
     "admin.active": "Active",
-    "bookings.title": "My Bookings",
-    "bookings.subtitle": "Manage your travel bookings and reservations",
     "bookings.myBookings": "Your Bookings",
     "bookings.noBookings": "You haven't made any bookings yet",
     "bookings.loading": "Loading bookings...",
@@ -534,6 +575,55 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
     "newBooking.couple": "Couple",
     "newBooking.family": "Family",
     "newBooking.other": "Other",
+    "company.dashboard.title": "Company Dashboard",
+    "company.dashboard.subtitle": "Overview of your business performance and upcoming events",
+    "company.dashboard.totalItineraries": "Total Experiences",
+    "company.dashboard.totalAttendees": "Total Attendees",
+    "company.dashboard.upcomingEvents": "Upcoming Events",
+    "company.dashboard.totalRevenue": "Total Revenue",
+    "company.dashboard.upcomingItineraries": "Upcoming Experiences",
+    "company.dashboard.viewAll": "View All",
+    "company.dashboard.noUpcoming": "No upcoming experiences scheduled",
+    "company.dashboard.attendees": "Attendees",
+    "company.dashboard.view": "View Details",
+    "company.register.title": "Register Your Company",
+    "company.register.subtitle": "Create your company profile to start offering experiences",
+    "company.register.setupRequired": "Company Setup Required",
+    "company.register.setupMessage": "Your company role is active, but you need to create a company profile to continue",
+    "company.register.companyName": "Company Name",
+    "company.register.companyNamePlaceholder": "e.g. Lake Kivu Adventures",
+    "company.register.contact": "Contact Information",
+    "company.register.contactPlaceholder": "Phone or email",
+    "company.register.description": "Company Description",
+    "company.register.descriptionPlaceholder": "Tell travelers about your company and what makes you unique",
+    "company.register.creating": "Creating Company...",
+    "company.register.createButton": "Create Company",
+    "company.register.success": "Company registered successfully!",
+    "company.register.loginRequired": "You must be logged in to register a company",
+    "company.register.nameRequired": "Company name is required",
+    "company.createItinerary.title": "Create New Experience",
+    "company.createItinerary.subtitle": "Share your unique Rwanda experience with travelers worldwide",
+    "company.createItinerary.companyRequired": "Company Profile Required",
+    "company.createItinerary.companyRequiredMessage": "You need to register a company before creating experiences",
+    "company.createItinerary.createCompany": "Register Company",
+    "company.createItinerary.itineraryTitle": "Experience Title",
+    "company.createItinerary.titlePlaceholder": "e.g. Gorilla Trekking Adventure in Volcanoes Park",
+    "company.createItinerary.details": "Experience Details",
+    "company.createItinerary.activity": "Activity Type",
+    "company.createItinerary.activityPlaceholder": "e.g. Wildlife, Culture, Adventure",
+    "company.createItinerary.location": "Location",
+    "company.createItinerary.locationPlaceholder": "e.g. Volcanoes National Park",
+    "company.createItinerary.schedule": "Schedule & Pricing",
+    "company.createItinerary.date": "Date",
+    "company.createItinerary.price": "Price per Person",
+    "company.createItinerary.description": "Description",
+    "company.createItinerary.descriptionPlaceholder": "Describe what makes this experience special and what travelers can expect",
+    "company.createItinerary.creating": "Creating Experience...",
+    "company.createItinerary.createButton": "Create Experience",
+    "company.createItinerary.success": "Experience created successfully!",
+    "company.createItinerary.noCompany": "No company found for your account",
+    "company.createItinerary.requiredFields": "Title, date, and price are required",
+    "company.createItinerary.invalidPrice": "Price must be a valid number greater than 0",
   },
   fr: {
     "nav.home": "Accueil",
@@ -676,9 +766,6 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
     "itineraries.loginRequired": "Veuillez vous connecter pour vous inscrire à une expérience.",
     "itineraries.filterAll": "Toutes les Expériences",
     "itineraries.searchPlaceholder": "Rechercher des expériences...",
-    "detail.tripInfo": "Informations sur le Voyage",
-    "detail.bookingsTitle": "Réservations",
-    "detail.noBookings": "Aucune réservation pour cette expérience.",
     "detail.goBack": "Retour",
     "detail.notFound": "L'expérience demandée est introuvable.",
     "detail.loadingDetails": "Chargement des détails de l'expérience...",
@@ -765,8 +852,6 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
     "admin.role": "Rôle",
     "admin.createdAt": "Créé le",
     "admin.active": "Actif",
-    "bookings.title": "Mes Réservations",
-    "bookings.subtitle": "Gérez vos réservations et réservations de voyage",
     "bookings.myBookings": "Vos Réservations",
     "bookings.noBookings": "Vous n'avez encore fait aucune réservation",
     "bookings.loading": "Chargement des réservations...",
@@ -805,6 +890,55 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
     "newBooking.couple": "Couple",
     "newBooking.family": "Famille",
     "newBooking.other": "Autre",
+    "company.dashboard.title": "Tableau de Bord de l'Entreprise",
+    "company.dashboard.subtitle": "Aperçu de vos performances et événements à venir",
+    "company.dashboard.totalItineraries": "Total des Expériences",
+    "company.dashboard.totalAttendees": "Total des Participants",
+    "company.dashboard.upcomingEvents": "Événements à Venir",
+    "company.dashboard.totalRevenue": "Revenu Total",
+    "company.dashboard.upcomingItineraries": "Expériences à Venir",
+    "company.dashboard.viewAll": "Voir Tout",
+    "company.dashboard.noUpcoming": "Aucune expérience à venir programmée",
+    "company.dashboard.attendees": "Participants",
+    "company.dashboard.view": "Voir les Détails",
+    "company.register.title": "Enregistrer Votre Entreprise",
+    "company.register.subtitle": "Créez votre profil d'entreprise pour commencer à offrir des expériences",
+    "company.register.setupRequired": "Configuration de l'Entreprise Requise",
+    "company.register.setupMessage": "Votre rôle d'entreprise est actif, mais vous devez créer un profil d'entreprise pour continuer",
+    "company.register.companyName": "Nom de l'Entreprise",
+    "company.register.companyNamePlaceholder": "ex. Aventures du Lac Kivu",
+    "company.register.contact": "Informations de Contact",
+    "company.register.contactPlaceholder": "Téléphone ou email",
+    "company.register.description": "Description de l'Entreprise",
+    "company.register.descriptionPlaceholder": "Parlez aux voyageurs de votre entreprise et de ce qui vous rend unique",
+    "company.register.creating": "Création de l'Entreprise...",
+    "company.register.createButton": "Créer l'Entreprise",
+    "company.register.success": "Entreprise enregistrée avec succès!",
+    "company.register.loginRequired": "Vous devez être connecté pour enregistrer une entreprise",
+    "company.register.nameRequired": "Le nom de l'entreprise est requis",
+    "company.createItinerary.title": "Créer une Nouvelle Expérience",
+    "company.createItinerary.subtitle": "Partagez votre expérience unique du Rwanda avec les voyageurs du monde entier",
+    "company.createItinerary.companyRequired": "Profil d'Entreprise Requis",
+    "company.createItinerary.companyRequiredMessage": "Vous devez enregistrer une entreprise avant de créer des expériences",
+    "company.createItinerary.createCompany": "Enregistrer l'Entreprise",
+    "company.createItinerary.itineraryTitle": "Titre de l'Expérience",
+    "company.createItinerary.titlePlaceholder": "ex. Aventure de Trekking des Gorilles dans le Parc des Volcans",
+    "company.createItinerary.details": "Détails de l'Expérience",
+    "company.createItinerary.activity": "Type d'Activité",
+    "company.createItinerary.activityPlaceholder": "ex. Faune, Culture, Aventure",
+    "company.createItinerary.location": "Lieu",
+    "company.createItinerary.locationPlaceholder": "ex. Parc National des Volcans",
+    "company.createItinerary.schedule": "Horaire et Tarification",
+    "company.createItinerary.date": "Date",
+    "company.createItinerary.price": "Prix par Personne",
+    "company.createItinerary.description": "Description",
+    "company.createItinerary.descriptionPlaceholder": "Décrivez ce qui rend cette expérience spéciale et ce que les voyageurs peuvent attendre",
+    "company.createItinerary.creating": "Création de l'Expérience...",
+    "company.createItinerary.createButton": "Créer l'Expérience",
+    "company.createItinerary.success": "Expérience créée avec succès!",
+    "company.createItinerary.noCompany": "Aucune entreprise trouvée pour votre compte",
+    "company.createItinerary.requiredFields": "Le titre, la date et le prix sont requis",
+    "company.createItinerary.invalidPrice": "Le prix doit être un nombre valide supérieur à 0",
   },
   rw: {
     "nav.home": "Ahabanza",
@@ -947,9 +1081,6 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
     "itineraries.loginRequired": "Nyamuneka injira kugira ngo wiyandikishe ku ngendo.",
     "itineraries.filterAll": "Ingendo Zose",
     "itineraries.searchPlaceholder": "Shakisha ingendo...",
-    "detail.tripInfo": "Amakuru y'Urugendo",
-    "detail.bookingsTitle": "Amarezervasi",
-    "detail.noBookings": "Nta marezervasi kuri iyi ngendo.",
     "detail.goBack": "Subira inyuma",
     "detail.notFound": "Ingendo wasabye ntiyabonetse.",
     "detail.loadingDetails": "Gupakira amakuru y'ingendo...",
@@ -1036,8 +1167,6 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
     "admin.role": "Uruhare",
     "admin.createdAt": "Byaremwe ku wa",
     "admin.active": "Birakora",
-    "bookings.title": "Amarezervasi Yanjye",
-    "bookings.subtitle": "Gucunga amarezervasi yawe y'ingendo",
     "bookings.myBookings": "Amarezervasi Yawe",
     "bookings.noBookings": "Ntabwo ukora amarezervasi ubu",
     "bookings.loading": "Gupakira amarezervasi...",
@@ -1076,6 +1205,55 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
     "newBooking.couple": "Ababiri",
     "newBooking.family": "Umuryango",
     "newBooking.other": "Ibindi",
+    "company.dashboard.title": "Ikibaho cy'Ikigo",
+    "company.dashboard.subtitle": "Incamake y'imikorere y'ubucuruzi bwawe n'ibyabaye bizaza",
+    "company.dashboard.totalItineraries": "Ingendo Zose",
+    "company.dashboard.totalAttendees": "Abitabiriye Bose",
+    "company.dashboard.upcomingEvents": "Ibyabaye Bizaza",
+    "company.dashboard.totalRevenue": "Amafaranga Yose",
+    "company.dashboard.upcomingItineraries": "Ingendo Zizaza",
+    "company.dashboard.viewAll": "Reba Byose",
+    "company.dashboard.noUpcoming": "Nta ngendo zizaza zateganijwe",
+    "company.dashboard.attendees": "Abitabiriye",
+    "company.dashboard.view": "Reba Ibisobanuro",
+    "company.register.title": "Kwandikisha Ikigo Cyawe",
+    "company.register.subtitle": "Kora umwirondoro w'ikigo cyawe kugira ngo utangire gutanga ingendo",
+    "company.register.setupRequired": "Gushiraho Ikigo Birakenewe",
+    "company.register.setupMessage": "Uruhare rw'ikigo cyawe rurakoze, ariko ugomba gukora umwirondoro w'ikigo kugira ngo ukomeze",
+    "company.register.companyName": "Izina ry'Ikigo",
+    "company.register.companyNamePlaceholder": "urugero: Ingendo zo ku Kivu",
+    "company.register.contact": "Amakuru yo Kuvugana",
+    "company.register.contactPlaceholder": "Telefoni cyangwa imeri",
+    "company.register.description": "Ibisobanuro by'Ikigo",
+    "company.register.descriptionPlaceholder": "Bwira abagenzi ikigo cyawe n'icyo kigutandukanya",
+    "company.register.creating": "Gukora Ikigo...",
+    "company.register.createButton": "Kora Ikigo",
+    "company.register.success": "Ikigo cyanditswe neza!",
+    "company.register.loginRequired": "Ugomba kwinjira kugira ngo wandikishe ikigo",
+    "company.register.nameRequired": "Izina ry'ikigo rirakenewe",
+    "company.createItinerary.title": "Kora Ingendo Nshya",
+    "company.createItinerary.subtitle": "Sangiza ingendo yawe idasanzwe yo mu Rwanda n'abagenzi ku isi",
+    "company.createItinerary.companyRequired": "Umwirondoro w'Ikigo Urakenewe",
+    "company.createItinerary.companyRequiredMessage": "Ugomba kwandikisha ikigo mbere yo gukora ingendo",
+    "company.createItinerary.createCompany": "Andikisha Ikigo",
+    "company.createItinerary.itineraryTitle": "Umutwe w'Ingendo",
+    "company.createItinerary.titlePlaceholder": "urugero: Ingendo yo Gushakisha Ingagi mu Pariki y'Ibirunga",
+    "company.createItinerary.details": "Ibisobanuro by'Ingendo",
+    "company.createItinerary.activity": "Ubwoko bw'Ibikorwa",
+    "company.createItinerary.activityPlaceholder": "urugero: Inyamaswa, Umuco, Ingendo",
+    "company.createItinerary.location": "Ahantu",
+    "company.createItinerary.locationPlaceholder": "urugero: Pariki y'Igihugu y'Ibirunga",
+    "company.createItinerary.schedule": "Gahunda n'Ibiciro",
+    "company.createItinerary.date": "Itariki",
+    "company.createItinerary.price": "Igiciro kuri Buri Muntu",
+    "company.createItinerary.description": "Ibisobanuro",
+    "company.createItinerary.descriptionPlaceholder": "Sobanura icyo gituma iyi ngendo idasanzwe n'icyo abagenzi bashobora gutegereza",
+    "company.createItinerary.creating": "Gukora Ingendo...",
+    "company.createItinerary.createButton": "Kora Ingendo",
+    "company.createItinerary.success": "Ingendo yaremwe neza!",
+    "company.createItinerary.noCompany": "Nta kigo cyabonetse kuri konti yawe",
+    "company.createItinerary.requiredFields": "Umutwe, itariki n'igiciro birakenewe",
+    "company.createItinerary.invalidPrice": "Igiciro kigomba kuba umubare wemewe urenze 0",
   },
 };
 

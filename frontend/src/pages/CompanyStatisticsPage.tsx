@@ -82,7 +82,51 @@ function CompanyStatisticsPage() {
   const totalAttendees = bookingItems.length;
 
   if (isLoading) {
-    return <p className="text-sm text-slate-300">Loading company statistics...</p>;
+    return (
+      <div className="space-y-6">
+        {/* Header Skeleton */}
+        <div className="animate-pulse space-y-2">
+          <div className="h-8 w-64 rounded-lg bg-slate-800"></div>
+          <div className="h-4 w-96 rounded-lg bg-slate-800/60"></div>
+        </div>
+
+        {/* Stats Cards Skeleton */}
+        <div className="grid gap-4 sm:grid-cols-2">
+          {[1, 2].map((i) => (
+            <div key={i} className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+              <div className="h-4 w-32 animate-pulse rounded bg-slate-700"></div>
+              <div className="mt-2 h-8 w-24 animate-pulse rounded-lg bg-slate-800"></div>
+            </div>
+          ))}
+        </div>
+
+        {/* Table Skeleton */}
+        <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900/60">
+          <div className="border-b border-slate-800 bg-slate-900/80 px-4 py-3">
+            <div className="flex gap-4">
+              <div className="h-4 w-24 animate-pulse rounded bg-slate-700"></div>
+              <div className="h-4 w-24 animate-pulse rounded bg-slate-700"></div>
+              <div className="h-4 w-24 animate-pulse rounded bg-slate-700"></div>
+              <div className="h-4 w-24 animate-pulse rounded bg-slate-700"></div>
+              <div className="h-4 w-24 animate-pulse rounded bg-slate-700"></div>
+            </div>
+          </div>
+          <div className="divide-y divide-slate-800/60">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="px-4 py-4">
+                <div className="flex items-center gap-4">
+                  <div className="h-6 w-48 animate-pulse rounded-lg bg-slate-800"></div>
+                  <div className="h-6 w-32 animate-pulse rounded-lg bg-slate-800"></div>
+                  <div className="h-6 w-24 animate-pulse rounded-lg bg-slate-800"></div>
+                  <div className="h-6 w-20 animate-pulse rounded-lg bg-slate-800"></div>
+                  <div className="h-6 w-16 animate-pulse rounded-lg bg-slate-800"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
