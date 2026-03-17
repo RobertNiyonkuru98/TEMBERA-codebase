@@ -24,6 +24,7 @@ const PORT = process.env.PORT || 3000;
 async function verifyDatabaseConnection(): Promise<boolean> {
   try {
     await prisma.$connect();
+    await prisma.$queryRaw`SELECT 1`;
     logger.info("Database connected successfully!");
     return true;
   } catch (error) {

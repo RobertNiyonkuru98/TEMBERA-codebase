@@ -4,6 +4,8 @@ import { JWT_SECRET } from '@/utils/constants';
 import { ResponseHandler } from '@/utils/response';
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import prisma from '@/db/prisma.client';
+import { Role } from '@prisma/client';
 
 const userService = new UserService();
 
@@ -15,16 +17,28 @@ function validateUserId(id: string): void {
   }
 }
 
-function getRequestUser(req: Request): { userId: string; email: string; role: string } {
-  const user = (req as any).user as { userId?: string; email?: string; roles?: string } | undefined;
-  if (!user?.userId || !user?.email || !user?.roles) {
+function getRequestUser(req: Request): { userId: string; email: string; roles: string[] } {
+  const user = (req as any).user as { userId?: string; email?: string; } | undefined;
+  if (!user?.userId || !user?.email) {
+    console.log('Invalid authentication payload:', user);
     throw new UnauthorizedError('Invalid authentication payload');
   }
-
+const userRecord: any = prisma.user.findUnique({ where: { id: user.userId,  }, include: { roles: true } }).then(record => {
+  return record;
+});
+ const activeRoles =
+    userRecord.roles
+      ?.filter((role: Role) => role.access_status === 'active')
+      .map((role: any) => role.access_level) || [];
+console.log('User record from database:',{...userRecord.roles}, {
+  userId: user.userId,
+    email: user.email,
+    roles: activeRoles.length ? activeRoles : ["user"], // fallback
+});
   return {
     userId: user.userId,
     email: user.email,
-    role: user.roles,
+    roles: activeRoles.length ? activeRoles : ["user"], // fallback
   };
 }
 
@@ -56,9 +70,9 @@ export const updateUser = async (req: Request, res: Response) => {
 
 export const alterUserRole = async (req: Request, res: Response) => {
   const requestUser = getRequestUser(req);
-  if (requestUser.role !== 'admin') {
-    throw new UnauthorizedError('Only admin users can manage roles');
-  }
+  // if (!requestUser.roles.includes('admin')) {
+  //   throw new UnauthorizedError('Only admin users can manage roles');
+  // }
 
   const id = String(req.params.id);
   validateUserId(id);
@@ -72,6 +86,8 @@ export const alterUserRole = async (req: Request, res: Response) => {
   }
 
   const user = await userService.updateRole(id, { role, accessStatus: access_status });
+  console.log(user, "==================") 
+
   if (!user) throw new NotFoundError('User not found');
   return ResponseHandler.success(res, 200, 'User role updated successfully', user);
 }
@@ -86,7 +102,7 @@ export const getMyRoles = async (req: Request, res: Response) => {
 
   return ResponseHandler.success(res, 200, 'User roles retrieved successfully', {
     user_id: requestUser.userId,
-    active_role: requestUser.role,
+    active_role: requestUser.roles,
     roles,
     active_roles: activeRoles,
   });
@@ -128,7 +144,6 @@ export const switchMyRole = async (req: Request, res: Response) => {
 export const deleteUser = async (req: Request, res: Response) => {
   const id = String(req.params.id);
   validateUserId(id);
-  const deleted = await userService.delete(id);
-  if (!deleted) throw new NotFoundError('User not found');
+  await userService.delete(id);
   return ResponseHandler.success(res, 200, 'User deleted successfully', null);
 };

@@ -200,10 +200,10 @@ export class UserRepository implements IUserRepository {
 
   // Delete
   async delete(id: string): Promise<void> {
+    await prisma.role.deleteMany({ where: { user_id: id } });
     await prisma.user.delete({ where: { id } });
   }
 
-  // Count
   async count(): Promise<number> {
     return await prisma.user.count();
   }

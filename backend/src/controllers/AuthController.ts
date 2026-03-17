@@ -49,8 +49,6 @@ export class AuthController {
     // Finding the User
     const user = await userRepository.findWithRolesByEmail(email);
     if (!user) throw new NotFoundError(`User with ${email} not found`);
-
-    // Password verification by comparison
     const isPasswordValid = await compare(password, user.password);
     if (!isPasswordValid) throw new UnauthorizedError("Invalid Credentials");
 

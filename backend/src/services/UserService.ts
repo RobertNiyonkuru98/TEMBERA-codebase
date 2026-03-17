@@ -39,12 +39,7 @@ export class UserService {
   async switchRole(id: string, role: string): Promise<string> {
     return await this.userRepository.switchRole(id, role);
   }
-  async delete(id: string): Promise<boolean> {
-    try {
-      await this.userRepository.delete(id);
-      return true;
-    } catch {
-      return false;
-    }
+  async delete(id: string): Promise<void> {
+      return await this.userRepository.delete(id);
   }
 }
