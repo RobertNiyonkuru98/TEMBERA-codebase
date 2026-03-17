@@ -11,6 +11,7 @@ import {
   updateBooking,
 } from "../api/platformApi";
 import type { Booking, BookingItem, Company, Itinerary } from "../types";
+import { Calendar, MapPin, Users, Edit2, Trash2, Save, X, Plus, Loader2, Package } from "lucide-react";
 
 type DraftMember = {
   name: string;
@@ -169,26 +170,46 @@ function BookingsPage() {
   }
 
   if (isLoading) {
-    return <p className="text-sm text-slate-300">Loading your bookings...</p>;
+    return (
+      <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-12 w-12 animate-spin text-emerald-500" />
+          <p className="text-sm text-slate-600 dark:text-slate-400">{t("bookings.loading")}</p>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <p className="text-sm text-red-300">{error}</p>;
+    return (
+      <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 flex items-center justify-center">
+        <div className="rounded-xl border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/10 p-8 text-center">
+          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-6">
-      <header className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-50">{t("bookings.title")}</h1>
-        <p className="text-sm text-slate-300">
-          {t("bookings.subtitle")} <span className="font-semibold">{user.name}</span>
-        </p>
-      </header>
+    <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 py-8">
+      <div className="mx-auto w-[95%] max-w-7xl space-y-8">
+        {/* Header */}
+        <header className="space-y-2">
+          <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
+            {t("bookings.title")}
+          </h1>
+          <p className="text-lg text-slate-600 dark:text-slate-300">
+            {t("bookings.subtitle")}
+          </p>
+        </header>
 
-      {userBookings.length === 0 ? (
-        <p className="text-sm text-slate-300">{t("bookings.empty")}</p>
-      ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {userBookings.length === 0 ? (
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-12 text-center">
+            <Package className="h-16 w-16 text-slate-400 dark:text-slate-600 mb-4" />
+            <p className="text-lg font-medium text-slate-600 dark:text-slate-400">{t("bookings.noBookings")}</p>
+          </div>
+        ) : (
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {userBookings.map((booking) => {
             const items = bookingItems.filter(
               (item) => String(item.bookingId) === String(booking.id),
@@ -209,128 +230,144 @@ function BookingsPage() {
             return (
               <section
                 key={booking.id}
-                className="space-y-3 overflow-hidden rounded-xl border border-slate-800 bg-slate-900/60"
+                className="group overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 shadow-lg transition-all hover:shadow-xl"
               >
-                {coverImage ? (
-                  <img
-                    src={coverImage}
-                    alt={coverItinerary?.title ?? "Booked itinerary"}
-                    className="h-36 w-full object-cover"
-                  />
-                ) : (
-                  <div className="h-36 w-full bg-slate-800" />
-                )}
-
-                <div className="space-y-3 p-4">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div>
-                    <p className="text-sm font-semibold text-slate-100">Booking #{booking.id}</p>
-                    <p className="text-xs text-slate-400">
-                      Created on {new Date(booking.date).toLocaleDateString()}
-                    </p>
-                    <p className="text-xs text-slate-400 capitalize">Type: {booking.type}</p>
+                {/* Cover Image */}
+                <div className="relative h-48 overflow-hidden">
+                  {coverImage ? (
+                    <img
+                      src={coverImage}
+                      alt={coverItinerary?.title ?? "Booked itinerary"}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                  ) : (
+                    <div className="h-full w-full bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-800 dark:to-slate-900" />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-semibold text-white">Booking #{booking.id}</p>
+                        <p className="text-xs text-slate-200">
+                          {new Date(booking.date).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <span className="inline-flex items-center rounded-full bg-emerald-500 px-3 py-1 text-xs font-semibold capitalize text-white shadow-lg">
+                        {booking.status}
+                      </span>
+                    </div>
                   </div>
+                </div>
+
+                <div className="space-y-4 p-6">
+                  {/* Action Buttons */}
                   <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center rounded-full border border-slate-700 bg-slate-900 px-2 py-0.5 text-[11px] font-medium capitalize text-slate-200">
-                      {booking.status}
-                    </span>
                     <button
                       type="button"
                       onClick={() => beginEdit(booking)}
                       disabled={editingBookingId !== null && !isEditing}
-                      className="rounded-md border border-slate-700 px-2 py-1 text-xs text-slate-200 hover:bg-slate-800"
+                      className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 transition-all hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Edit
+                      <Edit2 className="h-4 w-4" />
+                      {t("bookings.edit")}
                     </button>
                     <button
                       type="button"
                       disabled={editingBookingId !== null && !isEditing}
                       onClick={() => {
-                        void removeBooking(String(booking.id));
+                        if (window.confirm(t("bookings.deleteConfirm"))) {
+                          void removeBooking(String(booking.id));
+                        }
                       }}
-                      className="rounded-md border border-red-800 px-2 py-1 text-xs text-red-300 hover:bg-red-950/40"
+                      className="inline-flex items-center justify-center gap-2 rounded-xl border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-950/20 px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 transition-all hover:bg-red-100 dark:hover:bg-red-900/30 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Delete
+                      <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
-                </div>
 
                 {isEditing ? (
-                  <div className="space-y-3 rounded-lg border border-slate-800 bg-slate-950/40 p-3">
-                    <label className="space-y-1 text-xs text-slate-300">
-                      Description
+                  <div className="space-y-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 p-4">
+                    <label className="space-y-2">
+                      <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{t("bookings.description")}</span>
                       <textarea
                         value={draftDescription}
                         onChange={(event) => setDraftDescription(event.target.value)}
-                        className="min-h-[70px] w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-50 outline-none ring-emerald-500/60 focus:border-emerald-400 focus:ring-2"
+                        className="min-h-[80px] w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-3 text-sm text-slate-900 dark:text-slate-50 outline-none transition-all focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20"
+                        placeholder={t("newBooking.notePlaceholder")}
                       />
                     </label>
 
-                    <label className="space-y-1 text-xs text-slate-300">
-                      Booking date
+                    <label className="space-y-2">
+                      <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{t("bookings.date")}</span>
                       <input
                         type="date"
                         value={draftDate}
                         onChange={(event) => setDraftDate(event.target.value)}
-                        className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-50 outline-none ring-emerald-500/60 focus:border-emerald-400 focus:ring-2"
+                        className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-3 text-sm text-slate-900 dark:text-slate-50 outline-none transition-all focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20"
                       />
                     </label>
 
                     {booking.type === "group" && (
-                      <div className="space-y-2 rounded-md border border-slate-800 bg-slate-900/70 p-3">
+                      <div className="space-y-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-4">
                         <div className="flex items-center justify-between">
-                          <p className="text-xs font-semibold text-slate-200">Members</p>
+                          <div className="flex items-center gap-2">
+                            <Users className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+                            <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("bookings.members")}</p>
+                          </div>
                           <button
                             type="button"
                             onClick={addMember}
-                            className="text-xs font-medium text-emerald-300 hover:text-emerald-200"
+                            className="inline-flex items-center gap-1 rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-semibold text-white transition-all hover:bg-emerald-600"
                           >
-                            Add member
+                            <Plus className="h-3 w-3" />
+                            {t("bookings.addMember")}
                           </button>
                         </div>
-                        {draftMembers.map((member, index) => (
-                          <div
-                            key={`${String(booking.id)}-member-${index}`}
-                            className="grid gap-2 rounded-md border border-slate-800 p-2 md:grid-cols-3"
-                          >
-                            <input
-                              type="text"
-                              placeholder="Name"
-                              value={member.name}
-                              onChange={(event) =>
-                                updateMemberField(index, "name", event.target.value)
-                              }
-                              className="rounded-md border border-slate-700 bg-slate-950 px-2 py-1 text-xs text-slate-100"
-                            />
-                            <input
-                              type="email"
-                              placeholder="Email"
-                              value={member.email}
-                              onChange={(event) =>
-                                updateMemberField(index, "email", event.target.value)
-                              }
-                              className="rounded-md border border-slate-700 bg-slate-950 px-2 py-1 text-xs text-slate-100"
-                            />
-                            <div className="flex gap-2">
+                        <div className="space-y-2">
+                          {draftMembers.map((member, index) => (
+                            <div
+                              key={`${String(booking.id)}-member-${index}`}
+                              className="grid gap-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 p-3 sm:grid-cols-3"
+                            >
                               <input
                                 type="text"
-                                placeholder="Phone"
-                                value={member.phone}
+                                placeholder={t("bookings.memberName")}
+                                value={member.name}
                                 onChange={(event) =>
-                                  updateMemberField(index, "phone", event.target.value)
+                                  updateMemberField(index, "name", event.target.value)
                                 }
-                                className="w-full rounded-md border border-slate-700 bg-slate-950 px-2 py-1 text-xs text-slate-100"
+                                className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 outline-none transition-all focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
                               />
-                              <button
-                                type="button"
-                                onClick={() => removeMember(index)}
-                                className="rounded-md border border-slate-700 px-2 text-xs text-slate-300 hover:bg-slate-800"
-                              >
-                                Remove
-                              </button>
+                              <input
+                                type="email"
+                                placeholder={t("bookings.memberEmail")}
+                                value={member.email}
+                                onChange={(event) =>
+                                  updateMemberField(index, "email", event.target.value)
+                                }
+                                className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 outline-none transition-all focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                              />
+                              <div className="flex gap-2">
+                                <input
+                                  type="text"
+                                  placeholder={t("bookings.memberPhone")}
+                                  value={member.phone}
+                                  onChange={(event) =>
+                                    updateMemberField(index, "phone", event.target.value)
+                                  }
+                                  className="flex-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 outline-none transition-all focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => removeMember(index)}
+                                  className="inline-flex items-center justify-center rounded-lg border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-950/20 px-3 text-xs text-red-600 dark:text-red-400 transition-all hover:bg-red-100 dark:hover:bg-red-900/30"
+                                >
+                                  <X className="h-3 w-3" />
+                                </button>
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
                       </div>
                     )}
 
@@ -341,16 +378,27 @@ function BookingsPage() {
                         onClick={() => {
                           void saveBooking(booking);
                         }}
-                        className="rounded-md bg-emerald-500 px-3 py-1 text-xs font-semibold text-slate-950 hover:bg-emerald-400 disabled:opacity-70"
+                        className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-emerald-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        {isSaving ? "Saving..." : "Save"}
+                        {isSaving ? (
+                          <>
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            {t("bookings.saving")}
+                          </>
+                        ) : (
+                          <>
+                            <Save className="h-4 w-4" />
+                            {t("bookings.save")}
+                          </>
+                        )}
                       </button>
                       <button
                         type="button"
                         onClick={() => setEditingBookingId(null)}
-                        className="rounded-md border border-slate-700 px-3 py-1 text-xs text-slate-200 hover:bg-slate-800"
+                        className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 transition-all hover:bg-slate-50 dark:hover:bg-slate-800"
                       >
-                        Cancel
+                        <X className="h-4 w-4" />
+                        {t("bookings.cancel")}
                       </button>
                     </div>
                   </div>
@@ -422,6 +470,20 @@ function BookingsPage() {
                         </p>
                       )}
                     </div>
+                  </>
+                )}
+                </div>
+              </section>
+            );
+          })}
+        </div>
+      )}
+      </div>
+    </div>
+  );
+}
+
+export default BookingsPage;
                   </>
                 )}
                 </div>

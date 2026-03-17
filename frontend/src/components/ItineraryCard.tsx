@@ -32,7 +32,7 @@ const ItineraryCard: React.FC<ItineraryCardProps> = ({
 						alt={itinerary.activity ?? "Itinerary"}
 						className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
 					/>
-					<div className="absolute inset-0 bg-linear-to-t from-slate-900/60 to-transparent" />
+					<div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
 					<div className="absolute top-3 left-3">
 						<span className="inline-block rounded-full bg-emerald-500 px-3 py-1 text-xs font-semibold text-white shadow-lg">
 							{itinerary.activity ?? "Experience"}
@@ -84,7 +84,7 @@ const ItineraryCard: React.FC<ItineraryCardProps> = ({
 						type="button"
 						onClick={() => onAttend(itinerary)}
 						disabled={isAttending}
-						className="w-full mt-3 inline-flex items-center justify-center rounded-xl bg-linear-to-r from-emerald-500 to-emerald-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-emerald-500/50 hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
+						className="w-full mt-3 inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-emerald-500/50 hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
 					>
 						{isAttending ? t("card.attending") : defaultAttendLabel}
 					</button>

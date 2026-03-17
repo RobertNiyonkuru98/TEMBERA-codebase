@@ -166,7 +166,106 @@ type TranslationKey =
   | "showcase.reason3Desc"
   | "showcase.ctaTitle"
   | "showcase.ctaSubtitle"
-  | "showcase.ctaButton";
+  | "showcase.ctaButton"
+  | "nav.profile"
+  | "nav.companyItineraries"
+  | "profile.title"
+  | "profile.subtitle"
+  | "profile.accountDetails"
+  | "profile.userId"
+  | "profile.role"
+  | "profile.updateProfile"
+  | "profile.fullName"
+  | "profile.phoneNumber"
+  | "profile.saveChanges"
+  | "profile.saving"
+  | "profile.dangerZone"
+  | "profile.deleteAccount"
+  | "profile.deleteWarning"
+  | "profile.deleting"
+  | "profile.updateSuccess"
+  | "company.registerTitle"
+  | "company.registerSubtitle"
+  | "company.setupRequired"
+  | "company.setupMessage"
+  | "company.name"
+  | "company.contact"
+  | "company.description"
+  | "company.creating"
+  | "company.createButton"
+  | "company.namePlaceholder"
+  | "company.contactPlaceholder"
+  | "company.descriptionPlaceholder"
+  | "company.createItineraryTitle"
+  | "company.createItinerarySubtitle"
+  | "company.itineraryTitle"
+  | "company.activity"
+  | "company.location"
+  | "company.date"
+  | "company.price"
+  | "company.submitting"
+  | "company.createItinerary"
+  | "company.titlePlaceholder"
+  | "company.activityPlaceholder"
+  | "company.locationPlaceholder"
+  | "company.descriptionPlaceholder2"
+  | "company.pricePlaceholder"
+  | "admin.dashboardTitle"
+  | "admin.dashboardSubtitle"
+  | "admin.totalUsers"
+  | "admin.totalCompanies"
+  | "admin.totalItineraries"
+  | "admin.totalRegistrations"
+  | "admin.loading"
+  | "admin.usersTitle"
+  | "admin.usersSubtitle"
+  | "admin.name"
+  | "admin.email"
+  | "admin.status"
+  | "admin.phone"
+  | "admin.role"
+  | "admin.createdAt"
+  | "admin.active"
+  | "bookings.title"
+  | "bookings.subtitle"
+  | "bookings.myBookings"
+  | "bookings.noBookings"
+  | "bookings.loading"
+  | "bookings.edit"
+  | "bookings.save"
+  | "bookings.cancel"
+  | "bookings.delete"
+  | "bookings.description"
+  | "bookings.date"
+  | "bookings.status"
+  | "bookings.members"
+  | "bookings.addMember"
+  | "bookings.removeMember"
+  | "bookings.memberName"
+  | "bookings.memberEmail"
+  | "bookings.memberPhone"
+  | "bookings.saving"
+  | "bookings.deleting"
+  | "bookings.deleteConfirm"
+  | "bookings.included"
+  | "newBooking.title"
+  | "newBooking.subtitle"
+  | "newBooking.selectItinerary"
+  | "newBooking.note"
+  | "newBooking.notePlaceholder"
+  | "newBooking.isGroup"
+  | "newBooking.groupHelper"
+  | "newBooking.groupType"
+  | "newBooking.groupMembers"
+  | "newBooking.memberNationalId"
+  | "newBooking.addMember"
+  | "newBooking.remove"
+  | "newBooking.submit"
+  | "newBooking.submitting"
+  | "newBooking.personal"
+  | "newBooking.couple"
+  | "newBooking.family"
+  | "newBooking.other";
 
 const translations: Record<Lang, Record<TranslationKey, string>> = {
   en: {
@@ -336,6 +435,105 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
     "showcase.ctaTitle": "Ready to Explore Rwanda?",
     "showcase.ctaSubtitle": "Join thousands of travelers discovering the land of a thousand hills",
     "showcase.ctaButton": "Browse Experiences",
+    "nav.profile": "Profile",
+    "nav.companyItineraries": "Company Itineraries",
+    "profile.title": "Profile",
+    "profile.subtitle": "Manage your personal information and account",
+    "profile.accountDetails": "Account Details",
+    "profile.userId": "User ID",
+    "profile.role": "Role",
+    "profile.updateProfile": "Update Profile",
+    "profile.fullName": "Full Name",
+    "profile.phoneNumber": "Phone Number",
+    "profile.saveChanges": "Save Changes",
+    "profile.saving": "Saving...",
+    "profile.dangerZone": "Danger Zone",
+    "profile.deleteAccount": "Delete Account",
+    "profile.deleteWarning": "Deleting your account is irreversible and removes your access",
+    "profile.deleting": "Processing...",
+    "profile.updateSuccess": "Profile updated successfully",
+    "company.registerTitle": "Register Your Company",
+    "company.registerSubtitle": "You need to register a company to continue",
+    "company.setupRequired": "Company Setup Required",
+    "company.setupMessage": "Your company role is active, but your account has no company profile yet. Create one to unlock your workspace",
+    "company.name": "Company Name",
+    "company.contact": "Contact",
+    "company.description": "Description",
+    "company.creating": "Creating...",
+    "company.createButton": "Create Company",
+    "company.namePlaceholder": "e.g. Lake Kivu Tours",
+    "company.contactPlaceholder": "Phone or email",
+    "company.descriptionPlaceholder": "Describe your company and services",
+    "company.createItineraryTitle": "Create Your First Experience",
+    "company.createItinerarySubtitle": "Share your unique Rwanda experience with travelers",
+    "company.itineraryTitle": "Experience Title",
+    "company.activity": "Activity Type",
+    "company.location": "Location",
+    "company.date": "Date",
+    "company.price": "Price (RWF)",
+    "company.submitting": "Creating...",
+    "company.createItinerary": "Create Experience",
+    "company.titlePlaceholder": "e.g. Gorilla Trekking Adventure",
+    "company.activityPlaceholder": "e.g. Wildlife, Culture, Adventure",
+    "company.locationPlaceholder": "e.g. Volcanoes National Park",
+    "company.descriptionPlaceholder2": "Describe what makes this experience special",
+    "company.pricePlaceholder": "Price per person",
+    "admin.dashboardTitle": "Admin Dashboard",
+    "admin.dashboardSubtitle": "Platform-wide statistics and activity overview",
+    "admin.totalUsers": "Total Users",
+    "admin.totalCompanies": "Total Companies",
+    "admin.totalItineraries": "Total Experiences",
+    "admin.totalRegistrations": "Total Registrations",
+    "admin.loading": "Loading dashboard...",
+    "admin.usersTitle": "All Users",
+    "admin.usersSubtitle": "All registered users in the system",
+    "admin.name": "Name",
+    "admin.email": "Email",
+    "admin.status": "Status",
+    "admin.phone": "Phone",
+    "admin.role": "Role",
+    "admin.createdAt": "Created At",
+    "admin.active": "Active",
+    "bookings.title": "My Bookings",
+    "bookings.subtitle": "Manage your travel bookings and reservations",
+    "bookings.myBookings": "Your Bookings",
+    "bookings.noBookings": "You haven't made any bookings yet",
+    "bookings.loading": "Loading bookings...",
+    "bookings.edit": "Edit",
+    "bookings.save": "Save",
+    "bookings.cancel": "Cancel",
+    "bookings.delete": "Delete",
+    "bookings.description": "Description",
+    "bookings.date": "Date",
+    "bookings.status": "Status",
+    "bookings.members": "Group Members",
+    "bookings.addMember": "Add Member",
+    "bookings.removeMember": "Remove",
+    "bookings.memberName": "Name",
+    "bookings.memberEmail": "Email",
+    "bookings.memberPhone": "Phone",
+    "bookings.saving": "Saving...",
+    "bookings.deleting": "Deleting...",
+    "bookings.deleteConfirm": "Are you sure you want to delete this booking?",
+    "bookings.included": "Included Experiences",
+    "newBooking.title": "Create New Booking",
+    "newBooking.subtitle": "Book your next Rwanda adventure",
+    "newBooking.selectItinerary": "Select Experience",
+    "newBooking.note": "Booking Note",
+    "newBooking.notePlaceholder": "Add any special requests or notes",
+    "newBooking.isGroup": "Group Booking",
+    "newBooking.groupHelper": "Check this if you're booking for multiple people",
+    "newBooking.groupType": "Group Type",
+    "newBooking.groupMembers": "Group Members",
+    "newBooking.memberNationalId": "National ID",
+    "newBooking.addMember": "Add Member",
+    "newBooking.remove": "Remove",
+    "newBooking.submit": "Create Booking",
+    "newBooking.submitting": "Creating...",
+    "newBooking.personal": "Personal",
+    "newBooking.couple": "Couple",
+    "newBooking.family": "Family",
+    "newBooking.other": "Other",
   },
   fr: {
     "nav.home": "Accueil",
@@ -508,6 +706,105 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
     "showcase.ctaTitle": "Prêt à Explorer le Rwanda?",
     "showcase.ctaSubtitle": "Rejoignez des milliers de voyageurs découvrant le pays aux mille collines",
     "showcase.ctaButton": "Parcourir les Expériences",
+    "nav.profile": "Profil",
+    "nav.companyItineraries": "Itinéraires de l'Entreprise",
+    "profile.title": "Profil",
+    "profile.subtitle": "Gérez vos informations personnelles et votre compte",
+    "profile.accountDetails": "Détails du Compte",
+    "profile.userId": "ID Utilisateur",
+    "profile.role": "Rôle",
+    "profile.updateProfile": "Mettre à Jour le Profil",
+    "profile.fullName": "Nom Complet",
+    "profile.phoneNumber": "Numéro de Téléphone",
+    "profile.saveChanges": "Enregistrer les Modifications",
+    "profile.saving": "Enregistrement...",
+    "profile.dangerZone": "Zone Dangereuse",
+    "profile.deleteAccount": "Supprimer le Compte",
+    "profile.deleteWarning": "La suppression de votre compte est irréversible et supprime votre accès",
+    "profile.deleting": "Traitement...",
+    "profile.updateSuccess": "Profil mis à jour avec succès",
+    "company.registerTitle": "Enregistrer Votre Entreprise",
+    "company.registerSubtitle": "Vous devez enregistrer une entreprise pour continuer",
+    "company.setupRequired": "Configuration de l'Entreprise Requise",
+    "company.setupMessage": "Votre rôle d'entreprise est actif, mais votre compte n'a pas encore de profil d'entreprise. Créez-en un pour débloquer votre espace de travail",
+    "company.name": "Nom de l'Entreprise",
+    "company.contact": "Contact",
+    "company.description": "Description",
+    "company.creating": "Création...",
+    "company.createButton": "Créer l'Entreprise",
+    "company.namePlaceholder": "ex. Tours du Lac Kivu",
+    "company.contactPlaceholder": "Téléphone ou email",
+    "company.descriptionPlaceholder": "Décrivez votre entreprise et vos services",
+    "company.createItineraryTitle": "Créez Votre Première Expérience",
+    "company.createItinerarySubtitle": "Partagez votre expérience unique du Rwanda avec les voyageurs",
+    "company.itineraryTitle": "Titre de l'Expérience",
+    "company.activity": "Type d'Activité",
+    "company.location": "Lieu",
+    "company.date": "Date",
+    "company.price": "Prix (RWF)",
+    "company.submitting": "Création...",
+    "company.createItinerary": "Créer l'Expérience",
+    "company.titlePlaceholder": "ex. Aventure de Trekking des Gorilles",
+    "company.activityPlaceholder": "ex. Faune, Culture, Aventure",
+    "company.locationPlaceholder": "ex. Parc National des Volcans",
+    "company.descriptionPlaceholder2": "Décrivez ce qui rend cette expérience spéciale",
+    "company.pricePlaceholder": "Prix par personne",
+    "admin.dashboardTitle": "Tableau de Bord Admin",
+    "admin.dashboardSubtitle": "Statistiques et aperçu de l'activité de la plateforme",
+    "admin.totalUsers": "Total Utilisateurs",
+    "admin.totalCompanies": "Total Entreprises",
+    "admin.totalItineraries": "Total Expériences",
+    "admin.totalRegistrations": "Total Inscriptions",
+    "admin.loading": "Chargement du tableau de bord...",
+    "admin.usersTitle": "Tous les Utilisateurs",
+    "admin.usersSubtitle": "Tous les utilisateurs enregistrés dans le système",
+    "admin.name": "Nom",
+    "admin.email": "Email",
+    "admin.status": "Statut",
+    "admin.phone": "Téléphone",
+    "admin.role": "Rôle",
+    "admin.createdAt": "Créé le",
+    "admin.active": "Actif",
+    "bookings.title": "Mes Réservations",
+    "bookings.subtitle": "Gérez vos réservations et réservations de voyage",
+    "bookings.myBookings": "Vos Réservations",
+    "bookings.noBookings": "Vous n'avez encore fait aucune réservation",
+    "bookings.loading": "Chargement des réservations...",
+    "bookings.edit": "Modifier",
+    "bookings.save": "Enregistrer",
+    "bookings.cancel": "Annuler",
+    "bookings.delete": "Supprimer",
+    "bookings.description": "Description",
+    "bookings.date": "Date",
+    "bookings.status": "Statut",
+    "bookings.members": "Membres du Groupe",
+    "bookings.addMember": "Ajouter un Membre",
+    "bookings.removeMember": "Retirer",
+    "bookings.memberName": "Nom",
+    "bookings.memberEmail": "Email",
+    "bookings.memberPhone": "Téléphone",
+    "bookings.saving": "Enregistrement...",
+    "bookings.deleting": "Suppression...",
+    "bookings.deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette réservation?",
+    "bookings.included": "Expériences Incluses",
+    "newBooking.title": "Créer une Nouvelle Réservation",
+    "newBooking.subtitle": "Réservez votre prochaine aventure au Rwanda",
+    "newBooking.selectItinerary": "Sélectionner l'Expérience",
+    "newBooking.note": "Note de Réservation",
+    "newBooking.notePlaceholder": "Ajoutez des demandes ou notes spéciales",
+    "newBooking.isGroup": "Réservation de Groupe",
+    "newBooking.groupHelper": "Cochez cette case si vous réservez pour plusieurs personnes",
+    "newBooking.groupType": "Type de Groupe",
+    "newBooking.groupMembers": "Membres du Groupe",
+    "newBooking.memberNationalId": "Carte d'Identité Nationale",
+    "newBooking.addMember": "Ajouter un Membre",
+    "newBooking.remove": "Retirer",
+    "newBooking.submit": "Créer la Réservation",
+    "newBooking.submitting": "Création...",
+    "newBooking.personal": "Personnel",
+    "newBooking.couple": "Couple",
+    "newBooking.family": "Famille",
+    "newBooking.other": "Autre",
   },
   rw: {
     "nav.home": "Ahabanza",
@@ -680,6 +977,105 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
     "showcase.ctaTitle": "Witeguye Gushakisha u Rwanda?",
     "showcase.ctaSubtitle": "Jya mu bantu babarirwa mu bihumbi bashakisha igihugu cy'imisozi igihumbi",
     "showcase.ctaButton": "Reba Ingendo",
+    "nav.profile": "Umwirondoro",
+    "nav.companyItineraries": "Ingendo z'Ikigo",
+    "profile.title": "Umwirondoro",
+    "profile.subtitle": "Gucunga amakuru yawe bwite na konti yawe",
+    "profile.accountDetails": "Amakuru ya Konti",
+    "profile.userId": "ID y'Ukoresha",
+    "profile.role": "Uruhare",
+    "profile.updateProfile": "Kuvugurura Umwirondoro",
+    "profile.fullName": "Amazina Yuzuye",
+    "profile.phoneNumber": "Numero ya Telefoni",
+    "profile.saveChanges": "Bika Impinduka",
+    "profile.saving": "Gukora...",
+    "profile.dangerZone": "Ahantu h'Akaga",
+    "profile.deleteAccount": "Gusiba Konti",
+    "profile.deleteWarning": "Gusiba konti yawe ntibishobora gusubizwa inyuma kandi bikuraho uburenganzira bwawe",
+    "profile.deleting": "Gutunganya...",
+    "profile.updateSuccess": "Umwirondoro wavuguruwe neza",
+    "company.registerTitle": "Kwandikisha Ikigo Cyawe",
+    "company.registerSubtitle": "Ugomba kwandikisha ikigo kugira ngo ukomeze",
+    "company.setupRequired": "Gushiraho Ikigo Birakenewe",
+    "company.setupMessage": "Uruhare rw'ikigo cyawe rurakoze, ariko konti yawe nta mwirondoro w'ikigo ifite. Kora umwe kugira ngo ufungure akazu kawe k'akazi",
+    "company.name": "Izina ry'Ikigo",
+    "company.contact": "Aho Kubarizwa",
+    "company.description": "Ibisobanuro",
+    "company.creating": "Gukora...",
+    "company.createButton": "Kora Ikigo",
+    "company.namePlaceholder": "urugero: Ingendo zo ku Kivu",
+    "company.contactPlaceholder": "Telefoni cyangwa imeri",
+    "company.descriptionPlaceholder": "Sobanura ikigo cyawe na serivisi zawe",
+    "company.createItineraryTitle": "Kora Ingendo Yawe ya Mbere",
+    "company.createItinerarySubtitle": "Sangiza ingendo yawe idasanzwe yo mu Rwanda n'abagenzi",
+    "company.itineraryTitle": "Umutwe w'Ingendo",
+    "company.activity": "Ubwoko bw'Ibikorwa",
+    "company.location": "Ahantu",
+    "company.date": "Itariki",
+    "company.price": "Igiciro (RWF)",
+    "company.submitting": "Gukora...",
+    "company.createItinerary": "Kora Ingendo",
+    "company.titlePlaceholder": "urugero: Ingendo yo Gushakisha Ingagi",
+    "company.activityPlaceholder": "urugero: Inyamaswa, Umuco, Ingendo",
+    "company.locationPlaceholder": "urugero: Pariki y'Igihugu y'Ibirunga",
+    "company.descriptionPlaceholder2": "Sobanura icyo gituma iyi ngendo idasanzwe",
+    "company.pricePlaceholder": "Igiciro kuri buri muntu",
+    "admin.dashboardTitle": "Ikibaho cya Admin",
+    "admin.dashboardSubtitle": "Imibare n'incamake y'ibikorwa bya platfomo",
+    "admin.totalUsers": "Abakoresha Bose",
+    "admin.totalCompanies": "Ibigo Byose",
+    "admin.totalItineraries": "Ingendo Zose",
+    "admin.totalRegistrations": "Iyandikisha Ryose",
+    "admin.loading": "Gupakira ikibaho...",
+    "admin.usersTitle": "Abakoresha Bose",
+    "admin.usersSubtitle": "Abakoresha bose banditse muri sisitemu",
+    "admin.name": "Izina",
+    "admin.email": "Imeri",
+    "admin.status": "Imimerere",
+    "admin.phone": "Telefoni",
+    "admin.role": "Uruhare",
+    "admin.createdAt": "Byaremwe ku wa",
+    "admin.active": "Birakora",
+    "bookings.title": "Amarezervasi Yanjye",
+    "bookings.subtitle": "Gucunga amarezervasi yawe y'ingendo",
+    "bookings.myBookings": "Amarezervasi Yawe",
+    "bookings.noBookings": "Ntabwo ukora amarezervasi ubu",
+    "bookings.loading": "Gupakira amarezervasi...",
+    "bookings.edit": "Hindura",
+    "bookings.save": "Bika",
+    "bookings.cancel": "Kureka",
+    "bookings.delete": "Gusiba",
+    "bookings.description": "Ibisobanuro",
+    "bookings.date": "Itariki",
+    "bookings.status": "Imimerere",
+    "bookings.members": "Abagize Itsinda",
+    "bookings.addMember": "Ongeraho Umunyamuryango",
+    "bookings.removeMember": "Kuraho",
+    "bookings.memberName": "Izina",
+    "bookings.memberEmail": "Imeri",
+    "bookings.memberPhone": "Telefoni",
+    "bookings.saving": "Gukora...",
+    "bookings.deleting": "Gusiba...",
+    "bookings.deleteConfirm": "Uzi neza ko ushaka gusiba iyi rezervasi?",
+    "bookings.included": "Ingendo Zirimo",
+    "newBooking.title": "Kora Rezervasi Nshya",
+    "newBooking.subtitle": "Bika ingendo yawe ikurikira yo mu Rwanda",
+    "newBooking.selectItinerary": "Hitamo Ingendo",
+    "newBooking.note": "Icyitonderwa cya Rezervasi",
+    "newBooking.notePlaceholder": "Ongeraho ibisabwa cyangwa icyitonderwa",
+    "newBooking.isGroup": "Rezervasi y'Itsinda",
+    "newBooking.groupHelper": "Hitamo ibi niba ubika abantu benshi",
+    "newBooking.groupType": "Ubwoko bw'Itsinda",
+    "newBooking.groupMembers": "Abagize Itsinda",
+    "newBooking.memberNationalId": "Indangamuntu",
+    "newBooking.addMember": "Ongeraho Umunyamuryango",
+    "newBooking.remove": "Kuraho",
+    "newBooking.submit": "Kora Rezervasi",
+    "newBooking.submitting": "Gukora...",
+    "newBooking.personal": "Umuntu ku giti cye",
+    "newBooking.couple": "Ababiri",
+    "newBooking.family": "Umuryango",
+    "newBooking.other": "Ibindi",
   },
 };
 

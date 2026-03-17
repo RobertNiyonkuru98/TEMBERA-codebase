@@ -50,7 +50,7 @@ function RegisterPage() {
               alt="Rwanda adventures"
               className="h-[700px] w-full object-cover"
             />
-            <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-8">
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="h-5 w-5 text-emerald-400" />
@@ -169,7 +169,7 @@ function RegisterPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="group w-full rounded-xl bg-linear-to-r from-emerald-500 to-emerald-600 px-6 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-emerald-500/50 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="group w-full rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-6 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-emerald-500/50 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {isLoading ? "Creating account..." : t("auth.registerButton")}
                 {!isLoading && <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />}
