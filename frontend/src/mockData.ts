@@ -89,6 +89,7 @@ export const bookings: Booking[] = [
   {
     id: 10,
     userId: 1,
+    type: "personal",
     description: "Easter weekend plans",
     status: "confirmed",
     date: "2026-03-20",
@@ -96,6 +97,7 @@ export const bookings: Booking[] = [
   {
     id: 11,
     userId: 1,
+    type: "personal",
     status: "pending",
     date: "2026-03-25",
   },

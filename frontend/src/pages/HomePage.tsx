@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import ItineraryCard from "../components/ItineraryCard";
 import { useI18n } from "../i18n";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   createBooking,
   createBookingItem,
@@ -10,6 +10,7 @@ import {
 } from "../api/platformApi";
 import type { Company, Itinerary } from "../types";
 import { useAuth } from "../AuthContext";
+import { toast } from "sonner";
 
 function HomePage() {
   const { token, user, activeRole } = useAuth();
@@ -19,26 +20,25 @@ function HomePage() {
   const [attendingItineraryId, setAttendingItineraryId] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if(activeRole && ["company", "admin"].includes(activeRole)) {
+      toast.info("Switch to visitor role to explore new events itineraries. Today")
+      navigate(`/${activeRole}/dashboard`, { replace: true });
+      return;
+    }
     async function loadData() {
-      if (!token) {
-        setIsLoading(false);
-        return;
-      }
-
       try {
         setIsLoading(true);
-        setError(null);
         const [fetchedItineraries, fetchedCompanies] = await Promise.all([
-          fetchItineraries(token),
-          fetchCompanies(token),
+          fetchItineraries(token ? token : 'undefined'),
+          fetchCompanies(token ? token : 'undefined'),
         ]);
         setItineraries(fetchedItineraries);
         setCompanies(fetchedCompanies);
       } catch (loadError) {
-        setError(
+        toast.error(
           loadError instanceof Error
             ? loadError.message
             : "Failed to load home data",
@@ -49,7 +49,7 @@ function HomePage() {
     }
 
     void loadData();
-  }, [token]);
+  }, [activeRole]);
 
   const featuredItineraries = useMemo(() => itineraries.slice(0, 6), [itineraries]);
   const spotlight = featuredItineraries[0];
@@ -59,13 +59,12 @@ function HomePage() {
 
   async function handleAttend(itinerary: Itinerary) {
     if (!token || !user) {
-      setError("Please login to register for an itinerary.");
+      toast.error("Please login to register for an itinerary.");
       return;
     }
 
     try {
       setAttendingItineraryId(String(itinerary.id));
-      setError(null);
       setActionMessage(null);
 
       const booking = await createBooking(token, {
@@ -79,10 +78,9 @@ function HomePage() {
         booking_id: String(booking.id),
         itinerary_id: String(itinerary.id),
       });
-
-      setActionMessage(`Successfully registered for ${itinerary.title}.`);
+    toast.success(`Successfully registered for ${itinerary.title}! Check your my Bookings for details.`);
     } catch (attendError) {
-      setError(
+      toast.error(
         attendError instanceof Error
           ? attendError.message
           : "Failed to register for itinerary",
@@ -228,10 +226,6 @@ function HomePage() {
 
       {isLoading && (
         <p className="text-sm text-slate-300">Loading live data...</p>
-      )}
-
-      {error && (
-        <p className="text-sm text-red-300">{error}</p>
       )}
 
       {actionMessage && (

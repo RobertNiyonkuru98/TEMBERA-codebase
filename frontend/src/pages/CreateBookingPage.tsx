@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import { useAuth } from "../AuthContext";
 import { useI18n } from "../i18n";
-import { createBooking, createBookingItem, fetchItineraries } from "../api/platformApi";
+import { createBooking, fetchItineraries } from "../api/platformApi";
 import type { Itinerary } from "../types";
 
 type GroupMember = {
@@ -25,7 +26,9 @@ function CreateBookingPage() {
   const [description, setDescription] = useState("");
   const [isGroup, setIsGroup] = useState(false);
   const [groupType, setGroupType] = useState<GroupType>("personal");
-  const [groupMembers, setGroupMembers] = useState<GroupMember[]>([]);
+  const [groupMembers, setGroupMembers] = useState<GroupMember[]>([
+    { name: "", phoneNumber: "", email: "", nationalId: "" },
+  ]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -93,11 +96,28 @@ function CreateBookingPage() {
 
     if (!token) {
       setError("Missing authentication token");
+      toast.error("Something went wrong");
       return;
     }
 
     if (!selectedItineraryId) {
       setError("Please select an itinerary");
+      toast.error("Something went wrong");
+      return;
+    }
+
+    const type = isGroup ? "group" : "personal";
+    const normalizedMembers = groupMembers
+      .map((member) => ({
+        name: member.name.trim(),
+        email: member.email.trim() || undefined,
+        phone: member.phoneNumber.trim() || undefined,
+      }))
+      .filter((member) => member.name.length > 0);
+
+    if (type === "group" && normalizedMembers.length === 0) {
+      setError("Add at least one person for group booking");
+      toast.error("Add at least one person for group booking");
       return;
     }
 
@@ -110,23 +130,27 @@ function CreateBookingPage() {
 
       const booking = await createBooking(token, {
         user_id: currentUserId,
+        itineraryId: selectedItineraryId,
+        type,
         description: isGroup ? `${baseDescription} (${groupType})` : baseDescription,
-        status: "pending",
         date: new Date().toISOString().slice(0, 10),
+        members: type === "group" ? normalizedMembers : [],
       });
 
-      await createBookingItem(token, {
-        booking_id: String(booking.id),
-        itinerary_id: selectedItineraryId,
-      });
+      if (!booking) {
+        throw new Error("Booking creation failed");
+      }
 
-      navigate("/my-registrations");
+      toast.success("Booking created successfully");
+
+      navigate("/my-bookings");
     } catch (submitError) {
-      setError(
+      const errorMsg =
         submitError instanceof Error
           ? submitError.message
-          : "Failed to create booking",
-      );
+          : "Failed to create booking";
+      setError(errorMsg);
+      toast.error(errorMsg || "Something went wrong");
     } finally {
       setIsSubmitting(false);
     }

@@ -2,7 +2,78 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import { fetchBookingItems, fetchCompanies, fetchItineraries } from "../api/platformApi";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/carousel";
 import type { BookingItem, Company, Itinerary } from "../types";
+
+function ItineraryImageCarousel({ itinerary }: { itinerary: Itinerary }) {
+  const images = itinerary.imageUrls?.length
+    ? itinerary.imageUrls
+    : itinerary.imageUrl
+      ? [itinerary.imageUrl]
+      : [];
+
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!api) {
+      return;
+    }
+
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap() + 1);
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap() + 1);
+    });
+  }, [api]);
+
+  if (images.length === 0) {
+    return <span className="text-xs text-slate-400">No images</span>;
+  }
+
+  return (
+    <div className="mx-auto max-w-[12rem] sm:max-w-xs">
+      <Carousel setApi={setApi} className="w-full max-w-xs">
+        <CarouselContent>
+          {images.map((image, index) => (
+            <CarouselItem key={`${itinerary.id}-${image}-${index}`}>
+              <Card className="m-px overflow-hidden border-slate-700 bg-slate-950">
+                <CardContent className="p-0">
+                  <img
+                    src={image}
+                    alt={`${itinerary.title} image ${index + 1}`}
+                    className="aspect-square w-full object-cover"
+                  />
+                </CardContent>
+              </Card>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        {images.length > 1 && (
+          <>
+            <CarouselPrevious />
+            <CarouselNext />
+          </>
+        )}
+      </Carousel>
+      {images.length > 1 && (
+        <div className="py-2 text-center text-xs text-slate-400">
+          Slide {current} of {count}
+        </div>
+      )}
+    </div>
+  );
+}
 
 function CompanyItinerariesPage() {
   const { user, token } = useAuth();
@@ -24,7 +95,7 @@ function CompanyItinerariesPage() {
         setError(null);
         const [allCompanies, allItineraries, allBookingItems] = await Promise.all([
           fetchCompanies(token),
-          fetchItineraries(token),
+          fetchItineraries(token, { includeBlobs: true }),
           fetchBookingItems(token),
         ]);
 
@@ -79,12 +150,22 @@ function CompanyItinerariesPage() {
   return (
     <div className="space-y-4">
       <header>
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-50">
-          Company Itineraries
-        </h1>
-        <p className="text-sm text-slate-300">
-          Itineraries belonging to companies owned by your account.
-        </p>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-semibold tracking-tight text-slate-50">
+              Company Itineraries
+            </h1>
+            <p className="text-sm text-slate-300">
+              Itineraries belonging to companies owned by your account.
+            </p>
+          </div>
+          <Link
+            to="/company/itineraries/create"
+            className="rounded-md bg-emerald-500 px-3 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400"
+          >
+            Create Itinerary
+          </Link>
+        </div>
       </header>
 
       {isLoading && <p className="text-sm text-slate-300">Loading itineraries...</p>}
@@ -97,49 +178,72 @@ function CompanyItinerariesPage() {
       )}
 
       {!isLoading && !error && companies.length > 0 && (
-        <div className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/60">
-          <table className="w-full min-w-[880px] text-left text-sm text-slate-200">
-            <thead className="border-b border-slate-800 bg-slate-900/80 text-xs uppercase tracking-wide text-slate-400">
-              <tr>
-                <th className="px-4 py-3">Title</th>
-                <th className="px-4 py-3">Company</th>
-                <th className="px-4 py-3">Location</th>
-                <th className="px-4 py-3">Date</th>
-                <th className="px-4 py-3">Price</th>
-                <th className="px-4 py-3">Attendees</th>
-                <th className="px-4 py-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {itineraries.map((itinerary) => (
-                <tr key={itinerary.id} className="border-b border-slate-800/60">
-                  <td className="px-4 py-3">{itinerary.title}</td>
-                  <td className="px-4 py-3">
-                    {companyById.get(String(itinerary.companyId))?.name ?? "Unknown"}
-                  </td>
-                  <td className="px-4 py-3">{itinerary.location ?? "-"}</td>
-                  <td className="px-4 py-3">
-                    {new Date(itinerary.date).toLocaleDateString()}
-                  </td>
-                  <td className="px-4 py-3 font-medium text-emerald-300">
-                    {itinerary.price.toLocaleString()} RWF
-                  </td>
-                  <td className="px-4 py-3">
-                    {attendeesByItinerary.get(String(itinerary.id)) ?? 0}
-                  </td>
-                  <td className="px-4 py-3">
-                    <Link
-                      to={`/company/itinerary/${itinerary.id}/attendees`}
-                      className="rounded-md border border-slate-700 px-2 py-1 text-xs text-slate-200 transition hover:bg-slate-800"
-                    >
-                      View attendees
-                    </Link>
-                  </td>
+        itineraries.length === 0 ? (
+          <div className="rounded-xl border border-amber-900 bg-amber-950/30 p-4 text-sm text-amber-100">
+            <p className="font-medium">Create your first itinerary to start.</p>
+            <p className="mt-1 text-amber-200">Your dashboard unlocks after your first itinerary.</p>
+            <Link
+              to="/company/itineraries/create"
+              className="mt-3 inline-flex rounded-md bg-emerald-500 px-3 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400"
+            >
+              Create Itinerary
+            </Link>
+          </div>
+        ) : (
+          <div className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/60">
+            <table className="w-full min-w-[880px] text-left text-sm text-slate-200">
+              <thead className="border-b border-slate-800 bg-slate-900/80 text-xs uppercase tracking-wide text-slate-400">
+                <tr>
+                  <th className="px-4 py-3">Title</th>
+                  <th className="px-4 py-3">Company</th>
+                  <th className="px-4 py-3">Images</th>
+                  <th className="px-4 py-3">Location</th>
+                  <th className="px-4 py-3">Date</th>
+                  <th className="px-4 py-3">Price</th>
+                  <th className="px-4 py-3">Attendees</th>
+                  <th className="px-4 py-3">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {itineraries.map((itinerary) => (
+                  <tr key={itinerary.id} className="border-b border-slate-800/60">
+                    <td className="px-4 py-3">{itinerary.title}</td>
+                    <td className="px-4 py-3">
+                      {companyById.get(String(itinerary.companyId))?.name ?? "Unknown"}
+                    </td>
+                    <td className="px-4 py-3">
+                      <ItineraryImageCarousel itinerary={itinerary} />
+                    </td>
+                    <td className="px-4 py-3">{itinerary.location ?? "-"}</td>
+                    <td className="px-4 py-3">
+                      {new Date(itinerary.date).toLocaleDateString()}
+                    </td>
+                    <td className="px-4 py-3 font-medium text-emerald-300">
+                      {itinerary.price.toLocaleString()} RWF
+                    </td>
+                    <td className="px-4 py-3">
+                      {attendeesByItinerary.get(String(itinerary.id)) ?? 0}
+                    </td>
+                    <td className="px-4 py-3 space-x-2">
+                      <Link
+                        to={`/company/itinerary/${itinerary.id}/attendees`}
+                        className="rounded-md border border-slate-700 px-2 py-1 text-xs text-slate-200 transition hover:bg-slate-800"
+                      >
+                        View attendees
+                      </Link>
+                      <Link
+                        to={`/company/itinerary/${itinerary.id}/images`}
+                        className="rounded-md border border-slate-700 bg-slate-800 px-2 py-1 text-xs text-slate-200 transition hover:bg-slate-700"
+                      >
+                        Manage images
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )
       )}
     </div>
   );

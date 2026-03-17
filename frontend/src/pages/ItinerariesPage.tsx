@@ -22,17 +22,12 @@ function ItinerariesPage() {
 
   useEffect(() => {
     async function loadData() {
-      if (!token) {
-        setIsLoading(false);
-        return;
-      }
-
       try {
         setIsLoading(true);
         setError(null);
         const [fetchedItineraries, fetchedCompanies] = await Promise.all([
-          fetchItineraries(token),
-          fetchCompanies(token),
+          fetchItineraries(token ? token : 'undefined'),
+          fetchCompanies(token ? token : 'undefined'),
         ]);
 
         setItineraries(fetchedItineraries);
