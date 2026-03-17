@@ -26,6 +26,7 @@ export function asyncWrapper(fn: (request: Request, response: Response, next: Ne
       }
       
       // Default error handler
+      console.log("Unhandled error in async wrapper:", err);
       return ResponseHandler.error(reply, err, 999, 500);
     }
   };
