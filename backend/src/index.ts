@@ -8,6 +8,7 @@ import YAML from "yamljs";
 import path from "path";
 import { logger } from "./utils/logger";
 import router from "./routes";
+import cors from "cors";
 
 const __dirname = path.resolve();
 
@@ -38,6 +39,7 @@ const swaggerDocument = YAML.load(path.join(__dirname, "src", "swagger.yml"));
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(express.json());
+app.use(cors());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use("/api", router);
