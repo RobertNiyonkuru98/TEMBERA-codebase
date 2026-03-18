@@ -2,83 +2,177 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import { fetchBookingItems, fetchCompanies, fetchItineraries } from "../api/platformApi";
-import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-  type CarouselApi,
-} from "@/components/ui/carousel";
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { BookingItem, Company, Itinerary } from "../types";
+import {
+  Plus,
+  Calendar,
+  MapPin,
+  Users,
+  Eye,
+  Images,
+  ImageIcon,
+} from "lucide-react";
 
-function ItineraryImageCarousel({ itinerary }: { itinerary: Itinerary }) {
+function ItineraryCard({
+  itinerary,
+  companyName,
+  attendeeCount,
+}: {
+  itinerary: Itinerary;
+  companyName: string;
+  attendeeCount: number;
+}) {
   const images = itinerary.imageUrls?.length
     ? itinerary.imageUrls
     : itinerary.imageUrl
       ? [itinerary.imageUrl]
       : [];
 
-  const [api, setApi] = useState<CarouselApi>();
-  const [current, setCurrent] = useState(0);
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    if (!api) {
-      return;
-    }
-
-    const updateCounts = () => {
-      setCount(api.scrollSnapList().length);
-      setCurrent(api.selectedScrollSnap() + 1);
-    };
-
-    updateCounts();
-
-    api.on("select", () => {
-      setCurrent(api.selectedScrollSnap() + 1);
-    });
-
-    return () => {
-      api.off("select", updateCounts);
-    };
-  }, [api]);
-
-  if (images.length === 0) {
-    return <span className="text-xs text-slate-400">No images</span>;
-  }
+  const thumbnail = images[0];
 
   return (
-    <div className="mx-auto max-w-48 sm:max-w-xs">
-      <Carousel setApi={setApi} className="w-full max-w-xs">
-        <CarouselContent>
-          {images.map((image, index) => (
-            <CarouselItem key={`${itinerary.id}-${image}-${index}`}>
-              <Card className="m-px overflow-hidden border-slate-700 bg-slate-950">
-                <CardContent className="p-0">
-                  <img
-                    src={image}
-                    alt={`${itinerary.title} image ${index + 1}`}
-                    className="aspect-square w-full object-cover"
-                  />
-                </CardContent>
-              </Card>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        {images.length > 1 && (
-          <>
-            <CarouselPrevious />
-            <CarouselNext />
-          </>
+    <div className="group relative overflow-hidden rounded-xl border border-slate-800 bg-slate-900/60 transition-all hover:border-slate-700 hover:bg-slate-900/80">
+      {/* Image / Placeholder */}
+      <Link to={`/company/itinerary/${itinerary.id}/detail`} className="block">
+        {thumbnail ? (
+          <div className="relative aspect-16/10 overflow-hidden">
+            <img
+              src={thumbnail}
+              alt={itinerary.title}
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-linear-to-t from-slate-950/60 via-transparent to-transparent" />
+            {images.length > 1 && (
+              <span className="absolute bottom-2 right-2 inline-flex items-center gap-1 rounded-full bg-slate-900/80 px-2 py-0.5 text-xs font-medium text-slate-200 backdrop-blur-sm">
+                <ImageIcon className="h-3 w-3" />
+                {images.length}
+              </span>
+            )}
+          </div>
+        ) : (
+          <div className="flex aspect-16/10 items-center justify-center bg-slate-800/30">
+            <ImageIcon className="h-10 w-10 text-slate-700" />
+          </div>
         )}
-      </Carousel>
-      {images.length > 1 && (
-        <div className="py-2 text-center text-xs text-slate-400">
-          Slide {current} of {count}
+      </Link>
+
+      {/* Content */}
+      <div className="p-4 space-y-3">
+        <div>
+          <Link
+            to={`/company/itinerary/${itinerary.id}/detail`}
+            className="text-base font-semibold text-slate-100 transition-colors hover:text-emerald-400 line-clamp-1"
+          >
+            {itinerary.title}
+          </Link>
+          <p className="mt-0.5 text-xs text-slate-500">{companyName}</p>
         </div>
-      )}
+
+        {/* Meta info */}
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-slate-400">
+          {itinerary.location && (
+            <span className="inline-flex items-center gap-1">
+              <MapPin className="h-3 w-3" />
+              <span className="line-clamp-1">{itinerary.location}</span>
+            </span>
+          )}
+          <span className="inline-flex items-center gap-1">
+            <Calendar className="h-3 w-3" />
+            {new Date(itinerary.date).toLocaleDateString()}
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <Users className="h-3 w-3" />
+            {attendeeCount}
+          </span>
+        </div>
+
+        {/* Price + Actions */}
+        <div className="flex items-center justify-between pt-1 border-t border-slate-800/60">
+          <span className="text-sm font-bold text-emerald-400">
+            {itinerary.price.toLocaleString()} RWF
+          </span>
+
+          <TooltipProvider>
+            <div className="flex items-center gap-1">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link
+                    to={`/company/itinerary/${itinerary.id}/detail`}
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-800 hover:text-slate-200"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  <p>View details</p>
+                </TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link
+                    to={`/company/itinerary/${itinerary.id}/images`}
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-800 hover:text-slate-200"
+                  >
+                    <Images className="h-4 w-4" />
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  <p>Manage images</p>
+                </TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link
+                    to={`/company/itinerary/${itinerary.id}/attendees`}
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-800 hover:text-emerald-400"
+                  >
+                    <Users className="h-4 w-4" />
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  <p>View attendees</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          </TooltipProvider>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ItineraryCardSkeleton() {
+  return (
+    <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900/60">
+      <Skeleton className="aspect-16/10 w-full bg-slate-800" />
+      <div className="p-4 space-y-3">
+        <div className="space-y-2">
+          <Skeleton className="h-5 w-3/4 bg-slate-800" />
+          <Skeleton className="h-3 w-1/3 bg-slate-800/60" />
+        </div>
+        <div className="flex gap-3">
+          <Skeleton className="h-3 w-20 bg-slate-800/60" />
+          <Skeleton className="h-3 w-20 bg-slate-800/60" />
+          <Skeleton className="h-3 w-12 bg-slate-800/60" />
+        </div>
+        <div className="flex items-center justify-between pt-1 border-t border-slate-800/60">
+          <Skeleton className="h-5 w-24 bg-slate-800" />
+          <div className="flex gap-1">
+            <Skeleton className="h-8 w-8 rounded-lg bg-slate-800/60" />
+            <Skeleton className="h-8 w-8 rounded-lg bg-slate-800/60" />
+            <Skeleton className="h-8 w-8 rounded-lg bg-slate-800/60" />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -156,143 +250,91 @@ function CompanyItinerariesPage() {
   }, [bookingItems]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <header>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-slate-50">
-              Company Itineraries
+            <h1 className="text-2xl font-bold tracking-tight text-slate-50">
+              Itineraries
             </h1>
-            <p className="text-sm text-slate-300">
-              Itineraries belonging to companies owned by your account.
+            <p className="mt-1 text-sm text-slate-400">
+              Manage and view all itineraries for your companies.
             </p>
           </div>
           <Link
             to="/company/itineraries/create"
-            className="rounded-md bg-emerald-500 px-3 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400"
+            className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-600/20 transition-all hover:bg-emerald-500 hover:shadow-emerald-500/30"
           >
-            Create Itinerary
+            <Plus className="h-4 w-4" />
+            New Itinerary
           </Link>
         </div>
       </header>
 
+      {/* Loading Skeletons */}
       {isLoading && (
-        <div className="space-y-4">
-          {/* Header Skeleton */}
-          <div className="animate-pulse space-y-3">
-            <div className="h-8 w-64 rounded-lg bg-slate-800"></div>
-            <div className="h-4 w-96 rounded-lg bg-slate-800/60"></div>
-          </div>
-          
-          {/* Table Skeleton */}
-          <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900/60">
-            <div className="border-b border-slate-800 bg-slate-900/80 px-4 py-3">
-              <div className="flex gap-4">
-                <div className="h-4 w-24 animate-pulse rounded bg-slate-700"></div>
-                <div className="h-4 w-24 animate-pulse rounded bg-slate-700"></div>
-                <div className="h-4 w-24 animate-pulse rounded bg-slate-700"></div>
-                <div className="h-4 w-24 animate-pulse rounded bg-slate-700"></div>
-                <div className="h-4 w-24 animate-pulse rounded bg-slate-700"></div>
-                <div className="h-4 w-24 animate-pulse rounded bg-slate-700"></div>
-              </div>
-            </div>
-            <div className="divide-y divide-slate-800/60">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="px-4 py-4">
-                  <div className="flex items-center gap-4">
-                    <div className="h-6 w-48 animate-pulse rounded-lg bg-slate-800"></div>
-                    <div className="h-6 w-32 animate-pulse rounded-lg bg-slate-800"></div>
-                    <div className="h-20 w-20 animate-pulse rounded-lg bg-slate-800"></div>
-                    <div className="h-6 w-24 animate-pulse rounded-lg bg-slate-800"></div>
-                    <div className="h-6 w-24 animate-pulse rounded-lg bg-slate-800"></div>
-                    <div className="h-6 w-20 animate-pulse rounded-lg bg-slate-800"></div>
-                    <div className="h-6 w-16 animate-pulse rounded-lg bg-slate-800"></div>
-                    <div className="flex gap-2">
-                      <div className="h-8 w-24 animate-pulse rounded-md bg-slate-700"></div>
-                      <div className="h-8 w-24 animate-pulse rounded-md bg-slate-700"></div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <ItineraryCardSkeleton key={i} />
+          ))}
         </div>
       )}
-      {error && <p className="text-sm text-red-300">{error}</p>}
 
-      {!isLoading && !error && companies.length === 0 && (
-        <p className="text-sm text-slate-300">
-          No companies are linked to your user yet.
-        </p>
+      {/* Error */}
+      {error && (
+        <div className="rounded-xl border border-red-900/50 bg-red-950/20 p-4">
+          <p className="text-sm text-red-400">{error}</p>
+        </div>
       )}
 
-      {!isLoading && !error && companies.length > 0 && (
-        itineraries.length === 0 ? (
-          <div className="rounded-xl border border-amber-900 bg-amber-950/30 p-4 text-sm text-amber-100">
-            <p className="font-medium">Create your first itinerary to start.</p>
-            <p className="mt-1 text-amber-200">Your dashboard unlocks after your first itinerary.</p>
-            <Link
-              to="/company/itineraries/create"
-              className="mt-3 inline-flex rounded-md bg-emerald-500 px-3 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400"
-            >
-              Create Itinerary
-            </Link>
+      {/* No companies */}
+      {!isLoading && !error && companies.length === 0 && (
+        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-8 text-center">
+          <p className="text-sm text-slate-400">
+            No companies are linked to your account yet.
+          </p>
+        </div>
+      )}
+
+      {/* Empty state */}
+      {!isLoading && !error && companies.length > 0 && itineraries.length === 0 && (
+        <div className="rounded-xl border border-dashed border-slate-700 bg-slate-900/30 p-10 text-center">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/10">
+            <Plus className="h-7 w-7 text-emerald-400" />
           </div>
-        ) : (
-          <div className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/60">
-            <table className="w-full min-w-[880px] text-left text-sm text-slate-200">
-              <thead className="border-b border-slate-800 bg-slate-900/80 text-xs uppercase tracking-wide text-slate-400">
-                <tr>
-                  <th className="px-4 py-3">Title</th>
-                  <th className="px-4 py-3">Company</th>
-                  <th className="px-4 py-3">Images</th>
-                  <th className="px-4 py-3">Location</th>
-                  <th className="px-4 py-3">Date</th>
-                  <th className="px-4 py-3">Price</th>
-                  <th className="px-4 py-3">Attendees</th>
-                  <th className="px-4 py-3">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {itineraries.map((itinerary) => (
-                  <tr key={itinerary.id} className="border-b border-slate-800/60">
-                    <td className="px-4 py-3">{itinerary.title}</td>
-                    <td className="px-4 py-3">
-                      {companyById.get(String(itinerary.companyId))?.name ?? "Unknown"}
-                    </td>
-                    <td className="px-4 py-3">
-                      <ItineraryImageCarousel itinerary={itinerary} />
-                    </td>
-                    <td className="px-4 py-3">{itinerary.location ?? "-"}</td>
-                    <td className="px-4 py-3">
-                      {new Date(itinerary.date).toLocaleDateString()}
-                    </td>
-                    <td className="px-4 py-3 font-medium text-emerald-300">
-                      {itinerary.price.toLocaleString()} RWF
-                    </td>
-                    <td className="px-4 py-3">
-                      {attendeesByItinerary.get(String(itinerary.id)) ?? 0}
-                    </td>
-                    <td className="px-4 py-3 space-x-2">
-                      <Link
-                        to={`/company/itinerary/${itinerary.id}/attendees`}
-                        className="rounded-md border border-slate-700 px-2 py-1 text-xs text-slate-200 transition hover:bg-slate-800"
-                      >
-                        View attendees
-                      </Link>
-                      <Link
-                        to={`/company/itinerary/${itinerary.id}/images`}
-                        className="rounded-md border border-slate-700 bg-slate-800 px-2 py-1 text-xs text-slate-200 transition hover:bg-slate-700"
-                      >
-                        Manage images
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <h3 className="text-lg font-semibold text-slate-200">
+            Create your first itinerary
+          </h3>
+          <p className="mt-1 text-sm text-slate-400">
+            Get started by creating an itinerary for your company.
+          </p>
+          <Link
+            to="/company/itineraries/create"
+            className="mt-5 inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-emerald-500"
+          >
+            <Plus className="h-4 w-4" />
+            New Itinerary
+          </Link>
+        </div>
+      )}
+
+      {/* Itinerary Cards Grid */}
+      {!isLoading && !error && itineraries.length > 0 && (
+        <>
+          <div className="flex items-center gap-2 text-sm text-slate-500">
+            <span>{itineraries.length} {itineraries.length === 1 ? "itinerary" : "itineraries"}</span>
           </div>
-        )
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {itineraries.map((itinerary) => (
+              <ItineraryCard
+                key={itinerary.id}
+                itinerary={itinerary}
+                companyName={companyById.get(String(itinerary.companyId))?.name ?? "Unknown"}
+                attendeeCount={attendeesByItinerary.get(String(itinerary.id)) ?? 0}
+              />
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

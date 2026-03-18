@@ -148,6 +148,24 @@ export const createItineraryImages = async (req: Request, res: Response) => {
   );
   ResponseHandler.success(res, 200, 'Itinerary images added successfully', presentable);
 };
+export const addCloudinaryImagesToItinerary = async (req: Request, res: Response) => {
+  const id = String(req.params.id);
+  const { imageUrls } = req.body;
+
+  if (!imageUrls || !Array.isArray(imageUrls) || imageUrls.length === 0) {
+    throw new BadRequestError('imageUrls array is required');
+  }
+
+  const updatedItinerary = await itineraryService.addCloudinaryImages(id, imageUrls);
+  if (!updatedItinerary) throw new NotFoundError('Itinerary not found');
+
+  const presentable = await presentItineraryImages(
+    updatedItinerary as ItineraryWithImagesPayload,
+    false,
+  );
+  ResponseHandler.success(res, 200, 'Cloudinary images added successfully', presentable);
+};
+
 export const updateItinerary = async (req: Request, res: Response) => {
   const id = String(req.params.id);
   const updateData = { ...req.body };

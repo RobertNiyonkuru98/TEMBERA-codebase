@@ -27,6 +27,7 @@ import AdminCreateItineraryPage from "./pages/AdminCreateItineraryPage";
 import CompanyRegisterPage from "./pages/CompanyRegisterPage";
 import CompanyCreateItineraryPage from "./pages/CompanyCreateItineraryPage";
 import CompanyItineraryImagesPage from "./pages/CompanyItineraryImagesPage";
+import CompanyItineraryDetailPage from "./pages/CompanyItineraryDetailPage";
 import AuthenticatedSidebar from "./components/AuthenticatedSidebar";
 import GuestTopNav from "./components/GuestTopNav";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
@@ -290,6 +291,16 @@ function AppRoutes() {
           <CompanyRoute>
             <CompanyOnboardingRoute>
               <CompanyItinerariesPage />
+            </CompanyOnboardingRoute>
+          </CompanyRoute>
+        }
+      />
+      <Route
+        path="/company/itinerary/:id/detail"
+        element={
+          <CompanyRoute>
+            <CompanyOnboardingRoute>
+              <CompanyItineraryDetailPage />
             </CompanyOnboardingRoute>
           </CompanyRoute>
         }
