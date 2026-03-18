@@ -108,7 +108,7 @@ function CompanyDashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 flex items-center justify-center">
+      <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="h-12 w-12 animate-spin text-emerald-500" />
           <p className="text-sm text-slate-600 dark:text-slate-400">Loading company dashboard...</p>
@@ -119,7 +119,7 @@ function CompanyDashboardPage() {
 
   if (error) {
     return (
-      <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 p-8">
+      <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 p-8">
         <div className="mx-auto max-w-2xl rounded-2xl border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/10 p-8 text-center">
           <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
         </div>
@@ -129,7 +129,7 @@ function CompanyDashboardPage() {
 
   if (companies.length === 0) {
     return (
-      <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 p-8">
+      <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 p-8">
         <div className="mx-auto max-w-2xl rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8 text-center">
           <Building2 className="mx-auto h-16 w-16 text-slate-400 dark:text-slate-600 mb-4" />
           <p className="text-sm text-slate-600 dark:text-slate-400">No companies are linked to your account yet.</p>
@@ -139,12 +139,12 @@ function CompanyDashboardPage() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 py-8">
+    <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 py-8">
       <div className="mx-auto w-[95%] max-w-7xl space-y-8">
         {/* Header Section */}
         <header className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 p-3 shadow-lg">
+            <div className="rounded-2xl bg-linear-to-br from-emerald-400 to-emerald-600 p-3 shadow-lg">
               <Building2 className="h-8 w-8 text-white" />
             </div>
             <div>
@@ -213,7 +213,7 @@ function CompanyDashboardPage() {
           </article>
 
           {/* Total Revenue */}
-          <article className="group relative overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 p-6 shadow-lg transition-all hover:shadow-xl hover:scale-[1.02]">
+          <article className="group relative overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 p-6 shadow-lg transition-all hover:shadow-xl hover:scale-[1.02]">
             <div className="absolute top-0 right-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-amber-500/10 dark:bg-amber-500/5 blur-2xl" />
             <div className="relative">
               <div className="flex items-center justify-between mb-4">
@@ -234,7 +234,7 @@ function CompanyDashboardPage() {
 
         {/* Upcoming Itineraries Section */}
         <section className="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 shadow-lg">
-          <div className="border-b border-slate-200 dark:border-slate-800 bg-gradient-to-r from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-900/10 px-6 py-4">
+          <div className="border-b border-slate-200 dark:border-slate-800 bg-linear-to-r from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-900/10 px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="rounded-xl bg-emerald-500 p-2">
@@ -269,7 +269,7 @@ function CompanyDashboardPage() {
                     className="group flex flex-wrap items-center justify-between gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 p-4 transition-all hover:shadow-md hover:border-emerald-200 dark:hover:border-emerald-900/50"
                   >
                     <div className="flex items-center gap-4 flex-1 min-w-0">
-                      <div className="rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 p-3 shadow-md">
+                      <div className="rounded-xl bg-linear-to-br from-emerald-400 to-emerald-600 p-3 shadow-md">
                         <MapPin className="h-5 w-5 text-white" />
                       </div>
                       <div className="flex-1 min-w-0">

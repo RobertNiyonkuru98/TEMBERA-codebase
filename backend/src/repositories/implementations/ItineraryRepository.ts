@@ -132,10 +132,34 @@ export class ItineraryRepository implements IItineraryRepository {
     }
 
     await prisma.itineraryImage.createMany({
-      data: imagePaths.map((imagePath) => ({
+      data: imagePaths.map((imagePath, index) => ({
         itinerary_id: itineraryId,
-        image_path: imagePath,
+        image_url: imagePath,
+        public_id: `local_${Date.now()}_${index}`,
+        order: index,
       })),
+    });
+  }
+
+  async createCloudinaryImages(itineraryId: string, imageUrls: string[]): Promise<void> {
+    if (imageUrls.length === 0) {
+      return;
+    }
+
+    await prisma.itineraryImage.createMany({
+      data: imageUrls.map((imageUrl, index) => {
+        // Extract public_id from Cloudinary URL
+        // Format: https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_id}.{format}
+        const publicIdMatch = imageUrl.match(/\/upload\/(?:v\d+\/)?(.+)\.\w+$/);
+        const publicId = publicIdMatch ? publicIdMatch[1] : `cloudinary_${Date.now()}_${index}`;
+        
+        return {
+          itinerary_id: itineraryId,
+          image_url: imageUrl,
+          public_id: publicId,
+          order: index,
+        };
+      }),
     });
   }
 }

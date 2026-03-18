@@ -249,7 +249,7 @@ function HomePage() {
       </section>
 
       {/* STATS SECTION - Animated Counters */}
-      <section className="bg-gradient-to-b from-slate-100 to-slate-50 dark:from-slate-950 dark:to-slate-900 py-20 w-full">
+      <section className="bg-linear-to-b from-slate-100 to-slate-50 dark:from-slate-950 dark:to-slate-900 py-20 w-full">
         <div className="mx-auto w-[95%] max-w-[1920px]">
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {stats.map((stat, idx) => {
@@ -330,7 +330,7 @@ function HomePage() {
       </section>
 
       {/* FEATURED ITINERARIES */}
-      <section className="bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 py-20 w-full">
+      <section className="bg-linear-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 py-20 w-full">
         <div className="mx-auto w-[95%] max-w-[1920px]">
           <div className="mb-12 flex items-center justify-between">
             <div>

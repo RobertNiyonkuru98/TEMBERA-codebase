@@ -50,7 +50,7 @@ function ItineraryImageCarousel({ itinerary }: { itinerary: Itinerary }) {
   }
 
   return (
-    <div className="mx-auto max-w-[12rem] sm:max-w-xs">
+    <div className="mx-auto max-w-48 sm:max-w-xs">
       <Carousel setApi={setApi} className="w-full max-w-xs">
         <CarouselContent>
           {images.map((image, index) => (

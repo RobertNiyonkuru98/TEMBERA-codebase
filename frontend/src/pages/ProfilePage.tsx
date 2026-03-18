@@ -61,7 +61,7 @@ function ProfilePage() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 py-8">
+    <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 py-8">
       <div className="mx-auto w-[95%] max-w-4xl space-y-8">
         {/* Header */}
         <div className="space-y-2">
@@ -75,7 +75,7 @@ function ProfilePage() {
 
         {/* Account Details Card */}
         <section className="group overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 shadow-lg transition-all hover:shadow-xl">
-          <div className="border-b border-slate-200 dark:border-slate-800 bg-gradient-to-r from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-900/10 px-6 py-4">
+          <div className="border-b border-slate-200 dark:border-slate-800 bg-linear-to-r from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-900/10 px-6 py-4">
             <div className="flex items-center gap-3">
               <div className="rounded-xl bg-emerald-500 p-2">
                 <Shield className="h-5 w-5 text-white" />
@@ -112,7 +112,7 @@ function ProfilePage() {
           onSubmit={handleUpdate}
           className="group overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 shadow-lg transition-all hover:shadow-xl"
         >
-          <div className="border-b border-slate-200 dark:border-slate-800 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-900/10 px-6 py-4">
+          <div className="border-b border-slate-200 dark:border-slate-800 bg-linear-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-900/10 px-6 py-4">
             <div className="flex items-center gap-3">
               <div className="rounded-xl bg-blue-500 p-2">
                 <User className="h-5 w-5 text-white" />
@@ -196,7 +196,7 @@ function ProfilePage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="group w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-6 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-emerald-500/50 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group w-full inline-flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-emerald-500 to-emerald-600 px-6 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-emerald-500/50 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <>
@@ -215,7 +215,7 @@ function ProfilePage() {
 
         {/* Danger Zone */}
         <section className="group overflow-hidden rounded-2xl border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-950/20 shadow-lg transition-all hover:shadow-xl">
-          <div className="border-b border-red-200 dark:border-red-900/50 bg-gradient-to-r from-red-100 to-red-50 dark:from-red-900/30 dark:to-red-900/20 px-6 py-4">
+          <div className="border-b border-red-200 dark:border-red-900/50 bg-linear-to-r from-red-100 to-red-50 dark:from-red-900/30 dark:to-red-900/20 px-6 py-4">
             <div className="flex items-center gap-3">
               <div className="rounded-xl bg-red-500 p-2">
                 <Trash2 className="h-5 w-5 text-white" />

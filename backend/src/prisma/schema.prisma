@@ -6,104 +6,92 @@ datasource db {
   provider = "postgresql"
 }
 
-// User Model - Stores all users of the system
-model User {
-  id           String   @id @default(uuid()) @db.Uuid
-  name         String   @db.VarChar(255)
-  email        String   @unique @db.VarChar(255)
-  phone_number String?  @db.VarChar(50)
-  password     String   @db.VarChar(255)
-
-  bookings     Booking[]
-  companies    Company[] @relation("CompanyOwner")
-  roles        Role[]
+model Booking {
+  description   String?         @db.VarChar(255)
+  status        String          @db.VarChar(10)
+  date          DateTime        @db.Date
+  id            String          @id @db.Uuid
+  user_id       String          @db.Uuid
+  itinerary_id  String?         @db.Uuid
+  type          String          @default("personal") @db.VarChar(20)
+  Itinerary     Itinerary?      @relation(fields: [itinerary_id], references: [id])
+  User          User            @relation(fields: [user_id], references: [id])
+  BookingItem   BookingItem[]
+  BookingMember BookingMember[]
 }
 
-// Role Model - Stores access level and access status for each user
+model BookingItem {
+  id           String    @id @db.Uuid
+  itinerary_id String    @db.Uuid
+  booking_id   String    @db.Uuid
+  Booking      Booking   @relation(fields: [booking_id], references: [id])
+  Itinerary    Itinerary @relation(fields: [itinerary_id], references: [id])
+
+  @@unique([booking_id, itinerary_id])
+}
+
+model BookingMember {
+  id         String  @id @db.Uuid
+  booking_id String  @db.Uuid
+  name       String  @db.VarChar(255)
+  email      String? @db.VarChar(255)
+  phone      String? @db.VarChar(50)
+  Booking    Booking @relation(fields: [booking_id], references: [id], onDelete: Cascade)
+}
+
+model Company {
+  name        String      @db.VarChar(50)
+  description String?     @db.VarChar(255)
+  contact     String?     @db.VarChar(50)
+  id          String      @id @db.Uuid
+  owner_id    String      @db.Uuid
+  User        User        @relation(fields: [owner_id], references: [id])
+  Itinerary   Itinerary[]
+}
+
+model Itinerary {
+  title          String           @db.VarChar(50)
+  activity       String?          @db.VarChar(255)
+  description    String?          @db.VarChar(255)
+  location       String?          @db.VarChar(255)
+  date           DateTime         @db.Date
+  price          Float
+  id             String           @id @db.Uuid
+  company_id     String           @db.Uuid
+  Booking        Booking[]
+  BookingItem    BookingItem[]
+  Company        Company          @relation(fields: [company_id], references: [id])
+  ItineraryImage ItineraryImage[]
+}
+
+model ItineraryImage {
+  id           String    @id @default(uuid()) @db.Uuid
+  itinerary_id String    @db.Uuid
+  image_path   String?   @db.VarChar(255)
+  image_url    String    @db.VarChar(500)
+  public_id    String    @db.VarChar(255)
+  order        Int       @default(0)
+  created_at   DateTime  @default(now())
+  Itinerary    Itinerary @relation(fields: [itinerary_id], references: [id], onDelete: Cascade)
+}
+
 model Role {
-  id            String @id @default(uuid()) @db.Uuid
+  id            String @id @db.Uuid
   user_id       String @db.Uuid
   access_level  String @db.VarChar(50)
   access_status String @db.VarChar(20)
-
-  user          User   @relation(fields: [user_id], references: [id])
+  User          User   @relation(fields: [user_id], references: [id])
 
   @@unique([user_id, access_level])
 }
 
-// Company Model - Represents companies that provide itineraries
-model Company {
-  id          String   @id @default(uuid()) @db.Uuid
-  name        String   @db.VarChar(50)
-  description String?  @db.VarChar(255)
-  contact     String?  @db.VarChar(50)
-
-  owner_id    String   @db.Uuid
-  owner       User     @relation("CompanyOwner", fields: [owner_id], references: [id])
-
-  itineraries Itinerary[]
-}
-
-// Itinerary Model - Stores travel or activity information
-model Itinerary {
-  id          String    @id @default(uuid()) @db.Uuid
-  company_id  String    @db.Uuid
-  title       String    @db.VarChar(50)
-  activity    String?   @db.VarChar(255)
-  description String?   @db.VarChar(255)
-  location    String?   @db.VarChar(255)
-  date        DateTime  @db.Date
-  price       Float
-
-  company      Company       @relation(fields: [company_id], references: [id])
-  bookings     Booking[]
-  bookingItems BookingItem[]
-  images       ItineraryImage[]
-}
-
-// ItineraryImage Model - Stores one or more images associated with an itinerary
-model ItineraryImage {
-  id           String    @id @default(uuid()) @db.Uuid
-  itinerary_id String    @db.Uuid
-  image_path   String    @db.VarChar(255)
-
-  itinerary    Itinerary @relation(fields: [itinerary_id], references: [id])
-}
-
-// Booking Model - Represents a booking created by a user
-model Booking {
-  id          String   @id @default(uuid()) @db.Uuid
-  user_id     String   @db.Uuid
-  itinerary_id String?  @db.Uuid
-  type        String   @default("personal") @db.VarChar(20)
-  description String?  @db.VarChar(255)
-  status      String   @db.VarChar(10)
-  date        DateTime @db.Date
-
-  user        User          @relation(fields: [user_id], references: [id])
-  itinerary   Itinerary?    @relation(fields: [itinerary_id], references: [id])
-  items       BookingItem[]
-  members     BookingMember[]
-}
-
-model BookingMember {
-  id         String   @id @default(uuid()) @db.Uuid
-  booking_id String   @db.Uuid
-  name       String   @db.VarChar(255)
-  email      String?  @db.VarChar(255)
-  phone      String?  @db.VarChar(50)
-
-  booking    Booking  @relation(fields: [booking_id], references: [id], onDelete: Cascade)
-}
-
-// BookingItem Model - Junction table connecting bookings and itineraries
-model BookingItem {
-  id           String    @id @default(uuid()) @db.Uuid
-  itinerary_id String    @db.Uuid
-  booking_id   String    @db.Uuid
-
-  itinerary    Itinerary @relation(fields: [itinerary_id], references: [id])
-  booking      Booking   @relation(fields: [booking_id], references: [id])
-
-  @@unique([booking_id, itinerary_id])
+model User {
+  name         String    @db.VarChar(255)
+  email        String    @unique @db.VarChar(255)
+  phone_number String?   @db.VarChar(50)
+  password     String    @db.VarChar(255)
+  id           String    @id @db.Uuid
+  Booking      Booking[]
+  Company      Company[]
+  Role         Role[]
 }

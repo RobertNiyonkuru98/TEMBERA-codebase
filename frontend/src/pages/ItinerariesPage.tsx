@@ -83,7 +83,7 @@ function ItinerariesPage() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+    <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
       <div className="mx-auto w-[95%] max-w-[1920px] space-y-8 py-12">
         {/* Header Section */}
         <header className="space-y-4">

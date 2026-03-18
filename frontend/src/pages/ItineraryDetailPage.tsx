@@ -139,7 +139,7 @@ function ItineraryDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 flex items-center justify-center">
+      <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 flex items-center justify-center">
         <div className="flex flex-col items-center">
           <Loader2 className="h-12 w-12 animate-spin text-emerald-500" />
           <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">{t("detail.loadingDetails")}</p>
@@ -150,7 +150,7 @@ function ItineraryDetailPage() {
 
   if (error) {
     return (
-      <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+      <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
         <div className="mx-auto w-[95%] max-w-[1920px] py-12">
           <div className="rounded-xl border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/10 p-8 text-center space-y-4">
             <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
@@ -170,7 +170,7 @@ function ItineraryDetailPage() {
 
   if (!itinerary) {
     return (
-      <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+      <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
         <div className="mx-auto w-[95%] max-w-[1920px] py-12">
           <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8 text-center space-y-4">
             <p className="text-sm text-slate-600 dark:text-slate-400">{t("detail.notFound")}</p>
@@ -209,7 +209,7 @@ function ItineraryDetailPage() {
                 alt={itinerary.title}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-slate-900 via-slate-900/40 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-8">
                 <span className="inline-block rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-lg mb-4">
                   {itinerary.activity ?? "Experience"}
@@ -331,7 +331,7 @@ function ItineraryDetailPage() {
                     void handleAttend();
                   }}
                   disabled={isAttending}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-6 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-emerald-500/50 hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-emerald-500 to-emerald-600 px-6 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-emerald-500/50 hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isAttending ? t("detail.attending") : t("detail.attendButton")}
                 </button>

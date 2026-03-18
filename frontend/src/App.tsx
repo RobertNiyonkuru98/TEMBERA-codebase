@@ -128,17 +128,10 @@ function CompanyOnboardingRoute({
       return "/company/register";
     }
 
-    if (!hasItineraries) {
-
-      toast.info("Create your first itinerary to continue", {
-        description: "After creating one, you'll have full access to your dashboard.",
-      });
-      console.log("No itineraries found for company, redirecting to create page",);
-      return "/company/itineraries/create";
-    }
-
+    // Allow companies to access all pages even without itineraries
+    // They can create their first itinerary from the dashboard or itineraries page
     return null;
-  }, [companyState.hasCompany, hasItineraries]);
+  }, [companyState.hasCompany]);
 
   if (isLoading) {
     return <p className="text-sm text-slate-300">Checking company setup...</p>;
