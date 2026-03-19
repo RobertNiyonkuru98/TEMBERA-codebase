@@ -122,7 +122,7 @@ function AuthenticatedSidebar({
         <div className="flex items-center gap-3">
           <div className="relative">
             <div className="absolute inset-0 rounded-xl bg-emerald-500 blur-md opacity-50" />
-            <span className="relative rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 px-3 py-2 text-sm font-bold text-slate-950 shadow-lg">
+            <span className="relative rounded-xl bg-linear-to-br from-emerald-400 to-emerald-600 px-3 py-2 text-sm font-bold text-slate-950 shadow-lg">
               TEMBERA
             </span>
           </div>
@@ -184,12 +184,12 @@ function AuthenticatedSidebar({
         )}
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-slate-200 dark:border-slate-800 bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-900/50 dark:to-slate-900 px-3 py-3">
+      <SidebarFooter className="border-t border-slate-200 dark:border-slate-800 bg-linear-to-b from-slate-50 to-slate-100 dark:from-slate-900/50 dark:to-slate-900 px-3 py-3">
         <div className="space-y-2">
           {/* User Profile Section */}
           <div className="rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-3 shadow-sm">
             <div className="flex items-center gap-3 mb-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-white font-semibold text-sm shadow-md">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br from-emerald-400 to-emerald-600 text-white font-semibold text-sm shadow-md">
                 {displayName.charAt(0).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">

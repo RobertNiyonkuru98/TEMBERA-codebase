@@ -38,7 +38,7 @@ function GuestTopNav({ brandTitle }: GuestTopNavProps) {
         <Link to="/" className="group flex items-center gap-3">
           <div className="relative">
             <div className="absolute inset-0 rounded-xl bg-emerald-500 blur-md opacity-50 group-hover:opacity-75 transition-opacity" />
-            <span className="relative rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 px-3 py-2 text-base font-bold text-slate-950 shadow-lg">
+            <span className="relative rounded-xl bg-linear-to-br from-emerald-400 to-emerald-600 px-3 py-2 text-base font-bold text-slate-950 shadow-lg">
               TEMBERA
             </span>
           </div>

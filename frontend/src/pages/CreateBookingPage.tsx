@@ -163,7 +163,7 @@ function CreateBookingPage() {
 
   if (isLoading) {
     return (
-      <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 flex items-center justify-center">
+      <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="h-12 w-12 animate-spin text-emerald-500" />
           <p className="text-sm text-slate-600 dark:text-slate-400">Loading itineraries...</p>
@@ -173,7 +173,7 @@ function CreateBookingPage() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 py-8">
+    <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 py-8">
       <div className="mx-auto w-[95%] max-w-4xl space-y-8">
         {/* Header */}
         <div className="space-y-2">
@@ -203,7 +203,7 @@ function CreateBookingPage() {
       >
         {/* Select Itinerary Card */}
         <div className="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 shadow-lg">
-          <div className="border-b border-slate-200 dark:border-slate-800 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-900/10 px-6 py-4">
+          <div className="border-b border-slate-200 dark:border-slate-800 bg-linear-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-900/10 px-6 py-4">
             <div className="flex items-center gap-3">
               <div className="rounded-xl bg-blue-500 p-2">
                 <Calendar className="h-5 w-5 text-white" />
@@ -251,7 +251,7 @@ function CreateBookingPage() {
 
         {/* Booking Note Card */}
         <div className="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 shadow-lg">
-          <div className="border-b border-slate-200 dark:border-slate-800 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-900/10 px-6 py-4">
+          <div className="border-b border-slate-200 dark:border-slate-800 bg-linear-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-900/10 px-6 py-4">
             <div className="flex items-center gap-3">
               <div className="rounded-xl bg-purple-500 p-2">
                 <FileText className="h-5 w-5 text-white" />
@@ -293,7 +293,7 @@ function CreateBookingPage() {
         {/* Group Members Card */}
         {isGroup && (
           <div className="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 shadow-lg">
-            <div className="border-b border-slate-200 dark:border-slate-800 bg-gradient-to-r from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-900/10 px-6 py-4">
+            <div className="border-b border-slate-200 dark:border-slate-800 bg-linear-to-r from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-900/10 px-6 py-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="rounded-xl bg-emerald-500 p-2">
@@ -326,12 +326,12 @@ function CreateBookingPage() {
               {groupMembers.map((member, index) => (
                 <div
                   key={index}
-                  className="group relative rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-gradient-to-br from-white to-slate-50 dark:from-slate-900/50 dark:to-slate-900/80 p-5 shadow-sm transition-all hover:shadow-md hover:border-emerald-200 dark:hover:border-emerald-900/50"
+                  className="group relative rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-linear-to-br from-white to-slate-50 dark:from-slate-900/50 dark:to-slate-900/80 p-5 shadow-sm transition-all hover:shadow-md hover:border-emerald-200 dark:hover:border-emerald-900/50"
                 >
                   {/* Member Header */}
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-white font-bold text-sm shadow-md">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br from-emerald-400 to-emerald-600 text-white font-bold text-sm shadow-md">
                         {index + 1}
                       </div>
                       <div>
@@ -449,7 +449,7 @@ function CreateBookingPage() {
         <button
           type="submit"
           disabled={isSubmitting || itineraries.length === 0}
-          className="group w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-6 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-emerald-500/50 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+          className="group w-full inline-flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-emerald-500 to-emerald-600 px-6 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-emerald-500/50 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
         >
           {isSubmitting ? (
             <>

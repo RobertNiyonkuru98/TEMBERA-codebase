@@ -44,7 +44,7 @@ const MenubarContent = React.forwardRef<
       align={align}
       sideOffset={sideOffset}
       className={cn(
-        "z-50 min-w-[12rem] overflow-hidden rounded-md border border-slate-700 bg-slate-900 p-1 text-slate-100 shadow-lg",
+        "z-50 min-w-48 overflow-hidden rounded-md border border-slate-700 bg-slate-900 p-1 text-slate-100 shadow-lg",
         className,
       )}
       {...props}

@@ -82,6 +82,7 @@ function BookingsPage() {
 
   useEffect(() => {
     void loadData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, user]);
 
   const userBookings = useMemo(() => {
@@ -180,7 +181,7 @@ function BookingsPage() {
 
   if (isLoading) {
     return (
-      <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 flex items-center justify-center">
+      <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="h-12 w-12 animate-spin text-emerald-500" />
           <p className="text-sm text-slate-600 dark:text-slate-400">{t("bookings.loading")}</p>
@@ -191,7 +192,7 @@ function BookingsPage() {
 
   if (error) {
     return (
-      <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 flex items-center justify-center">
+      <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 flex items-center justify-center">
         <div className="rounded-xl border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/10 p-8 text-center">
           <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
         </div>
@@ -200,7 +201,7 @@ function BookingsPage() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 py-8">
+    <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 py-8">
       <div className="mx-auto w-[95%] max-w-7xl space-y-8">
         {/* Header */}
         <header className="space-y-2">
@@ -250,9 +251,9 @@ function BookingsPage() {
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
                   ) : (
-                    <div className="h-full w-full bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-800 dark:to-slate-900" />
+                    <div className="h-full w-full bg-linear-to-br from-slate-200 to-slate-300 dark:from-slate-800 dark:to-slate-900" />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
+                  <div className="absolute inset-0 bg-linear-to-t from-slate-900/60 to-transparent" />
                   <div className="absolute bottom-4 left-4 right-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -387,7 +388,7 @@ function BookingsPage() {
                         onClick={() => {
                           void saveBooking(booking);
                         }}
-                        className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-emerald-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-emerald-500 to-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-emerald-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {isSaving ? (
                           <>

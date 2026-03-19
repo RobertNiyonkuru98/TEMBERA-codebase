@@ -311,7 +311,22 @@ type TranslationKey =
   | "company.createItinerary.success"
   | "company.createItinerary.noCompany"
   | "company.createItinerary.requiredFields"
-  | "company.createItinerary.invalidPrice";
+  | "company.createItinerary.invalidPrice"
+  | "company.manageImages.title"
+  | "company.manageImages.subtitle"
+  | "company.manageImages.backToItineraries"
+  | "company.manageImages.uploadTitle"
+  | "company.manageImages.uploadSubtitle"
+  | "company.manageImages.currentImages"
+  | "company.manageImages.noImages"
+  | "company.manageImages.noImagesHint"
+  | "company.manageImages.uploadButton"
+  | "company.manageImages.uploading"
+  | "company.manageImages.uploadSuccess"
+  | "company.manageImages.uploadError"
+  | "company.manageImages.photoCount"
+  | "company.manageImages.notFound"
+  | "company.manageImages.loading";
 
 const translations: Record<Lang, Record<TranslationKey, string>> = {
   en: {
@@ -624,6 +639,21 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
     "company.createItinerary.noCompany": "No company found for your account",
     "company.createItinerary.requiredFields": "Title, date, and price are required",
     "company.createItinerary.invalidPrice": "Price must be a valid number greater than 0",
+    "company.manageImages.title": "Manage Images",
+    "company.manageImages.subtitle": "Upload and manage photos for your experience",
+    "company.manageImages.backToItineraries": "Back to Itineraries",
+    "company.manageImages.uploadTitle": "Upload New Images",
+    "company.manageImages.uploadSubtitle": "Add photos to showcase your experience",
+    "company.manageImages.currentImages": "Current Images",
+    "company.manageImages.noImages": "No images yet",
+    "company.manageImages.noImagesHint": "Upload your first photos to attract more travelers",
+    "company.manageImages.uploadButton": "Upload Images",
+    "company.manageImages.uploading": "Uploading...",
+    "company.manageImages.uploadSuccess": "Images uploaded successfully!",
+    "company.manageImages.uploadError": "Failed to upload images",
+    "company.manageImages.photoCount": "photos",
+    "company.manageImages.notFound": "Itinerary not found",
+    "company.manageImages.loading": "Loading itinerary...",
   },
   fr: {
     "nav.home": "Accueil",
@@ -939,6 +969,21 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
     "company.createItinerary.noCompany": "Aucune entreprise trouvée pour votre compte",
     "company.createItinerary.requiredFields": "Le titre, la date et le prix sont requis",
     "company.createItinerary.invalidPrice": "Le prix doit être un nombre valide supérieur à 0",
+    "company.manageImages.title": "Gérer les Images",
+    "company.manageImages.subtitle": "Téléchargez et gérez les photos de votre expérience",
+    "company.manageImages.backToItineraries": "Retour aux Itinéraires",
+    "company.manageImages.uploadTitle": "Télécharger de Nouvelles Images",
+    "company.manageImages.uploadSubtitle": "Ajoutez des photos pour mettre en valeur votre expérience",
+    "company.manageImages.currentImages": "Images Actuelles",
+    "company.manageImages.noImages": "Aucune image pour le moment",
+    "company.manageImages.noImagesHint": "Téléchargez vos premières photos pour attirer plus de voyageurs",
+    "company.manageImages.uploadButton": "Télécharger les Images",
+    "company.manageImages.uploading": "Téléchargement...",
+    "company.manageImages.uploadSuccess": "Images téléchargées avec succès!",
+    "company.manageImages.uploadError": "Échec du téléchargement des images",
+    "company.manageImages.photoCount": "photos",
+    "company.manageImages.notFound": "Itinéraire introuvable",
+    "company.manageImages.loading": "Chargement de l'itinéraire...",
   },
   rw: {
     "nav.home": "Ahabanza",
@@ -1254,6 +1299,21 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
     "company.createItinerary.noCompany": "Nta kigo cyabonetse kuri konti yawe",
     "company.createItinerary.requiredFields": "Umutwe, itariki n'igiciro birakenewe",
     "company.createItinerary.invalidPrice": "Igiciro kigomba kuba umubare wemewe urenze 0",
+    "company.manageImages.title": "Gucunga Amafoto",
+    "company.manageImages.subtitle": "Shyiraho kandi ucunge amafoto y'ingendo yawe",
+    "company.manageImages.backToItineraries": "Subira ku Ngendo",
+    "company.manageImages.uploadTitle": "Shyiraho Amafoto Mashya",
+    "company.manageImages.uploadSubtitle": "Ongeraho amafoto kugira ngo urebe ingendo yawe",
+    "company.manageImages.currentImages": "Amafoto Ariho",
+    "company.manageImages.noImages": "Nta mafoto arahari",
+    "company.manageImages.noImagesHint": "Shyiraho amafoto yawe ya mbere kugira ngo ukurure abagenzi benshi",
+    "company.manageImages.uploadButton": "Shyiraho Amafoto",
+    "company.manageImages.uploading": "Gushyiraho...",
+    "company.manageImages.uploadSuccess": "Amafoto yashyizweho neza!",
+    "company.manageImages.uploadError": "Byanze gushyiraho amafoto",
+    "company.manageImages.photoCount": "amafoto",
+    "company.manageImages.notFound": "Ingendo ntiyabonetse",
+    "company.manageImages.loading": "Gupakira ingendo...",
   },
 };
 

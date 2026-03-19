@@ -27,6 +27,7 @@ import AdminCreateItineraryPage from "./pages/AdminCreateItineraryPage";
 import CompanyRegisterPage from "./pages/CompanyRegisterPage";
 import CompanyCreateItineraryPage from "./pages/CompanyCreateItineraryPage";
 import CompanyItineraryImagesPage from "./pages/CompanyItineraryImagesPage";
+import CompanyItineraryDetailPage from "./pages/CompanyItineraryDetailPage";
 import AuthenticatedSidebar from "./components/AuthenticatedSidebar";
 import GuestTopNav from "./components/GuestTopNav";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
@@ -128,17 +129,10 @@ function CompanyOnboardingRoute({
       return "/company/register";
     }
 
-    if (!hasItineraries) {
-
-      toast.info("Create your first itinerary to continue", {
-        description: "After creating one, you'll have full access to your dashboard.",
-      });
-      console.log("No itineraries found for company, redirecting to create page",);
-      return "/company/itineraries/create";
-    }
-
+    // Allow companies to access all pages even without itineraries
+    // They can create their first itinerary from the dashboard or itineraries page
     return null;
-  }, [companyState.hasCompany, hasItineraries]);
+  }, [companyState.hasCompany]);
 
   if (isLoading) {
     return <p className="text-sm text-slate-300">Checking company setup...</p>;
@@ -297,6 +291,16 @@ function AppRoutes() {
           <CompanyRoute>
             <CompanyOnboardingRoute>
               <CompanyItinerariesPage />
+            </CompanyOnboardingRoute>
+          </CompanyRoute>
+        }
+      />
+      <Route
+        path="/company/itinerary/:id/detail"
+        element={
+          <CompanyRoute>
+            <CompanyOnboardingRoute>
+              <CompanyItineraryDetailPage />
             </CompanyOnboardingRoute>
           </CompanyRoute>
         }

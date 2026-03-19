@@ -10,8 +10,9 @@ const itineraryService = new ItineraryService();
 
 type ItineraryImagePayload = {
   id?: string;
-  image_path: string;
-  image_url?: string;
+  image_url: string;
+  public_id: string;
+  order?: number;
   image_blob?: string | null;
 };
 
@@ -54,7 +55,6 @@ async function toBlobDataUrl(imagePath: string): Promise<string | null> {
 }
 
 async function presentItineraryImages(
-  req: Request,
   itinerary: ItineraryWithImagesPayload,
   includeBlobs: boolean,
 ): Promise<ItineraryWithImagesPayload> {
@@ -62,8 +62,9 @@ async function presentItineraryImages(
 
   const images = await Promise.all(
     rawImages.map(async (image) => {
-      const imageUrl = toPublicImageUrl(req, image.image_path);
-      const imageBlob = includeBlobs ? await toBlobDataUrl(image.image_path) : null;
+      // image_url is already a full URL from Cloudinary or a local path
+      const imageUrl = image.image_url;
+      const imageBlob = includeBlobs && !imageUrl.startsWith('http') ? await toBlobDataUrl(imageUrl) : null;
       return {
         ...image,
         image_url: imageUrl,
@@ -85,7 +86,7 @@ export const getAllItineraries = async (req: Request, res: Response) => {
   const itineraries = await itineraryService.getAll();
   const presentable = await Promise.all(
     (itineraries as ItineraryWithImagesPayload[]).map((itinerary) =>
-      presentItineraryImages(req, itinerary, includeBlobs),
+      presentItineraryImages(itinerary, includeBlobs),
     ),
   );
   ResponseHandler.success(res, 200, 'Itineraries retrieved successfully', presentable);
@@ -97,7 +98,6 @@ export const getItineraryById = async (req: Request, res: Response) => {
   const itinerary = await itineraryService.getById(id);
   if (!itinerary) throw new NotFoundError('Itinerary not found');
   const presentable = await presentItineraryImages(
-    req,
     itinerary as ItineraryWithImagesPayload,
     includeBlobs,
   );
@@ -105,7 +105,6 @@ export const getItineraryById = async (req: Request, res: Response) => {
 };
 
 export const createItinerary = async (req: Request, res: Response) => {
-  console.log('Received itinerary creation request with body:', req.body);
   if (!req.body?.date) {
     throw new  BadRequestError('Date is required to create an itinerary');
   }
@@ -113,15 +112,21 @@ export const createItinerary = async (req: Request, res: Response) => {
     throw new  BadRequestError('Price is required to create an itinerary');
   }
     const normalizedDate = normalizeDate(req.body.date);
+    const { imageUrls, ...itineraryData } = req.body;
     const itineraryPayload = {
-      ...req.body,
+      ...itineraryData,
       price: Number(req.body.price),
       date: normalizedDate,
     };
 
   const itinerary = await itineraryService.create(itineraryPayload);
+  
+  // Add images if provided
+  if (imageUrls && Array.isArray(imageUrls) && imageUrls.length > 0) {
+    await itineraryService.addCloudinaryImages(itinerary.id, imageUrls);
+  }
+  
   const presentable = await presentItineraryImages(
-    req,
     itinerary as ItineraryWithImagesPayload,
     false,
   );
@@ -134,16 +139,33 @@ export const createItineraryImages = async (req: Request, res: Response) => {
   if (files.length === 0) {
     throw new NotFoundError('No images uploaded');
   }
-  const imagePaths = files.map((file) => `/uploads/${file.filename}`);
-  const updatedItinerary = await itineraryService.addImages(id, imagePaths);
+  const imageUrls = files.map((file) => toPublicImageUrl(req, `/uploads/${file.filename}`));
+  const updatedItinerary = await itineraryService.addImages(id, imageUrls);
   if (!updatedItinerary) throw new NotFoundError('Itinerary not found');
   const presentable = await presentItineraryImages(
-    req,
     updatedItinerary as ItineraryWithImagesPayload,
     true,
   );
   ResponseHandler.success(res, 200, 'Itinerary images added successfully', presentable);
 };
+export const addCloudinaryImagesToItinerary = async (req: Request, res: Response) => {
+  const id = String(req.params.id);
+  const { imageUrls } = req.body;
+
+  if (!imageUrls || !Array.isArray(imageUrls) || imageUrls.length === 0) {
+    throw new BadRequestError('imageUrls array is required');
+  }
+
+  const updatedItinerary = await itineraryService.addCloudinaryImages(id, imageUrls);
+  if (!updatedItinerary) throw new NotFoundError('Itinerary not found');
+
+  const presentable = await presentItineraryImages(
+    updatedItinerary as ItineraryWithImagesPayload,
+    false,
+  );
+  ResponseHandler.success(res, 200, 'Cloudinary images added successfully', presentable);
+};
+
 export const updateItinerary = async (req: Request, res: Response) => {
   const id = String(req.params.id);
   const updateData = { ...req.body };
@@ -161,7 +183,6 @@ export const updateItinerary = async (req: Request, res: Response) => {
   const itinerary = await itineraryService.update(id, updateData);
   if (!itinerary) throw new NotFoundError('Itinerary not found');
   const presentable = await presentItineraryImages(
-    req,
     itinerary as ItineraryWithImagesPayload,
     false,
   );

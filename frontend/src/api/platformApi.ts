@@ -39,10 +39,14 @@ type BackendItinerary = {
   date: string;
   price: number;
   images?: Array<{
-    image_path: string;
-    image_url?: string;
+    id?: string;
+    image_url: string;
+    public_id: string;
+    order?: number;
     image_blob?: string | null;
   }>;
+  image_urls?: string[];
+  image_blobs?: (string | null)[];
   created_at?: string;
 };
 
@@ -126,6 +130,7 @@ type CreateItineraryPayload = {
   date: string;
   price: number;
   images?: File[];
+  imageUrls?: string[];
 };
 
 export type CompanyState = {
@@ -189,21 +194,42 @@ function mapCompany(company: BackendCompany): Company {
 }
 
 function mapItinerary(itinerary: BackendItinerary): Itinerary {
-  const imageUrls = (itinerary.images ?? [])
-    .map((image) => {
-      if (image.image_blob) return image.image_blob;
-      if (image.image_url) return image.image_url;
-      if (image.image_path.startsWith("http://") || image.image_path.startsWith("https://")) {
-        return image.image_path;
+  // Use image_urls array from backend if available, otherwise map from images
+  let imageUrls: string[] = [];
+  
+  if (itinerary.image_urls && itinerary.image_urls.length > 0) {
+    // Backend provides image_urls array - use it directly
+    imageUrls = itinerary.image_urls.map((url) => {
+      // If it's already a full URL (Cloudinary), return as-is
+      if (url.startsWith("http://") || url.startsWith("https://")) {
+        return url;
       }
-      if (image.image_path.startsWith("/")) {
-        return `${API_BASE_URL}${image.image_path}`;
-      }
-      return `${API_BASE_URL}/${image.image_path}`;
-    })
-    .filter(Boolean);
+      // If it's a local path, prepend API base URL
+      const fullUrl = url.startsWith("/") ? `${API_BASE_URL}${url}` : `${API_BASE_URL}/${url}`;
+      return fullUrl;
+    });
+  } else if (itinerary.images && itinerary.images.length > 0) {
+    // Fallback: map from images array
+    imageUrls = (itinerary.images ?? [])
+      .map((image) => {
+        if (image.image_blob) return image.image_blob;
+        if (image.image_url) {
+          // If it's already a full URL (Cloudinary), return as-is
+          if (image.image_url.startsWith("http://") || image.image_url.startsWith("https://")) {
+            return image.image_url;
+          }
+          // If it's a local path, prepend API base URL
+          if (image.image_url.startsWith("/")) {
+            return `${API_BASE_URL}${image.image_url}`;
+          }
+          return `${API_BASE_URL}/${image.image_url}`;
+        }
+        return null;
+      })
+      .filter(Boolean) as string[];
+  }
 
-  return {
+  const result = {
     id: itinerary.id,
     companyId: itinerary.company_id,
     title: itinerary.title,
@@ -216,6 +242,7 @@ function mapItinerary(itinerary: BackendItinerary): Itinerary {
     imageUrl: imageUrls[0],
     createdAt: itinerary.created_at,
   };
+  return result;
 }
 
 function mapBooking(booking: BackendBooking): Booking {
@@ -465,6 +492,7 @@ export async function createItinerary(
   if (payload.activity) body.activity = payload.activity;
   if (payload.description) body.description = payload.description;
   if (payload.location) body.location = payload.location;
+  if (payload.imageUrls) body.imageUrls = payload.imageUrls;
 
   // Send request as JSON
   const parsed = await requestHelper<BackendItinerary>({

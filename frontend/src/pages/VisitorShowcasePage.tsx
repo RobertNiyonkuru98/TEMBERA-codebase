@@ -36,7 +36,7 @@ function VisitorShowcasePage() {
   ];
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+    <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
       <div className="mx-auto w-[95%] max-w-[1920px] space-y-20 py-12">
         {/* Hero Section */}
         <section className="text-center space-y-6 py-12">
@@ -90,7 +90,7 @@ function VisitorShowcasePage() {
                       alt={reason.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-slate-900 via-slate-900/40 to-transparent" />
                     <div className="absolute bottom-4 left-4">
                       <div className="rounded-xl bg-emerald-500 p-2">
                         <Icon className="h-6 w-6 text-white" />
@@ -112,7 +112,7 @@ function VisitorShowcasePage() {
         </section>
 
         {/* CTA Section */}
-        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-500 to-emerald-600 p-12 text-center shadow-2xl">
+        <section className="relative overflow-hidden rounded-3xl bg-linear-to-r from-emerald-500 to-emerald-600 p-12 text-center shadow-2xl">
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjEiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-30" />
           <div className="relative space-y-6">
             <h2 className="text-4xl font-bold text-white sm:text-5xl">
