@@ -239,10 +239,21 @@ async function seedRoles(): Promise<void> {
         access_status: 'active'
       }
     });
+
+    // Create company owner role
+    const companyOwnerId = await question('Enter user ID for company owner role: ');
+    const companyOwnerRole = await prisma.role.create({
+      data: {
+        user_id: companyOwnerId,
+        access_level: 'company',
+        access_status: 'active'
+      }
+    });
     
     printSuccess('Roles seeded successfully:');
     console.log(`  - Admin role: ${adminRole.id} (user: ${adminRole.user_id})`);
     console.log(`  - User role: ${normalRole.id} (user: ${normalRole.user_id})`);
+    console.log(`  - Company role: ${companyOwnerRole.id} (user: ${companyOwnerRole.user_id})`);
     
   } catch (error) {
     printError(`Failed to seed roles: ${error instanceof Error ? error.message : 'Unknown error'}`);
