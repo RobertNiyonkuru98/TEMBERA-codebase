@@ -1,6 +1,274 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 body {
   @apply bg-slate-950 text-slate-50 antialiased;
+}
+
+:root {
+  --app-bg: #f8fafc;
+  --app-fg: #0f172a;
+  --app-muted-fg: #475569;
+  --app-soft-fg: #64748b;
+  --app-surface: #ffffff;
+  --app-surface-2: #f8fafc;
+  --app-surface-3: #f1f5f9;
+  --app-border: #cbd5e1;
+  --app-border-strong: #94a3b8;
+  --app-overlay: rgba(15, 23, 42, 0.5);
+}
+
+.dark {
+  --app-bg: #020618;
+  --app-fg: #f8fafc;
+  --app-muted-fg: #cbd5e1;
+  --app-soft-fg: #94a3b8;
+  --app-surface: #020618;
+  --app-surface-2: #020618;
+  --app-surface-3: #1e293b;
+  --app-border: #334155;
+  --app-border-strong: #1e293b;
+  --app-overlay: rgba(2, 6, 23, 0.7);
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  background-color: var(--app-bg);
+  color: var(--app-fg);
+}
+
+/* Theme-compatibility layer: keeps existing slate-heavy JSX classes in sync with light/dark mode. */
+:root:not(.dark) .bg-slate-950,
+:root:not(.dark) .bg-slate-900,
+:root:not(.dark) .bg-slate-900\/80,
+:root:not(.dark) .bg-slate-900\/70,
+:root:not(.dark) .bg-slate-900\/60,
+:root:not(.dark) .bg-slate-900\/50,
+:root:not(.dark) .bg-slate-900\/40,
+:root:not(.dark) .bg-slate-950\/95,
+:root:not(.dark) .bg-slate-950\/80,
+:root:not(.dark) .bg-slate-950\/40,
+:root:not(.dark) .bg-slate-800 {
+  background-color: var(--app-surface) !important;
+}
+
+:root:not(.dark) .text-slate-50,
+:root:not(.dark) .text-slate-100,
+:root:not(.dark) .text-slate-200 {
+  color: var(--app-fg) !important;
+}
+
+:root:not(.dark) .text-slate-300,
+:root:not(.dark) .text-slate-400,
+:root:not(.dark) .text-slate-500 {
+  color: var(--app-muted-fg) !important;
+}
+
+:root:not(.dark) .border-slate-900,
+:root:not(.dark) .border-slate-800,
+:root:not(.dark) .border-slate-700 {
+  border-color: var(--app-border) !important;
+}
+
+:root:not(.dark) .hover\:bg-slate-800:hover,
+:root:not(.dark) .hover\:bg-slate-900:hover {
+  background-color: var(--app-surface-3) !important;
+}
+
+:root:not(.dark) .bg-gradient-to-t.from-slate-950,
+:root:not(.dark) .bg-gradient-to-b.from-slate-900\/60,
+:root:not(.dark) .bg-gradient-to-b.via-slate-900\/30,
+:root:not(.dark) .bg-gradient-to-b.to-slate-900\/80 {
+  --tw-gradient-from: var(--app-overlay) var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: transparent var(--tw-gradient-to-position) !important;
+}
+
+/* Keep dark utility-heavy backgrounds aligned to the requested dark base color. */
+.dark .bg-slate-950,
+.dark .bg-slate-950\/95,
+.dark .bg-slate-950\/80,
+.dark .bg-slate-950\/40 {
+  background-color: #020618 !important;
+}
+
+:root {
+
+  --sidebar: hsl(0 0% 98%);
+
+  --sidebar-foreground: hsl(240 5.3% 26.1%);
+
+  --sidebar-primary: hsl(240 5.9% 10%);
+
+  --sidebar-primary-foreground: hsl(0 0% 98%);
+
+  --sidebar-accent: hsl(240 4.8% 95.9%);
+
+  --sidebar-accent-foreground: hsl(240 5.9% 10%);
+
+  --sidebar-border: hsl(220 13% 91%);
+
+  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+}
+
+.dark {
+  --sidebar: #020618;
+
+  --sidebar-foreground: hsl(240 4.8% 95.9%);
+
+  --sidebar-primary: hsl(224.3 76.3% 48%);
+
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+
+  --sidebar-accent: hsl(240 3.7% 15.9%);
+
+  --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
+
+  --sidebar-border: hsl(240 3.7% 15.9%);
+
+  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+}
+
+@theme inline {
+
+  --color-sidebar: var(--sidebar);
+
+  --color-sidebar-foreground: var(--sidebar-foreground);
+
+  --color-sidebar-primary: var(--sidebar-primary);
+
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+
+  --color-sidebar-accent: var(--sidebar-accent);
+
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+
+  --color-sidebar-border: var(--sidebar-border);
+
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* Custom Animations */
+@keyframes fade-in-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-left {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-right {
+  0% {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in-down {
+  animation: fade-in-down 0.8s ease-out forwards;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 1s ease-out forwards;
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.6s ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.6s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.5s ease-out forwards;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Hover glow effect */
+.hover-glow {
+  transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
 }
 

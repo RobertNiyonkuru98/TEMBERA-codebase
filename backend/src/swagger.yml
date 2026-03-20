@@ -98,6 +98,8 @@ paths:
   /users:
     get:
       summary: Retrieve a list of users
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: A list of users
@@ -109,6 +111,8 @@ paths:
                   $ref: "#/components/schemas/User"
     post:
       summary: Create a new user
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -127,6 +131,8 @@ paths:
   /users/{id}:
     get:
       summary: Get a user by ID
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -144,6 +150,8 @@ paths:
           description: User not found
     put:
       summary: Update a user
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -167,6 +175,8 @@ paths:
           description: User not found
     delete:
       summary: Delete a user
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -182,6 +192,8 @@ paths:
   /companies:
     get:
       summary: Retrieve a list of companies
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: A list of companies
@@ -193,6 +205,8 @@ paths:
                   $ref: "#/components/schemas/Company"
     post:
       summary: Create a new company
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -209,6 +223,8 @@ paths:
   /companies/{id}:
     get:
       summary: Get a company by ID
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -226,6 +242,8 @@ paths:
           description: Company not found
     put:
       summary: Update a company
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -249,6 +267,8 @@ paths:
           description: Company not found
     delete:
       summary: Delete a company
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -264,6 +284,8 @@ paths:
   /itineraries:
     get:
       summary: Retrieve a list of itineraries
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: A list of itineraries
@@ -274,13 +296,15 @@ paths:
                 items:
                   $ref: "#/components/schemas/Itinerary"
     post:
-      summary: Create a new itinerary
+      summary: Create a new itinerary with optional image uploads
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: "#/components/schemas/Itinerary"
+              $ref: "#/components/schemas/ItineraryCreateWithImagesRequest"
       responses:
         "201":
           description: The created itinerary
@@ -291,6 +315,8 @@ paths:
   /itineraries/{id}:
     get:
       summary: Get an itinerary by ID
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -308,6 +334,8 @@ paths:
           description: Itinerary not found
     put:
       summary: Update an itinerary
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -331,6 +359,8 @@ paths:
           description: Itinerary not found
     delete:
       summary: Delete an itinerary
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -346,6 +376,8 @@ paths:
   /bookings:
     get:
       summary: Retrieve a list of bookings
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: A list of bookings
@@ -357,6 +389,8 @@ paths:
                   $ref: "#/components/schemas/Booking"
     post:
       summary: Create a new booking
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -373,6 +407,8 @@ paths:
   /bookings/{id}:
     get:
       summary: Get a booking by ID
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -390,6 +426,8 @@ paths:
           description: Booking not found
     put:
       summary: Update a booking
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -413,6 +451,8 @@ paths:
           description: Booking not found
     delete:
       summary: Delete a booking
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -428,6 +468,8 @@ paths:
   /booking-items:
     get:
       summary: Retrieve a list of booking items
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: A list of booking items
@@ -439,6 +481,8 @@ paths:
                   $ref: "#/components/schemas/BookingItem"
     post:
       summary: Create a new booking item
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -455,6 +499,8 @@ paths:
   /booking-items/{id}:
     get:
       summary: Get a booking item by ID
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -472,6 +518,8 @@ paths:
           description: Booking item not found
     put:
       summary: Update a booking item
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -495,6 +543,8 @@ paths:
           description: Booking item not found
     delete:
       summary: Delete a booking item
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -507,6 +557,11 @@ paths:
         "404":
           description: Booking item not found
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     User:
       type: object
@@ -554,6 +609,35 @@ components:
           format: date
         price:
           type: number
+    ItineraryCreateWithImagesRequest:
+      type: object
+      required:
+        - company_id
+        - title
+        - date
+        - price
+      properties:
+        company_id:
+          type: string
+        title:
+          type: string
+        activity:
+          type: string
+        description:
+          type: string
+        location:
+          type: string
+        date:
+          type: string
+          format: date
+        price:
+          type: number
+        images:
+          type: array
+          description: One or more image files for the itinerary (field name must be `images`).
+          items:
+            type: string
+            format: binary
     Booking:
       type: object
       properties:

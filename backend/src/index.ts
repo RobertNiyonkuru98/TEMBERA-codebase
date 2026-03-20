@@ -1,14 +1,14 @@
 import "dotenv/config";
-import express, { Request, Response } from "express";
+import express from "express";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 import path from "path";
-import { asyncWrapper } from "./utils/async.wrapper";
-import authRoutes from './routes/auth.routes';
-import { authenticateToken } from "./middlewares/auth.middleware";
+import { logger } from "./utils/logger";
+import router from "./routes";
+import cors from "cors";
 
 const __dirname = path.resolve();
 
@@ -25,10 +25,11 @@ const PORT = process.env.PORT || 3000;
 async function verifyDatabaseConnection(): Promise<boolean> {
   try {
     await prisma.$connect();
-    console.log("Database connected successfully!");
+    await prisma.$queryRaw`SELECT 1`;
+    logger.info("Database connected successfully!");
     return true;
   } catch (error) {
-    console.error("Failed to connect to database:", error);
+    logger.error("Failed to connect to database:", error);
     return false;
   }
 }
@@ -38,44 +39,23 @@ const swaggerDocument = YAML.load(path.join(__dirname, "src", "swagger.yml"));
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(express.json());
+app.use(cors());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Register Auth Routes
-app.use('/api/auth', authRoutes);
-
-const router = express.Router();
-
-// Get Users
-router.get("/users", asyncWrapper(async (_req: Request, res: Response) => {
-  const users = await prisma.user.findMany();
-  res.json(users);
-}));
-
-// Create User
-router.post("/users", asyncWrapper(async (req: Request, res: Response) => {
-  const { email, name, phone_number, password } = req.body;
-  try {
-    const newUser = await prisma.user.create({
-      data: { email, name, phone_number, password },
-    });
-    res.json(newUser);
-  } catch (error) {
-    res.status(400).json({ error: "User already exists or invalid data" });
-  }
-}));
-
-app.use("/api", authenticateToken, router);
+app.use("/api", router);
 
 // Start server with database connection verification
 async function startServer() {
   const isDbConnected = await verifyDatabaseConnection();
 
   if (!isDbConnected) {
+    logger.error("Failed to connect to database");
     process.exit(1); // Exit if database connection fails
   }
 
   app.listen(PORT, () => {
-    console.log(`Server is running on: http://localhost:${PORT}/api`);
-    console.log(`API Documentation: http://localhost:${PORT}/api/docs`);
+    logger.info(`Server is running on: http://localhost:${PORT}/api`);
+    logger.info(`API Documentation: http://localhost:${PORT}/api/docs`);
   });
 }
 

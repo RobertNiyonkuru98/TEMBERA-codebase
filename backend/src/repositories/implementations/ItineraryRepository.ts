@@ -12,12 +12,18 @@ export class ItineraryRepository implements IItineraryRepository {
   async findById(id: string): Promise<Itinerary | null> {
     return await prisma.itinerary.findUnique({
       where: { id },
+      include: {
+        images: true,
+      },
     });
   }
 
   async findByCompanyId(companyId: string): Promise<Itinerary[]> {
     return await prisma.itinerary.findMany({
       where: { company_id: companyId },
+      include: {
+        images: true,
+      },
       orderBy: {
         date: 'asc',
       },
@@ -70,6 +76,9 @@ export class ItineraryRepository implements IItineraryRepository {
     return await prisma.itinerary.findMany({
       skip,
       take,
+      include: {
+        images: true,
+      },
       orderBy: {
         date: 'desc',
       },
@@ -115,5 +124,42 @@ export class ItineraryRepository implements IItineraryRepository {
   // Count
   async count(): Promise<number> {
     return await prisma.itinerary.count();
+  }
+
+  async createImages(itineraryId: string, imagePaths: string[]): Promise<void> {
+    if (imagePaths.length === 0) {
+      return;
+    }
+
+    await prisma.itineraryImage.createMany({
+      data: imagePaths.map((imagePath, index) => ({
+        itinerary_id: itineraryId,
+        image_url: imagePath,
+        public_id: `local_${Date.now()}_${index}`,
+        order: index,
+      })),
+    });
+  }
+
+  async createCloudinaryImages(itineraryId: string, imageUrls: string[]): Promise<void> {
+    if (imageUrls.length === 0) {
+      return;
+    }
+
+    await prisma.itineraryImage.createMany({
+      data: imageUrls.map((imageUrl, index) => {
+        // Extract public_id from Cloudinary URL
+        // Format: https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_id}.{format}
+        const publicIdMatch = imageUrl.match(/\/upload\/(?:v\d+\/)?(.+)\.\w+$/);
+        const publicId = publicIdMatch ? publicIdMatch[1] : `cloudinary_${Date.now()}_${index}`;
+        
+        return {
+          itinerary_id: itineraryId,
+          image_url: imageUrl,
+          public_id: publicId,
+          order: index,
+        };
+      }),
+    });
   }
 }

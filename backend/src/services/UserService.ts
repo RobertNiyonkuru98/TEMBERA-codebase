@@ -1,5 +1,7 @@
 import { UserRepository } from '../repositories/implementations/UserRepository';
-import { Prisma, User } from '@prisma/client';
+import { Prisma, User, Role } from '@prisma/client';
+
+type UserWithRoles = User & { roles: Role[] };
 
 export class UserService {
   private userRepository = new UserRepository();
@@ -23,13 +25,21 @@ export class UserService {
       return null;
     }
   }
+  async updateRole(
+    id: string,
+    data: { role: string; accessStatus: string },
+  ): Promise<UserWithRoles | null> {
+    return await this.userRepository.updateRole(id, data.role, data.accessStatus);
+  }
 
-  async delete(id: string): Promise<boolean> {
-    try {
-      await this.userRepository.delete(id);
-      return true;
-    } catch {
-      return false;
-    }
+  async getRoles(id: string): Promise<Role[]> {
+    return await this.userRepository.findRolesByUserId(id);
+  }
+
+  async switchRole(id: string, role: string): Promise<string> {
+    return await this.userRepository.switchRole(id, role);
+  }
+  async delete(id: string): Promise<void> {
+      return await this.userRepository.delete(id);
   }
 }

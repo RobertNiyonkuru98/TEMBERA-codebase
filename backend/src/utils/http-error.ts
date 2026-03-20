@@ -20,7 +20,11 @@ export class BadRequestError extends HttpError {
     super(400, message);
   }
 }
-
+export class UnauthorizedError extends HttpError {
+  constructor(message: string = "Unauthorized") {
+    super(401, message);
+  }
+}
 export class ConflictError extends HttpError {
   constructor(message: string = "Resource conflict") {
     super(409, message);
@@ -81,7 +85,7 @@ export class ExceptionProcessor {
   static handle(err: any): never {
     if (err?.response) {
       const { status, data } = err.response;
-      const message = data?.resp_msg || err.message || "Unexpected error";
+      const message = data?.message || err.message || "Unexpected error";
       const payload = data ?? null;
       this.handleResponseError(status, message, payload);
     }

@@ -13,9 +13,22 @@ export class ItineraryService {
   }
 
   async create(data: Prisma.ItineraryCreateInput): Promise<Itinerary> {
-    return this.itineraryRepository.create(data);
+    const itinerary = await this.itineraryRepository.create(data);
+    return itinerary;
+  }
+async addImages(id: string, imagePaths: string[]): Promise<Itinerary | null> {
+    const itinerary = await this.itineraryRepository.findById(id);
+    if (!itinerary) return null;
+    await this.itineraryRepository.createImages(id, imagePaths);
+    return this.itineraryRepository.findById(id);
   }
 
+  async addCloudinaryImages(id: string, imageUrls: string[]): Promise<Itinerary | null> {
+    const itinerary = await this.itineraryRepository.findById(id);
+    if (!itinerary) return null;
+    await this.itineraryRepository.createCloudinaryImages(id, imageUrls);
+    return this.itineraryRepository.findById(id);
+  }
   async update(id: string, data: Prisma.ItineraryUpdateInput): Promise<Itinerary | null> {
     try {
       return await this.itineraryRepository.update(id, data);

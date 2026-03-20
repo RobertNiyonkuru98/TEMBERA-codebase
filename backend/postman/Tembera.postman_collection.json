@@ -1,0 +1,909 @@
+{
+  "info": {
+    "name": "Tembera API",
+    "description": "Full collection for Tembera backend routes with sample payloads.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alice Traveler\",\n  \"email\": \"alice@example.com\",\n  \"password\": \"Password123!\",\n  \"phone_number\": \"+250788000111\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Creates a user account."
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json?.data?.token) {",
+                  "  pm.collectionVariables.set('token', json.data.token);",
+                  "}",
+                  "if (json?.data?.token) {",
+                  "  pm.test('Token stored in collection variable', function () {",
+                  "    pm.expect(pm.collectionVariables.get('token')).to.be.a('string');",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"alice@example.com\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Logs in and saves JWT into collection variable `token`."
+          }
+        },
+        {
+          "name": "Verify Token",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/verify",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "verify"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{userId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Bob User\",\n  \"email\": \"bob@example.com\",\n  \"password\": \"Password123!\",\n  \"phone_number\": \"+250788000222\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alice Updated\",\n  \"email\": \"alice.updated@example.com\",\n  \"phone_number\": \"+250788111333\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{userId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update User Role",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"company\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/{{userId}}/role",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{userId}}",
+                "role"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{userId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Companies",
+      "item": [
+        {
+          "name": "Get All Companies",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/companies",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "companies"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Company By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/companies/{{companyId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "companies",
+                "{{companyId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Company",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Kigali Adventures\",\n  \"description\": \"City tours and adventure packages\",\n  \"contact\": \"+250700123456\",\n  \"owner_id\": \"{{userId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/companies",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "companies"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Company",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Kigali Adventures Ltd\",\n  \"description\": \"Premium curated adventures\",\n  \"contact\": \"+250700654321\",\n  \"owner_id\": \"{{userId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/companies/{{companyId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "companies",
+                "{{companyId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Company",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/companies/{{companyId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "companies",
+                "{{companyId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Itineraries",
+      "item": [
+        {
+          "name": "Get All Itineraries",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/itineraries",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "itineraries"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Itinerary By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/itineraries/{{itineraryId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "itineraries",
+                "{{itineraryId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Itinerary With Images",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "company_id",
+                  "value": "{{companyId}}",
+                  "type": "text"
+                },
+                {
+                  "key": "title",
+                  "value": "Kigali City Tour",
+                  "type": "text"
+                },
+                {
+                  "key": "activity",
+                  "value": "City Tour",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "A guided city experience around Kigali.",
+                  "type": "text"
+                },
+                {
+                  "key": "location",
+                  "value": "Kigali",
+                  "type": "text"
+                },
+                {
+                  "key": "date",
+                  "value": "2026-04-20",
+                  "type": "text"
+                },
+                {
+                  "key": "price",
+                  "value": "45000",
+                  "type": "text"
+                },
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": ""
+                },
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/itineraries",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "itineraries"
+              ]
+            },
+            "description": "Attach one or more files under the same `images` form-data key."
+          }
+        },
+        {
+          "name": "Update Itinerary",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"company_id\": \"{{companyId}}\",\n  \"title\": \"Kigali Premium City Tour\",\n  \"activity\": \"City Tour\",\n  \"description\": \"Updated tour details\",\n  \"location\": \"Kigali\",\n  \"date\": \"2026-04-22\",\n  \"price\": 55000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/itineraries/{{itineraryId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "itineraries",
+                "{{itineraryId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Itinerary",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/itineraries/{{itineraryId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "itineraries",
+                "{{itineraryId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "Get All Bookings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bookings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Booking By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/bookings/{{bookingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bookings",
+                "{{bookingId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"{{userId}}\",\n  \"description\": \"Weekend booking\",\n  \"status\": \"pending\",\n  \"date\": \"2026-04-21\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bookings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Booking",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"{{userId}}\",\n  \"description\": \"Weekend booking updated\",\n  \"status\": \"confirmed\",\n  \"date\": \"2026-04-22\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/bookings/{{bookingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bookings",
+                "{{bookingId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Booking",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/bookings/{{bookingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bookings",
+                "{{bookingId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Booking Items",
+      "item": [
+        {
+          "name": "Get All Booking Items",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/bookings/items",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bookings",
+                "items"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Booking Item By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/bookings/items/{{bookingItemId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bookings",
+                "items",
+                "{{bookingItemId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Booking Item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"itinerary_id\": \"{{itineraryId}}\",\n  \"booking_id\": \"{{bookingId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/bookings/items",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bookings",
+                "items"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Booking Item",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"itinerary_id\": \"{{itineraryId}}\",\n  \"booking_id\": \"{{bookingId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/bookings/items/{{bookingItemId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bookings",
+                "items",
+                "{{bookingItemId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Booking Item",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/bookings/items/{{bookingItemId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bookings",
+                "items",
+                "{{bookingItemId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Utility",
+      "item": [
+        {
+          "name": "Swagger Docs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseOrigin}}/api/docs",
+              "host": [
+                "{{baseOrigin}}"
+              ],
+              "path": [
+                "api",
+                "docs"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Uploaded Image",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseOrigin}}/uploads/{{uploadedImageFile}}",
+              "host": [
+                "{{baseOrigin}}"
+              ],
+              "path": [
+                "uploads",
+                "{{uploadedImageFile}}"
+              ]
+            },
+            "description": "Set `uploadedImageFile` to a file name returned from itinerary image upload."
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseOrigin",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "userId",
+      "value": "00000000-0000-0000-0000-000000000001"
+    },
+    {
+      "key": "companyId",
+      "value": "00000000-0000-0000-0000-000000000002"
+    },
+    {
+      "key": "itineraryId",
+      "value": "00000000-0000-0000-0000-000000000003"
+    },
+    {
+      "key": "bookingId",
+      "value": "00000000-0000-0000-0000-000000000004"
+    },
+    {
+      "key": "bookingItemId",
+      "value": "00000000-0000-0000-0000-000000000005"
+    },
+    {
+      "key": "uploadedImageFile",
+      "value": "example.jpg"
+    }
+  ]
+}

@@ -1,12 +1,20 @@
 import { Router } from 'express';
-import * as CompanyController from '../controllers/CompanyController';
+import {
+    getAllCompanies,
+    getCompanyById,
+    createCompany,
+    updateCompany,
+    deleteCompany,
+} from '../controllers/CompanyController';
+import { asyncWrapper } from '@/utils/async.wrapper';
+import { authenticateToken } from '@/middlewares/auth.middleware';
 
 const router = Router();
 
-router.get('/', CompanyController.getAllCompanies);
-router.get('/:id', CompanyController.getCompanyById);
-router.post('/', CompanyController.createCompany);
-router.put('/:id', CompanyController.updateCompany);
-router.delete('/:id', CompanyController.deleteCompany);
+router.get('/', asyncWrapper(getAllCompanies));
+router.get('/:id', asyncWrapper(getCompanyById));
+router.post('/', authenticateToken, asyncWrapper(createCompany));
+router.put('/:id', authenticateToken, asyncWrapper(updateCompany));
+router.delete('/:id', authenticateToken, asyncWrapper(deleteCompany));
 
 export default router;
