@@ -16,8 +16,8 @@ model Booking {
   type          String          @default("personal") @db.VarChar(20)
   itinerary     Itinerary?      @relation(fields: [itinerary_id], references: [id])
   user          User            @relation(fields: [user_id], references: [id])
-  bookingItem   BookingItem[]
-  bookingMember BookingMember[]
+  items         BookingItem[]
+  members       BookingMember[]
 }
 
 model BookingItem {
@@ -45,8 +45,8 @@ model Company {
   contact     String?     @db.VarChar(50)
   id          String      @id @default(uuid()) @db.Uuid
   owner_id    String      @db.Uuid
-  user        User        @relation(fields: [owner_id], references: [id])
-  Itinerary   Itinerary[]
+  owner       User        @relation(fields: [owner_id], references: [id])
+  itineraries Itinerary[]
 }
 
 model Itinerary {
@@ -58,8 +58,8 @@ model Itinerary {
   price          Float
   id             String           @id @default(uuid()) @db.Uuid
   company_id     String           @db.Uuid
-  booking        Booking[]
-  bookingItem    BookingItem[]
+  bookings       Booking[]
+  items          BookingItem[]
   company        Company          @relation(fields: [company_id], references: [id])
   images         ItineraryImage[]
 }
@@ -72,7 +72,7 @@ model ItineraryImage {
   public_id    String    @db.VarChar(255)
   order        Int       @default(0)
   created_at   DateTime  @default(now())
-  itenerary    Itinerary @relation(fields: [itinerary_id], references: [id], onDelete: Cascade)
+  itinerary    Itinerary @relation(fields: [itinerary_id], references: [id], onDelete: Cascade)
 }
 
 model Role {
