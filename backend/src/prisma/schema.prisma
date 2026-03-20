@@ -10,43 +10,43 @@ model Booking {
   description   String?         @db.VarChar(255)
   status        String          @db.VarChar(10)
   date          DateTime        @db.Date
-  id            String          @id @db.Uuid
+  id            String          @id @default(uuid()) @db.Uuid
   user_id       String          @db.Uuid
   itinerary_id  String?         @db.Uuid
   type          String          @default("personal") @db.VarChar(20)
-  Itinerary     Itinerary?      @relation(fields: [itinerary_id], references: [id])
-  User          User            @relation(fields: [user_id], references: [id])
-  BookingItem   BookingItem[]
-  BookingMember BookingMember[]
+  itinerary     Itinerary?      @relation(fields: [itinerary_id], references: [id])
+  user          User            @relation(fields: [user_id], references: [id])
+  items         BookingItem[]
+  members       BookingMember[]
 }
 
 model BookingItem {
-  id           String    @id @db.Uuid
+  id           String    @id @default(uuid()) @db.Uuid
   itinerary_id String    @db.Uuid
   booking_id   String    @db.Uuid
-  Booking      Booking   @relation(fields: [booking_id], references: [id])
-  Itinerary    Itinerary @relation(fields: [itinerary_id], references: [id])
+  booking      Booking   @relation(fields: [booking_id], references: [id])
+  itinerary    Itinerary @relation(fields: [itinerary_id], references: [id])
 
   @@unique([booking_id, itinerary_id])
 }
 
 model BookingMember {
-  id         String  @id @db.Uuid
+  id         String  @id @default(uuid()) @db.Uuid
   booking_id String  @db.Uuid
   name       String  @db.VarChar(255)
   email      String? @db.VarChar(255)
   phone      String? @db.VarChar(50)
-  Booking    Booking @relation(fields: [booking_id], references: [id], onDelete: Cascade)
+  booking    Booking @relation(fields: [booking_id], references: [id], onDelete: Cascade)
 }
 
 model Company {
   name        String      @db.VarChar(50)
   description String?     @db.VarChar(255)
   contact     String?     @db.VarChar(50)
-  id          String      @id @db.Uuid
+  id          String      @id @default(uuid()) @db.Uuid
   owner_id    String      @db.Uuid
-  User        User        @relation(fields: [owner_id], references: [id])
-  Itinerary   Itinerary[]
+  owner       User        @relation(fields: [owner_id], references: [id])
+  itineraries Itinerary[]
 }
 
 model Itinerary {
@@ -56,12 +56,12 @@ model Itinerary {
   location       String?          @db.VarChar(255)
   date           DateTime         @db.Date
   price          Float
-  id             String           @id @db.Uuid
+  id             String           @id @default(uuid()) @db.Uuid
   company_id     String           @db.Uuid
-  Booking        Booking[]
-  BookingItem    BookingItem[]
-  Company        Company          @relation(fields: [company_id], references: [id])
-  ItineraryImage ItineraryImage[]
+  bookings       Booking[]
+  items          BookingItem[]
+  company        Company          @relation(fields: [company_id], references: [id])
+  images         ItineraryImage[]
 }
 
 model ItineraryImage {
@@ -72,15 +72,15 @@ model ItineraryImage {
   public_id    String    @db.VarChar(255)
   order        Int       @default(0)
   created_at   DateTime  @default(now())
-  Itinerary    Itinerary @relation(fields: [itinerary_id], references: [id], onDelete: Cascade)
+  itinerary    Itinerary @relation(fields: [itinerary_id], references: [id], onDelete: Cascade)
 }
 
 model Role {
-  id            String @id @db.Uuid
+  id            String @id @default(uuid()) @db.Uuid
   user_id       String @db.Uuid
   access_level  String @db.VarChar(50)
   access_status String @db.VarChar(20)
-  User          User   @relation(fields: [user_id], references: [id])
+  user          User   @relation(fields: [user_id], references: [id])
 
   @@unique([user_id, access_level])
 }
@@ -90,8 +90,8 @@ model User {
   email        String    @unique @db.VarChar(255)
   phone_number String?   @db.VarChar(50)
   password     String    @db.VarChar(255)
-  id           String    @id @db.Uuid
-  Booking      Booking[]
-  Company      Company[]
-  Role         Role[]
+  id           String    @id @default(uuid()) @db.Uuid
+  bookings     Booking[]
+  companies    Company[]
+  roles        Role[]
 }
