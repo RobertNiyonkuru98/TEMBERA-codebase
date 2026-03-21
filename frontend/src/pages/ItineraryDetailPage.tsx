@@ -13,7 +13,7 @@ import {
 } from "../api/platformApi";
 import type { Booking, BookingItem, Company, Itinerary, User } from "../types";
 import { toast } from "sonner";
-import { MapPin, Calendar, DollarSign, Building2, Users, ArrowLeft, Loader2 } from "lucide-react";
+import { MapPin, Calendar, DollarSign, Building2, Users, ArrowLeft, Loader2, Clock, Star, CheckCircle2, XCircle, Utensils, Car, Shield, Info, TrendingUp, AlertCircle } from "lucide-react";
 
 type BookingSummaryRow = {
   booking: Booking;
@@ -221,9 +221,29 @@ function ItineraryDetailPage() {
             </div>
           )}
 
-          {/* Description */}
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
-            <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">{itinerary.description}</p>
+          {/* Description & Ratings */}
+          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8 space-y-6">
+            {itinerary.description && (
+              <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">{itinerary.description}</p>
+            )}
+            
+            {/* Ratings */}
+            {itinerary.averageRating && itinerary.totalRatings && itinerary.totalRatings > 0 && (
+              <div className="flex items-center gap-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+                <div className="flex items-center gap-2">
+                  <Star className="h-6 w-6 fill-amber-400 text-amber-400" />
+                  <span className="text-2xl font-bold text-slate-900 dark:text-slate-50">
+                    {itinerary.averageRating.toFixed(1)}
+                  </span>
+                  <span className="text-sm text-slate-500 dark:text-slate-400">
+                    / 10
+                  </span>
+                </div>
+                <span className="text-sm text-slate-600 dark:text-slate-400">
+                  ({itinerary.totalRatings} {itinerary.totalRatings === 1 ? 'review' : 'reviews'})
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Success Message */}
@@ -233,59 +253,236 @@ function ItineraryDetailPage() {
             </div>
           )}
 
-          {/* Main Content Grid */}
-          <div className="grid items-start gap-8 lg:grid-cols-[2fr,1fr]">
-            {/* Trip Information */}
-            <section className="space-y-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t("detail.tripInfo")}</h2>
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                <div className="flex items-start gap-4">
-                  <div className="rounded-xl bg-emerald-100 dark:bg-emerald-900/20 p-3">
-                    <Calendar className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-                  </div>
-                  <div>
-                    <dt className="text-sm font-medium text-slate-500 dark:text-slate-400">{t("detail.date")}</dt>
-                    <dd className="mt-1 text-lg font-semibold text-slate-900 dark:text-white">
-                      {new Date(itinerary.date).toLocaleDateString()}
-                    </dd>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="rounded-xl bg-emerald-100 dark:bg-emerald-900/20 p-3">
-                    <MapPin className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-                  </div>
-                  <div>
-                    <dt className="text-sm font-medium text-slate-500 dark:text-slate-400">{t("detail.location")}</dt>
-                    <dd className="mt-1 text-lg font-semibold text-slate-900 dark:text-white">{itinerary.location}</dd>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="rounded-xl bg-emerald-100 dark:bg-emerald-900/20 p-3">
-                    <DollarSign className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-                  </div>
-                  <div>
-                    <dt className="text-sm font-medium text-slate-500 dark:text-slate-400">{t("detail.priceLabel")}</dt>
-                    <dd className="mt-1 text-2xl font-bold text-emerald-600 dark:text-emerald-400">
-                      {itinerary.price.toLocaleString()} RWF
-                    </dd>
-                  </div>
-                </div>
-                {company && (
+          {/* Main Content */}
+          <div className="space-y-8">
+            {/* Trip Information Grid */}
+            <div className="grid gap-8 lg:grid-cols-2">
+              {/* Basic Information */}
+              <section className="space-y-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Basic Information</h2>
+                <div className="space-y-4">
                   <div className="flex items-start gap-4">
-                    <div className="rounded-xl bg-emerald-100 dark:bg-emerald-900/20 p-3">
-                      <Building2 className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-                    </div>
+                    <Calendar className="h-5 w-5 text-emerald-600 dark:text-emerald-400 mt-0.5" />
                     <div>
-                      <dt className="text-sm font-medium text-slate-500 dark:text-slate-400">{t("detail.company")}</dt>
-                      <dd className="mt-1 text-lg font-semibold text-slate-900 dark:text-white">{company.name}</dd>
+                      <dt className="text-sm font-medium text-slate-500 dark:text-slate-400">Date</dt>
+                      <dd className="mt-1 text-base font-semibold text-slate-900 dark:text-white">
+                        {new Date(itinerary.date).toLocaleDateString()}
+                      </dd>
                     </div>
                   </div>
+                  {itinerary.location && (
+                    <div className="flex items-start gap-4">
+                      <MapPin className="h-5 w-5 text-emerald-600 dark:text-emerald-400 mt-0.5" />
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500 dark:text-slate-400">Location</dt>
+                        <dd className="mt-1 text-base font-semibold text-slate-900 dark:text-white">{itinerary.location}</dd>
+                      </div>
+                    </div>
+                  )}
+                  {(itinerary.durationDays || itinerary.durationHours) && (
+                    <div className="flex items-start gap-4">
+                      <Clock className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5" />
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500 dark:text-slate-400">Duration</dt>
+                        <dd className="mt-1 text-base font-semibold text-slate-900 dark:text-white">
+                          {itinerary.durationDays ? `${itinerary.durationDays} day${itinerary.durationDays > 1 ? 's' : ''}` : ''}
+                          {itinerary.durationDays && itinerary.durationHours ? ' ' : ''}
+                          {itinerary.durationHours ? `${itinerary.durationHours} hour${itinerary.durationHours > 1 ? 's' : ''}` : ''}
+                        </dd>
+                      </div>
+                    </div>
+                  )}
+                  {company && (
+                    <div className="flex items-start gap-4">
+                      <Building2 className="h-5 w-5 text-purple-600 dark:text-purple-400 mt-0.5" />
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500 dark:text-slate-400">Company</dt>
+                        <dd className="mt-1 text-base font-semibold text-slate-900 dark:text-white">{company.name}</dd>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </section>
+
+              {/* Pricing & Capacity */}
+              <section className="space-y-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Pricing & Capacity</h2>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-4">
+                    <DollarSign className="h-5 w-5 text-emerald-600 dark:text-emerald-400 mt-0.5" />
+                    <div>
+                      <dt className="text-sm font-medium text-slate-500 dark:text-slate-400">Base Price</dt>
+                      <dd className="mt-1 text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+                        {itinerary.price.toLocaleString()} {itinerary.currency || 'RWF'}
+                      </dd>
+                    </div>
+                  </div>
+                  {(itinerary.minParticipants || itinerary.maxParticipants) && (
+                    <div className="flex items-start gap-4">
+                      <Users className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5" />
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500 dark:text-slate-400">Participants</dt>
+                        <dd className="mt-1 text-base font-semibold text-slate-900 dark:text-white">
+                          {itinerary.minParticipants && itinerary.maxParticipants
+                            ? `${itinerary.minParticipants} - ${itinerary.maxParticipants} people`
+                            : itinerary.maxParticipants
+                            ? `Up to ${itinerary.maxParticipants} people`
+                            : `Minimum ${itinerary.minParticipants} people`}
+                        </dd>
+                      </div>
+                    </div>
+                  )}
+                  {itinerary.availableSlots !== null && itinerary.availableSlots !== undefined && (
+                    <div className="flex items-start gap-4">
+                      <TrendingUp className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5" />
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500 dark:text-slate-400">Available Slots</dt>
+                        <dd className="mt-1 text-base font-semibold text-slate-900 dark:text-white">
+                          {itinerary.availableSlots} {itinerary.availableSlots === 1 ? 'slot' : 'slots'}
+                        </dd>
+                      </div>
+                    </div>
+                  )}
+                  {itinerary.difficultyLevel && (
+                    <div className="flex items-start gap-4">
+                      <Info className="h-5 w-5 text-purple-600 dark:text-purple-400 mt-0.5" />
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500 dark:text-slate-400">Difficulty</dt>
+                        <dd className="mt-1">
+                          <span className="inline-block px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-sm font-semibold text-purple-700 dark:text-purple-300">
+                            {itinerary.difficultyLevel}
+                          </span>
+                        </dd>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </section>
+            </div>
+
+            {/* Inclusions & Exclusions */}
+            {(itinerary.inclusions?.length || itinerary.exclusions?.length) && (
+              <div className="grid gap-8 lg:grid-cols-2">
+                {itinerary.inclusions && itinerary.inclusions.length > 0 && (
+                  <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
+                    <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                      What's Included
+                    </h2>
+                    <ul className="space-y-2">
+                      {itinerary.inclusions.map((item, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-300">
+                          <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
+                {itinerary.exclusions && itinerary.exclusions.length > 0 && (
+                  <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
+                    <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                      <XCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
+                      What's Not Included
+                    </h2>
+                    <ul className="space-y-2">
+                      {itinerary.exclusions.map((item, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-300">
+                          <XCircle className="h-4 w-4 text-red-600 dark:text-red-400 mt-0.5 shrink-0" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
                 )}
               </div>
-            </section>
+            )}
 
-            {/* Bookings Sidebar */}
-            <aside className="space-y-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
+            {/* Meals & Transport */}
+            <div className="grid gap-8 lg:grid-cols-2">
+              {itinerary.mealsIncluded && (
+                <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
+                  <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                    <Utensils className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                    Meals
+                  </h2>
+                  <div className="space-y-3">
+                    <p className="text-sm text-slate-600 dark:text-slate-300">
+                      <span className="font-semibold">Included:</span> Yes
+                    </p>
+                    {itinerary.mealTypes && itinerary.mealTypes.length > 0 && (
+                      <div>
+                        <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Meal Types:</p>
+                        <div className="flex flex-wrap gap-2">
+                          {itinerary.mealTypes.map((meal, idx) => (
+                            <span key={idx} className="inline-block px-2 py-1 rounded-md bg-emerald-100 dark:bg-emerald-900/30 text-xs font-medium text-emerald-700 dark:text-emerald-300">
+                              {meal}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </section>
+              )}
+              {itinerary.transportIncluded && (
+                <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
+                  <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                    <Car className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                    Transport
+                  </h2>
+                  <div className="space-y-3">
+                    <p className="text-sm text-slate-600 dark:text-slate-300">
+                      <span className="font-semibold">Included:</span> Yes
+                    </p>
+                    {itinerary.transportType && (
+                      <p className="text-sm text-slate-600 dark:text-slate-300">
+                        <span className="font-semibold">Type:</span> {itinerary.transportType}
+                      </p>
+                    )}
+                    {itinerary.pickupLocations && itinerary.pickupLocations.length > 0 && (
+                      <p className="text-sm text-slate-600 dark:text-slate-300">
+                        <span className="font-semibold">Pickup:</span> {itinerary.pickupLocations.join(', ')}
+                      </p>
+                    )}
+                  </div>
+                </section>
+              )}
+            </div>
+
+            {/* Safety & Requirements */}
+            {(itinerary.insuranceIncluded || itinerary.safetyMeasures || itinerary.minAge || itinerary.maxAge) && (
+              <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                  <Shield className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                  Safety & Requirements
+                </h2>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {itinerary.insuranceIncluded && (
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                      <span className="text-sm text-slate-600 dark:text-slate-300">Insurance Included</span>
+                    </div>
+                  )}
+                  {(itinerary.minAge || itinerary.maxAge) && (
+                    <div className="flex items-start gap-2">
+                      <AlertCircle className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5" />
+                      <span className="text-sm text-slate-600 dark:text-slate-300">
+                        Age: {itinerary.minAge && itinerary.maxAge ? `${itinerary.minAge}-${itinerary.maxAge} years` : itinerary.minAge ? `${itinerary.minAge}+ years` : `Up to ${itinerary.maxAge} years`}
+                      </span>
+                    </div>
+                  )}
+                </div>
+                {itinerary.safetyMeasures && (
+                  <p className="mt-4 text-sm text-slate-600 dark:text-slate-300">
+                    <span className="font-semibold">Safety Measures:</span> {itinerary.safetyMeasures}
+                  </p>
+                )}
+              </section>
+            )}
+
+            {/* Bookings Section */}
+            <section className="space-y-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
               <div className="flex items-center gap-3">
                 <Users className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
                 <h2 className="text-xl font-bold text-slate-900 dark:text-white">
@@ -336,7 +533,7 @@ function ItineraryDetailPage() {
                   {isAttending ? t("detail.attending") : t("detail.attendButton")}
                 </button>
               )}
-            </aside>
+            </section>
           </div>
         </div>
       </div>

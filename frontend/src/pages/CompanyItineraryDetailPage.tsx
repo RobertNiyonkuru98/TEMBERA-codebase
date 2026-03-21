@@ -26,6 +26,9 @@ import {
   Users,
   ImageIcon,
   Images,
+  Clock,
+  Star,
+  TrendingUp,
 } from "lucide-react";
 
 function CompanyItineraryDetailPage() {
@@ -358,17 +361,77 @@ function CompanyItineraryDetailPage() {
               </div>
             )}
 
+            {(itinerary.durationDays || itinerary.durationHours) && (
+              <div className="flex items-center gap-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10">
+                  <Clock className="h-5 w-5 text-blue-400" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Duration</p>
+                  <p className="font-medium text-slate-200">
+                    {itinerary.durationDays ? `${itinerary.durationDays}d` : ''}
+                    {itinerary.durationDays && itinerary.durationHours ? ' ' : ''}
+                    {itinerary.durationHours ? `${itinerary.durationHours}h` : ''}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {(itinerary.minParticipants || itinerary.maxParticipants) && (
+              <div className="flex items-center gap-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/10">
+                  <Users className="h-5 w-5 text-purple-400" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Capacity</p>
+                  <p className="font-medium text-slate-200">
+                    {itinerary.minParticipants && itinerary.maxParticipants
+                      ? `${itinerary.minParticipants}-${itinerary.maxParticipants}`
+                      : itinerary.maxParticipants || itinerary.minParticipants} people
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {itinerary.availableSlots !== null && itinerary.availableSlots !== undefined && (
+              <div className="flex items-center gap-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500/10">
+                  <TrendingUp className="h-5 w-5 text-amber-400" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Available Slots</p>
+                  <p className="font-medium text-slate-200">
+                    {itinerary.availableSlots} {itinerary.availableSlots === 1 ? 'slot' : 'slots'}
+                  </p>
+                </div>
+              </div>
+            )}
+
             <div className="flex items-center gap-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-500/10">
                 <Users className="h-5 w-5 text-cyan-400" />
               </div>
               <div>
-                <p className="text-xs text-slate-500">Attendees</p>
+                <p className="text-xs text-slate-500">Bookings</p>
                 <p className="font-medium text-slate-200">
                   {attendeeCount} {attendeeCount === 1 ? "booking" : "bookings"}
                 </p>
               </div>
             </div>
+
+            {itinerary.averageRating && itinerary.totalRatings && itinerary.totalRatings > 0 && (
+              <div className="flex items-center gap-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500/10">
+                  <Star className="h-5 w-5 text-amber-400" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Rating</p>
+                  <p className="font-medium text-slate-200">
+                    {itinerary.averageRating.toFixed(1)}/10 ({itinerary.totalRatings} reviews)
+                  </p>
+                </div>
+              </div>
+            )}
 
             <div className="flex items-center gap-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-pink-500/10">
