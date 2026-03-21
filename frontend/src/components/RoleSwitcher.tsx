@@ -56,9 +56,11 @@ export function RoleSwitcher() {
   return (
     <Menubar className="border-none bg-transparent p-0 h-auto">
       <MenubarMenu>
-        <MenubarTrigger className="inline-flex items-center gap-2 rounded-xl border-2 border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 px-4 py-2.5 text-sm font-semibold text-emerald-900 dark:text-emerald-100 transition-all hover:bg-emerald-100 dark:hover:bg-emerald-900/40 hover:shadow-md data-[state=open]:bg-emerald-100 dark:data-[state=open]:bg-emerald-900/40">
-          <Eye className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-          <span className="text-xs text-emerald-700 dark:text-emerald-300">Viewing as</span>
+        <MenubarTrigger className="w-full flex flex-col items-start gap-2 rounded-xl border-2 border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 px-4 py-2.5 text-sm font-semibold text-emerald-900 dark:text-emerald-100 transition-all hover:bg-emerald-100 dark:hover:bg-emerald-900/40 hover:shadow-md data-[state=open]:bg-emerald-100 dark:data-[state=open]:bg-emerald-900/40">
+          <div className="flex items-center gap-2">
+            <Eye className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+            <span className="text-xs text-emerald-700 dark:text-emerald-300">Viewing as</span>
+          </div>
           <div className="flex items-center gap-1.5">
             <ActiveRoleIcon className="h-3.5 w-3.5" />
             <span>{activeRoleLabel}</span>
