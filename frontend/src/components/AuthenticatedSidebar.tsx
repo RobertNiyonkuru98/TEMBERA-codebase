@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import type { UserRole } from "../types";
 import type { Lang } from "../i18n";
 import { useI18n } from "../i18n";
@@ -105,10 +105,33 @@ function AuthenticatedSidebar({
   onLogout,
 }: AuthenticatedSidebarProps) {
   const { t } = useI18n();
+  const location = useLocation();
   const links = linksByRole(role, t);
   const primaryLinks = links.slice(0, 4);
   const extraLinks = links.slice(4);
   const { theme, resolvedTheme, setTheme } = useTheme();
+
+  // Helper function to check if a link is active
+  const isLinkActive = (linkPath: string) => {
+    // Exact match
+    if (location.pathname === linkPath) {
+      return true;
+    }
+    
+    // For create/new routes, only match exactly - don't activate parent list routes
+    if (linkPath.includes('/create') || linkPath.includes('/new')) {
+      return false;
+    }
+    
+    // For list/index routes, don't activate if we're on a create/new page
+    if (location.pathname.includes('/create') || location.pathname.includes('/new')) {
+      return false;
+    }
+    
+    // Allow nested route matching for detail pages (e.g., /itineraries/:id)
+    // but not for create/new pages
+    return location.pathname.startsWith(linkPath + '/');
+  };
 
   const getThemeIcon = () => {
     if (resolvedTheme === "light") return <Sun className="h-4 w-4" />;
@@ -141,15 +164,22 @@ function AuthenticatedSidebar({
             <SidebarMenu className="space-y-1">
               {primaryLinks.map((link) => {
                 const Icon = link.icon;
+                const isActive = isLinkActive(link.to);
                 return (
                   <SidebarMenuItem key={link.to}>
                     <SidebarMenuButton asChild className="group">
                       <Link 
                         to={link.to}
-                        className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 dark:text-slate-300 transition-all hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400 hover:shadow-sm"
+                        className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all hover:shadow-sm ${
+                          isActive
+                            ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 shadow-sm border-l-4 border-emerald-600 dark:border-emerald-400"
+                            : "text-slate-700 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400"
+                        }`}
                       >
-                        {Icon && <Icon className="h-5 w-5 transition-transform group-hover:scale-110" />}
-                        <span>{link.label}</span>
+                        {Icon && <Icon className={`h-5 w-5 transition-transform group-hover:scale-110 ${
+                          isActive ? "text-emerald-600 dark:text-emerald-400" : ""
+                        }`} />}
+                        <span className={isActive ? "font-semibold" : ""}>{link.label}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -164,15 +194,22 @@ function AuthenticatedSidebar({
               <SidebarMenu className="space-y-1">
                 {extraLinks.map((link) => {
                   const Icon = link.icon;
+                  const isActive = isLinkActive(link.to);
                   return (
                     <SidebarMenuItem key={link.to}>
                       <SidebarMenuButton asChild className="group">
                         <Link 
                           to={link.to}
-                          className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 dark:text-slate-300 transition-all hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400 hover:shadow-sm"
+                          className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all hover:shadow-sm ${
+                            isActive
+                              ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 shadow-sm border-l-4 border-emerald-600 dark:border-emerald-400"
+                              : "text-slate-700 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400"
+                          }`}
                         >
-                          {Icon && <Icon className="h-5 w-5 transition-transform group-hover:scale-110" />}
-                          <span>{link.label}</span>
+                          {Icon && <Icon className={`h-5 w-5 transition-transform group-hover:scale-110 ${
+                            isActive ? "text-emerald-600 dark:text-emerald-400" : ""
+                          }`} />}
+                          <span className={isActive ? "font-semibold" : ""}>{link.label}</span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
