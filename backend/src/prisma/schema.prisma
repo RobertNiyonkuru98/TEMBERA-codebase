@@ -110,18 +110,120 @@ model CompanyRating {
 }
 
 model Itinerary {
-  title          String           @db.VarChar(50)
-  activity       String?          @db.VarChar(255)
-  description    String?          @db.VarChar(255)
-  location       String?          @db.VarChar(255)
-  date           DateTime         @db.Date
-  price          Float
-  id             String           @id @default(uuid()) @db.Uuid
-  company_id     String           @db.Uuid
-  bookings       Booking[]
-  items          BookingItem[]
-  company        Company          @relation(fields: [company_id], references: [id])
-  images         ItineraryImage[]
+  // Basic Information
+  id                      String              @id @default(uuid()) @db.Uuid
+  title                   String              @db.VarChar(200)
+  activity                String?             @db.VarChar(255)
+  description             String?             @db.VarChar(3000)
+  location                String?             @db.VarChar(255)
+  date                    DateTime            @db.Date
+  
+  // Duration & Scheduling
+  duration_days           Int?                // Number of days
+  duration_hours          Int?                // Total hours if less than a day
+  start_time              String?             @db.VarChar(20)
+  end_time                String?             @db.VarChar(20)
+  is_multi_day            Boolean             @default(false)
+  schedule_details        String?             @db.VarChar(3000)
+  
+  // Capacity & Booking Policies
+  min_participants        Int?
+  max_participants        Int?
+  available_slots         Int?
+  allows_individuals      Boolean             @default(true)
+  allows_groups           Boolean             @default(true)
+  group_discount_percent  Float?
+  group_min_size          Int?
+  booking_deadline        DateTime?
+  
+  // Inclusions & Exclusions
+  inclusions              Json?               // Array of included items
+  exclusions              Json?               // Array of excluded items
+  provided_equipment      Json?               // Array of equipment provided
+  required_items          Json?               // Array of items to bring
+  
+  // Food & Meals
+  meals_included          Boolean             @default(false)
+  meal_types              Json?               // ["breakfast", "lunch", "dinner"]
+  food_options            String?             @db.VarChar(500)
+  can_buy_food_onsite     Boolean             @default(false)
+  can_bring_own_food      Boolean             @default(true)
+  dietary_accommodations  String?             @db.VarChar(500)
+  
+  // Transportation
+  transport_included      Boolean             @default(false)
+  transport_type          String?             @db.VarChar(100)
+  pickup_locations        Json?               // Array of pickup points
+  dropoff_locations       Json?               // Array of dropoff points
+  allows_own_transport    Boolean             @default(false)
+  parking_available       Boolean             @default(false)
+  transport_notes         String?             @db.VarChar(1000)
+  
+  // Meeting & Location Details
+  meeting_point           String?             @db.VarChar(500)
+  meeting_point_lat       Float?
+  meeting_point_lng       Float?
+  end_point               String?             @db.VarChar(500)
+  end_point_lat           Float?
+  end_point_lng           Float?
+  location_details        String?             @db.VarChar(1000)
+  
+  // Difficulty & Requirements
+  difficulty_level        String?             @db.VarChar(50)
+  fitness_level_required  String?             @db.VarChar(100)
+  min_age                 Int?
+  max_age                 Int?
+  age_restrictions_notes  String?             @db.VarChar(500)
+  accessibility_info      String?             @db.VarChar(1000)
+  
+  // Pricing & Payment
+  price                   Float
+  price_per_person        Float?
+  price_per_group         Float?
+  deposit_required        Float?
+  deposit_percentage      Float?
+  payment_methods         Json?               // ["cash", "card", "mobile_money"]
+  currency                String              @default("RWF") @db.VarChar(10)
+  refund_policy           String?             @db.VarChar(1000)
+  cancellation_policy     String?             @db.VarChar(1000)
+  
+  // Safety & Insurance
+  insurance_included      Boolean             @default(false)
+  insurance_details       String?             @db.VarChar(1000)
+  safety_measures         Json?               // Array of safety protocols
+  emergency_procedures    String?             @db.VarChar(1000)
+  medical_requirements    String?             @db.VarChar(500)
+  
+  // Additional Information
+  languages_offered       Json?               // Languages guides speak
+  guide_info              String?             @db.VarChar(500)
+  weather_dependency      Boolean             @default(false)
+  weather_notes           String?             @db.VarChar(500)
+  what_to_wear            String?             @db.VarChar(500)
+  additional_notes        String?             @db.VarChar(2000)
+  terms_and_conditions    String?             @db.VarChar(3000)
+  
+  // Status & Visibility
+  status                  String              @default("draft") @db.VarChar(20)
+  is_featured             Boolean             @default(false)
+  is_active               Boolean             @default(true)
+  tags                    Json?               // ["adventure", "family-friendly"]
+  category                String?             @db.VarChar(100)
+  
+  // Timestamps
+  created_at              DateTime            @default(now())
+  updated_at              DateTime            @updatedAt
+  published_at            DateTime?
+  last_booking_date       DateTime?
+  
+  // Relations
+  company_id              String              @db.Uuid
+  company                 Company             @relation(fields: [company_id], references: [id])
+  bookings                Booking[]
+  items                   BookingItem[]
+  images                  ItineraryImage[]
+  videos                  ItineraryVideo[]
+  ratings                 ItineraryRating[]
 }
 
 model ItineraryImage {
@@ -135,6 +237,56 @@ model ItineraryImage {
   itinerary    Itinerary @relation(fields: [itinerary_id], references: [id], onDelete: Cascade)
 }
 
+model ItineraryVideo {
+  id           String    @id @default(uuid()) @db.Uuid
+  itinerary_id String    @db.Uuid
+  video_url    String    @db.VarChar(500)
+  public_id    String    @db.VarChar(255)
+  thumbnail_url String?  @db.VarChar(500)
+  duration     Int?      // Duration in seconds
+  order        Int       @default(0)
+  created_at   DateTime  @default(now())
+  itinerary    Itinerary @relation(fields: [itinerary_id], references: [id], onDelete: Cascade)
+}
+
+model ItineraryRating {
+  id                  String    @id @default(uuid()) @db.Uuid
+  
+  // Single rating (1-10 scale to match company ratings)
+  rating              Int       // 1-10
+  
+  // Text feedback
+  title               String?   @db.VarChar(200)
+  comment             String?   @db.VarChar(2000)
+  
+  // Boolean feedback flags
+  good_value          Boolean?  // Worth the money?
+  good_guide          Boolean?  // Guide quality
+  well_organized      Boolean?  // Organization
+  safe                Boolean?  // Safety
+  would_recommend     Boolean?  // Recommend to others?
+  
+  // Verification
+  verified_booking    Boolean   @default(false)
+  
+  // Timestamps
+  created_at          DateTime  @default(now())
+  updated_at          DateTime  @updatedAt
+  
+  // Relations
+  user_id             String    @db.Uuid
+  itinerary_id        String    @db.Uuid
+  booking_id          String?   @db.Uuid
+  
+  user                User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  itinerary           Itinerary @relation(fields: [itinerary_id], references: [id], onDelete: Cascade)
+  
+  // One rating per user per itinerary
+  @@unique([user_id, itinerary_id])
+  @@index([itinerary_id])
+  @@index([user_id])
+}
+
 model Role {
   id            String @id @default(uuid()) @db.Uuid
   user_id       String @db.Uuid
@@ -146,13 +298,14 @@ model Role {
 }
 
 model User {
-  name           String          @db.VarChar(255)
-  email          String          @unique @db.VarChar(255)
-  phone_number   String?         @db.VarChar(50)
-  password       String          @db.VarChar(255)
-  id             String          @id @default(uuid()) @db.Uuid
-  bookings       Booking[]
-  companies      Company[]
-  roles          Role[]
-  companyRatings CompanyRating[]
+  name             String            @db.VarChar(255)
+  email            String            @unique @db.VarChar(255)
+  phone_number     String?           @db.VarChar(50)
+  password         String            @db.VarChar(255)
+  id               String            @id @default(uuid()) @db.Uuid
+  bookings         Booking[]
+  companies        Company[]
+  roles            Role[]
+  companyRatings   CompanyRating[]
+  itineraryRatings ItineraryRating[]
 }

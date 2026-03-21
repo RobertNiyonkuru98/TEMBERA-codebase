@@ -1,9 +1,41 @@
-import { type FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "../AuthContext";
 import { createItinerary, fetchCompanies } from "../api/platformApi";
 import type { Company } from "../types";
+import { Loader2, ChevronLeft, ChevronRight, Building2 } from "lucide-react";
+import {
+  BasicInfoStep,
+  DurationScheduleStep,
+  CapacityBookingStep,
+  InclusionsStep,
+  FoodMealsStep,
+  TransportStep,
+  LocationDetailsStep,
+  RequirementsStep,
+  PricingPaymentStep,
+  SafetyAdditionalStep,
+  MediaUploadStep,
+  ReviewSubmitStep,
+  INITIAL_FORM_DATA,
+  type ItineraryFormData,
+} from "./itinerary/components";
+
+const STEPS = [
+  { id: 1, name: "Basic Info", component: BasicInfoStep },
+  { id: 2, name: "Duration", component: DurationScheduleStep },
+  { id: 3, name: "Capacity", component: CapacityBookingStep },
+  { id: 4, name: "Inclusions", component: InclusionsStep },
+  { id: 5, name: "Food & Meals", component: FoodMealsStep },
+  { id: 6, name: "Transport", component: TransportStep },
+  { id: 7, name: "Location", component: LocationDetailsStep },
+  { id: 8, name: "Requirements", component: RequirementsStep },
+  { id: 9, name: "Pricing", component: PricingPaymentStep },
+  { id: 10, name: "Safety", component: SafetyAdditionalStep },
+  { id: 11, name: "Media", component: MediaUploadStep },
+  { id: 12, name: "Review", component: ReviewSubmitStep },
+];
 
 function AdminCreateItineraryPage() {
   const { token } = useAuth();
@@ -11,17 +43,15 @@ function AdminCreateItineraryPage() {
 
   const [companies, setCompanies] = useState<Company[]>([]);
   const [isLoadingCompanies, setIsLoadingCompanies] = useState(true);
-
-  const [companyId, setCompanyId] = useState("");
-  const [title, setTitle] = useState("");
-  const [activity, setActivity] = useState("");
-  const [description, setDescription] = useState("");
-  const [location, setLocation] = useState("");
-  const [date, setDate] = useState("");
-  const [price, setPrice] = useState("");
-
+  const [selectedCompanyId, setSelectedCompanyId] = useState("");
+  const [currentStep, setCurrentStep] = useState(1);
+  const [formData, setFormData] = useState<ItineraryFormData>(INITIAL_FORM_DATA);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const updateFormData = (updates: Partial<ItineraryFormData>) => {
+    setFormData((prev) => ({ ...prev, ...updates }));
+  };
 
   useEffect(() => {
     async function loadCompanies() {
@@ -36,7 +66,7 @@ function AdminCreateItineraryPage() {
         const allCompanies = await fetchCompanies(token);
         setCompanies(allCompanies);
         if (allCompanies.length > 0) {
-          setCompanyId(String(allCompanies[0].id));
+          setSelectedCompanyId(String(allCompanies[0].id));
         }
       } catch (loadError) {
         setError(
@@ -52,44 +82,79 @@ function AdminCreateItineraryPage() {
     void loadCompanies();
   }, [token]);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleNext = () => {
+    if (currentStep < STEPS.length) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
 
+  const handlePrevious = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleSubmit = async () => {
     if (!token) {
-      toast.error("You must be logged in to create an itinerary.");
+      toast.error("You must be logged in");
       return;
     }
 
-    if (!companyId || !title.trim() || !date || !price.trim()) {
-      toast.error("Company, title, date, and price are required.");
+    if (!selectedCompanyId) {
+      toast.error("Please select a company");
       return;
     }
 
-    const numericPrice = Number(price);
-    if (Number.isNaN(numericPrice) || numericPrice <= 0) {
-      toast.error("Price must be a valid number greater than 0.");
+    if (!formData.title || !formData.date || formData.price <= 0) {
+      toast.error("Please fill in all required fields");
       return;
     }
 
     try {
       setIsSubmitting(true);
       setError(null);
+
+      let imageUrls: string[] = [];
+      if (formData.images.length > 0 && formData.images.some(img => img.file)) {
+        const uploadFormData = new FormData();
+        formData.images.forEach((img) => {
+          if (img.file) {
+            uploadFormData.append("images", img.file);
+          }
+        });
+
+        try {
+          const uploadUrl = `${import.meta.env.VITE_API_BASE_URL || "http://localhost:3000"}/api/upload/images`;
+          const uploadResponse = await fetch(uploadUrl, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}` },
+            body: uploadFormData,
+          });
+
+          if (uploadResponse.ok) {
+            const uploadData = await uploadResponse.json();
+            imageUrls = uploadData.images.map((img: { url: string }) => img.url);
+          }
+        } catch (uploadError) {
+          console.error("Image upload failed:", uploadError);
+        }
+      }
+
       await createItinerary(token, {
-        company_id: companyId,
-        title: title.trim(),
-        activity: activity.trim() || undefined,
-        description: description.trim() || undefined,
-        location: location.trim() || undefined,
-        date,
-        price: numericPrice,
+        company_id: selectedCompanyId,
+        title: formData.title,
+        activity: formData.activity || undefined,
+        description: formData.description || undefined,
+        location: formData.location || undefined,
+        date: formData.date,
+        price: formData.price,
+        imageUrls: imageUrls.length > 0 ? imageUrls : undefined,
       });
+      
       toast.success("Itinerary created successfully!");
       navigate("/admin/itineraries", { replace: true });
     } catch (submitError) {
-      const errorMsg =
-        submitError instanceof Error
-          ? submitError.message
-          : "Failed to create itinerary";
+      const errorMsg = submitError instanceof Error ? submitError.message : "Failed to create itinerary";
       setError(errorMsg);
       toast.error(errorMsg);
     } finally {
@@ -97,126 +162,170 @@ function AdminCreateItineraryPage() {
     }
   };
 
+  if (isLoadingCompanies) {
+    return (
+      <div className="w-full min-h-screen flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-12 w-12 animate-spin text-emerald-500" />
+          <p className="text-sm text-slate-400">Loading companies...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (companies.length === 0) {
+    return (
+      <div className="mx-auto max-w-2xl space-y-6 p-8">
+        <div className="rounded-2xl border border-amber-200 dark:border-amber-900/50 bg-amber-50 dark:bg-amber-900/20 p-8">
+          <div className="flex items-start gap-4">
+            <Building2 className="h-8 w-8 text-amber-600 dark:text-amber-400" />
+            <div>
+              <h1 className="text-2xl font-bold text-amber-900 dark:text-amber-100 mb-2">
+                No Companies Available
+              </h1>
+              <p className="text-sm text-amber-800 dark:text-amber-200 mb-4">
+                You need to create a company before creating itineraries.
+              </p>
+              <Link
+                to="/admin/companies"
+                className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:bg-emerald-600"
+              >
+                <Building2 className="h-4 w-4" />
+                Go to Companies
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const CurrentStepComponent = STEPS[currentStep - 1].component;
+
   return (
-    <div className="mx-auto max-w-3xl space-y-4">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-50">Create Itinerary</h1>
-        <p className="text-sm text-slate-300">Create an itinerary for any company.</p>
-      </header>
+    <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 py-8">
+      <div className="mx-auto w-[95%] max-w-5xl space-y-8">
+        {/* Header */}
+        <header className="space-y-4">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-50">
+              Create New Itinerary (Admin)
+            </h1>
+            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+              Step {currentStep} of {STEPS.length}
+            </p>
+          </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/60 p-5"
-      >
-        <label className="space-y-1 text-sm text-slate-200">
-          <span>Company</span>
-          <select
-            value={companyId}
-            onChange={(event) => setCompanyId(event.target.value)}
-            disabled={isLoadingCompanies || companies.length === 0}
-            className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-50 outline-none ring-emerald-500/60 focus:border-emerald-400 focus:ring-2"
-          >
-            {companies.map((company) => (
-              <option key={company.id} value={String(company.id)}>
-                {company.name}
-              </option>
+          {/* Company Selector */}
+          <div className="rounded-xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-4">
+            <label className="block text-sm font-semibold text-slate-900 dark:text-slate-50 mb-2">
+              <Building2 className="inline h-4 w-4 mr-1" />
+              Select Company
+            </label>
+            <select
+              value={selectedCompanyId}
+              onChange={(e) => setSelectedCompanyId(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50 focus:border-emerald-500 dark:focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/20 transition-colors"
+            >
+              {companies.map((company) => (
+                <option key={company.id} value={String(company.id)}>
+                  {company.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="flex gap-1">
+            {STEPS.map((step) => (
+              <div
+                key={step.id}
+                className={`h-2 flex-1 rounded-full transition-all ${
+                  step.id <= currentStep
+                    ? "bg-emerald-600"
+                    : "bg-slate-200 dark:bg-slate-800"
+                }`}
+              />
             ))}
-          </select>
-        </label>
+          </div>
 
-        <label className="space-y-1 text-sm text-slate-200">
-          <span>Title</span>
-          <input
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-50 outline-none ring-emerald-500/60 focus:border-emerald-400 focus:ring-2"
-            placeholder="e.g. Kigali Cultural City Tour"
+          {/* Step Names */}
+          <div className="flex gap-2 overflow-x-auto pb-2">
+            {STEPS.map((step) => (
+              <button
+                key={step.id}
+                type="button"
+                onClick={() => setCurrentStep(step.id)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+                  step.id === currentStep
+                    ? "bg-emerald-600 text-white"
+                    : step.id < currentStep
+                    ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                }`}
+              >
+                {step.name}
+              </button>
+            ))}
+          </div>
+        </header>
+
+        {/* Form Content */}
+        <div className="rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8 shadow-lg">
+          <CurrentStepComponent
+            formData={formData}
+            updateFormData={updateFormData}
+            token={token || ""}
           />
-        </label>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <label className="space-y-1 text-sm text-slate-200">
-            <span>Activity</span>
-            <input
-              value={activity}
-              onChange={(event) => setActivity(event.target.value)}
-              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-50 outline-none ring-emerald-500/60 focus:border-emerald-400 focus:ring-2"
-              placeholder="e.g. Hiking"
-            />
-          </label>
-          <label className="space-y-1 text-sm text-slate-200">
-            <span>Location</span>
-            <input
-              value={location}
-              onChange={(event) => setLocation(event.target.value)}
-              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-50 outline-none ring-emerald-500/60 focus:border-emerald-400 focus:ring-2"
-              placeholder="e.g. Kigali"
-            />
-          </label>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <label className="space-y-1 text-sm text-slate-200">
-            <span>Date</span>
-            <input
-              type="date"
-              value={date}
-              onChange={(event) => setDate(event.target.value)}
-              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-50 outline-none ring-emerald-500/60 focus:border-emerald-400 focus:ring-2"
-            />
-          </label>
-          <label className="space-y-1 text-sm text-slate-200">
-            <span>Price (RWF)</span>
-            <input
-              type="number"
-              min="1"
-              value={price}
-              onChange={(event) => setPrice(event.target.value)}
-              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-50 outline-none ring-emerald-500/60 focus:border-emerald-400 focus:ring-2"
-              placeholder="50000"
-            />
-          </label>
-        </div>
-
-        <label className="space-y-1 text-sm text-slate-200">
-          <span>Description</span>
-          <textarea
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-            rows={4}
-            className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-50 outline-none ring-emerald-500/60 focus:border-emerald-400 focus:ring-2"
-            placeholder="What travelers should expect"
-          />
-        </label>
-
-        {companies.length === 0 && !isLoadingCompanies && (
-          <p className="rounded-md border border-amber-900 bg-amber-950/40 px-3 py-2 text-xs text-amber-300">
-            No companies found. Create a company first.
-          </p>
-        )}
-
+        {/* Error Message */}
         {error && (
-          <p className="rounded-md border border-red-900 bg-red-950/40 px-3 py-2 text-xs text-red-300">
-            {error}
-          </p>
+          <div className="rounded-xl border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/10 p-4">
+            <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+          </div>
         )}
 
-        <div className="flex flex-wrap items-center gap-3">
+        {/* Navigation Buttons */}
+        <div className="flex items-center justify-between gap-4">
           <button
-            type="submit"
-            disabled={isSubmitting || companies.length === 0}
-            className="rounded-md bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-70"
+            type="button"
+            onClick={handlePrevious}
+            disabled={currentStep === 1}
+            className="flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-semibold transition-colors hover:border-slate-300 dark:hover:border-slate-600 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? "Creating..." : "Create Itinerary"}
+            <ChevronLeft className="h-5 w-5" />
+            Previous
           </button>
-          <Link
-            to="/admin/itineraries"
-            className="rounded-md border border-slate-700 px-4 py-2 text-sm text-slate-200 transition hover:bg-slate-800"
-          >
-            Cancel
-          </Link>
+
+          {currentStep < STEPS.length ? (
+            <button
+              type="button"
+              onClick={handleNext}
+              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition-colors shadow-lg"
+            >
+              Next
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                  Creating...
+                </>
+              ) : (
+                "Create Itinerary"
+              )}
+            </button>
+          )}
         </div>
-      </form>
+      </div>
     </div>
   );
 }

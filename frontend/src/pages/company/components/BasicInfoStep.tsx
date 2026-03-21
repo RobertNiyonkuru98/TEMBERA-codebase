@@ -12,7 +12,7 @@ interface BasicInfoStepProps extends StepProps {
   currentUserName?: string;
 }
 
-export function BasicInfoStep({ formData, updateFormData, token, isAdmin = true, currentUserId, currentUserName }: BasicInfoStepProps) {
+export function BasicInfoStep({ formData, updateFormData, token, isAdmin = true, currentUserName }: BasicInfoStepProps) {
   const { t } = useI18n();
   const [users, setUsers] = useState<User[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
