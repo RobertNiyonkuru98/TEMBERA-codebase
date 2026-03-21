@@ -472,6 +472,290 @@ async function seedBoth(): Promise<void> {
   await question('\nPress Enter to continue...');
 }
 
+// Function to add a single new user
+async function addSingleUser(): Promise<void> {
+  printHeader('ADD NEW USER');
+  
+  try {
+    let name: string;
+    let email: string;
+    let password: string;
+    let confirmPassword: string;
+    let phoneNumber: string;
+    
+    // Get name
+    do {
+      name = await question('Enter user name: ');
+      if (name.trim().length < 2) {
+        printError('Name must be at least 2 characters long');
+      }
+    } while (name.trim().length < 2);
+    
+    // Get email
+    do {
+      email = await question('Enter user email: ');
+      if (!isValidEmail(email)) {
+        printError('Please enter a valid email address');
+      }
+      
+      // Check if email already exists
+      const existingUser = await prisma.user.findUnique({
+        where: { email: email.trim().toLowerCase() }
+      });
+      
+      if (existingUser) {
+        printError('Email already exists. Please use a different email.');
+        email = '';
+      }
+    } while (!isValidEmail(email) || !email);
+    
+    // Get password
+    do {
+      password = await question('Enter password: ');
+      if (password.length < 6) {
+        printError('Password must be at least 6 characters long');
+      }
+    } while (password.length < 6);
+    
+    // Confirm password
+    do {
+      confirmPassword = await question('Confirm password: ');
+      if (password !== confirmPassword) {
+        printError('Passwords do not match');
+      }
+    } while (password !== confirmPassword);
+    
+    // Get phone number (optional)
+    phoneNumber = await question('Enter phone number (optional, press Enter to skip): ');
+    
+    // Create user
+    const hashedPassword = await hashPassword(password);
+    const newUser = await prisma.user.create({
+      data: {
+        name: name.trim(),
+        email: email.trim().toLowerCase(),
+        password: hashedPassword,
+        phone_number: phoneNumber.trim() || undefined
+      }
+    });
+    
+    printSuccess('User created successfully:');
+    console.log(`  - Name: ${newUser.name}`);
+    console.log(`  - Email: ${newUser.email}`);
+    console.log(`  - ID: ${newUser.id}`);
+    console.log();
+    
+    // Ask if they want to assign a role immediately
+    const assignRole = await question('Do you want to assign a role to this user now? (y/n): ');
+    if (assignRole.toLowerCase() === 'y') {
+      await assignRoleToUser(newUser.id);
+    }
+    
+  } catch (error) {
+    printError(`Failed to add user: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+  
+  await question('\nPress Enter to continue...');
+}
+
+// Function to select a user from the list
+async function selectUser(): Promise<string | null> {
+  const users = await prisma.user.findMany({
+    include: {
+      roles: {
+        select: {
+          access_level: true,
+          access_status: true
+        }
+      }
+    }
+  });
+  
+  if (users.length === 0) {
+    printError('No users found in the database');
+    return null;
+  }
+  
+  console.log('\nAvailable users:');
+  users.forEach((user: any, index: number) => {
+    const roles = user.roles.map((r: any) => r.access_level).join(', ') || 'No roles';
+    console.log(`${index + 1}. ${user.name} (${user.email}) - Roles: ${roles}`);
+  });
+  console.log();
+  
+  let selection: number;
+  do {
+    const input = await question(`Select user (1-${users.length}): `);
+    selection = parseInt(input);
+    if (isNaN(selection) || selection < 1 || selection > users.length) {
+      printError(`Please enter a number between 1 and ${users.length}`);
+    }
+  } while (isNaN(selection) || selection < 1 || selection > users.length);
+  
+  return users[selection - 1].id;
+}
+
+// Function to assign a role to a user
+async function assignRoleToUser(userId?: string): Promise<void> {
+  printHeader('ASSIGN ROLE TO USER');
+  
+  try {
+    let targetUserId: string | undefined = userId;
+    
+    // If no userId provided, let user select
+    if (!targetUserId) {
+      const selectedUserId = await selectUser();
+      if (!selectedUserId) {
+        return;
+      }
+      targetUserId = selectedUserId;
+    }
+    
+    // Get user details
+    const user = await prisma.user.findUnique({
+      where: { id: targetUserId },
+      include: {
+        roles: {
+          select: {
+            access_level: true,
+            access_status: true
+          }
+        }
+      }
+    });
+    
+    if (!user) {
+      printError('User not found');
+      return;
+    }
+    
+    console.log(`\nAssigning role to: ${user.name} (${user.email})`);
+    console.log(`Current roles: ${user.roles.map((r: any) => r.access_level).join(', ') || 'None'}`);
+    console.log();
+    
+    // Select role type
+    console.log('Available role types:');
+    console.log('1. admin - Full system access');
+    console.log('2. company - Company management access');
+    console.log('3. user - Regular user access');
+    console.log();
+    
+    let roleChoice: string;
+    do {
+      roleChoice = await question('Select role type (1-3): ');
+      if (!['1', '2', '3'].includes(roleChoice)) {
+        printError('Please enter 1, 2, or 3');
+      }
+    } while (!['1', '2', '3'].includes(roleChoice));
+    
+    const roleMap: Record<string, string> = {
+      '1': 'admin',
+      '2': 'company',
+      '3': 'user'
+    };
+    
+    const accessLevel = roleMap[roleChoice];
+    
+    // Check if user already has this role
+    const existingRole = await prisma.role.findUnique({
+      where: {
+        user_id_access_level: {
+          user_id: targetUserId,
+          access_level: accessLevel
+        }
+      }
+    });
+    
+    if (existingRole) {
+      printError(`User already has the ${accessLevel} role`);
+      return;
+    }
+    
+    // Create the role
+    const newRole = await prisma.role.create({
+      data: {
+        user_id: targetUserId,
+        access_level: accessLevel,
+        access_status: 'active'
+      }
+    });
+    
+    printSuccess(`${accessLevel} role assigned successfully to ${user.name}`);
+    console.log(`  - Role ID: ${newRole.id}`);
+    
+  } catch (error) {
+    printError(`Failed to assign role: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+  
+  await question('\nPress Enter to continue...');
+}
+
+// Function to remove a role from a user
+async function removeRoleFromUser(): Promise<void> {
+  printHeader('REMOVE ROLE FROM USER');
+  
+  try {
+    const userId = await selectUser();
+    if (!userId) {
+      return;
+    }
+    
+    // Get user with roles
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        roles: true
+      }
+    });
+    
+    if (!user) {
+      printError('User not found');
+      return;
+    }
+    
+    if (user.roles.length === 0) {
+      printError('User has no roles to remove');
+      return;
+    }
+    
+    console.log(`\nRemoving role from: ${user.name} (${user.email})`);
+    console.log('\nCurrent roles:');
+    user.roles.forEach((role: any, index: number) => {
+      console.log(`${index + 1}. ${role.access_level} (${role.access_status})`);
+    });
+    console.log();
+    
+    let selection: number;
+    do {
+      const input = await question(`Select role to remove (1-${user.roles.length}): `);
+      selection = parseInt(input);
+      if (isNaN(selection) || selection < 1 || selection > user.roles.length) {
+        printError(`Please enter a number between 1 and ${user.roles.length}`);
+      }
+    } while (isNaN(selection) || selection < 1 || selection > user.roles.length);
+    
+    const roleToRemove = user.roles[selection - 1];
+    
+    // Confirm deletion
+    const confirm = await question(`Are you sure you want to remove the ${roleToRemove.access_level} role? (y/n): `);
+    if (confirm.toLowerCase() !== 'y') {
+      printInfo('Operation cancelled');
+      return;
+    }
+    
+    await prisma.role.delete({
+      where: { id: roleToRemove.id }
+    });
+    
+    printSuccess(`${roleToRemove.access_level} role removed from ${user.name}`);
+    
+  } catch (error) {
+    printError(`Failed to remove role: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+  
+  await question('\nPress Enter to continue...');
+}
+
 // Main menu
 async function showMainMenu(): Promise<void> {
   while (true) {
@@ -485,16 +769,27 @@ async function showMainMenu(): Promise<void> {
     console.log();
     
     console.log('Please select an operation:');
-    console.log('1. View current roles');
-    console.log('2. View current users');
-    console.log('3. Seed roles only');
-    console.log('4. Seed users only');
-    console.log('5. Seed both roles and users');
-    console.log('6. Clear all data');
-    console.log('7. Exit');
+    console.log();
+    console.log('📋 VIEW DATA:');
+    console.log('  1. View current roles');
+    console.log('  2. View current users');
+    console.log();
+    console.log('➕ ADD DATA (Incremental):');
+    console.log('  3. Add new user');
+    console.log('  4. Assign role to existing user');
+    console.log('  5. Remove role from user');
+    console.log();
+    console.log('🌱 SEED DATA (Bulk):');
+    console.log('  6. Seed roles only');
+    console.log('  7. Seed users only');
+    console.log('  8. Seed both roles and users');
+    console.log();
+    console.log('🗑️  MANAGE:');
+    console.log('  9. Clear all data');
+    console.log('  0. Exit');
     console.log();
     
-    const choice = await question('Enter your choice (1-7): ');
+    const choice = await question('Enter your choice: ');
     
     switch (choice) {
       case '1':
@@ -504,23 +799,32 @@ async function showMainMenu(): Promise<void> {
         await viewCurrentUsers();
         break;
       case '3':
-        await seedRoles();
+        await addSingleUser();
         break;
       case '4':
-        await seedUsers();
+        await assignRoleToUser();
         break;
       case '5':
-        await seedBoth();
+        await removeRoleFromUser();
         break;
       case '6':
-        await clearAllData();
+        await seedRoles();
         break;
       case '7':
+        await seedUsers();
+        break;
+      case '8':
+        await seedBoth();
+        break;
+      case '9':
+        await clearAllData();
+        break;
+      case '0':
         printInfo('Exiting seeder tool...');
         await cleanup();
         exit(0);
       default:
-        printError('Invalid choice. Please enter a number between 1 and 7.');
+        printError('Invalid choice. Please enter a valid option.');
         await question('\nPress Enter to continue...');
     }
   }
