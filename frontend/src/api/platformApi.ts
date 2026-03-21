@@ -572,6 +572,19 @@ export async function createBookingItem(
   return mapBookingItem(parsed.data);
 }
 
+export async function fetchCompanyById(
+  token: string,
+  companyId: string,
+): Promise<Company> {
+  const parsed = await requestHelper<BackendCompany>({
+    method: "GET",
+    url: `${API_BASE_URL}/api/companies/${companyId}`,
+    token,
+    headers: getAuthHeaders(token),
+  });
+  return mapCompany(parsed.data);
+}
+
 export async function createCompany(
   token: string,
   payload: CreateCompanyPayload,
@@ -584,6 +597,18 @@ export async function createCompany(
     data: payload,
   });
   return mapCompany(parsed.data);
+}
+
+export async function deleteCompany(
+  token: string,
+  companyId: string,
+): Promise<void> {
+  await requestHelper<null>({
+    method: "DELETE",
+    url: `${API_BASE_URL}/api/companies/${companyId}`,
+    token,
+    headers: getAuthHeaders(token),
+  });
 }
 
 export async function createItinerary(

@@ -16,6 +16,7 @@ import AdminUsersPage from "./pages/AdminUsersPage";
 import AdminItinerariesPage from "./pages/AdminItinerariesPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import AdminCompaniesPage from "./pages/AdminCompaniesPage";
+import AdminCompanyDetailPage from "./pages/AdminCompanyDetailPage";
 import CompanyItinerariesPage from "./pages/CompanyItinerariesPage";
 import CompanyDashboardPage from "./pages/CompanyDashboardPage";
 import CompanyAttendeesPage from "./pages/CompanyAttendeesPage";
@@ -226,6 +227,14 @@ function AppRoutes() {
         element={
           <AdminRoute>
             <AdminCompaniesPage />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/companies/:id"
+        element={
+          <AdminRoute>
+            <AdminCompanyDetailPage />
           </AdminRoute>
         }
       />
