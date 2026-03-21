@@ -41,52 +41,72 @@ model BookingMember {
 
 model Company {
   // Basic Info
-  id                    String      @id @default(uuid()) @db.Uuid
-  name                  String      @db.VarChar(100)
-  tagline               String?     @db.VarChar(150)
-  description           String?     @db.VarChar(2000)
+  id                    String          @id @default(uuid()) @db.Uuid
+  name                  String          @db.VarChar(100)
+  tagline               String?         @db.VarChar(150)
+  description           String?         @db.VarChar(2000)
   
   // Visual Branding
-  logo_url              String?     @db.VarChar(500)
-  cover_image_url       String?     @db.VarChar(500)
+  logo_url              String?         @db.VarChar(500)
+  cover_image_url       String?         @db.VarChar(500)
   
   // Location
-  address               String?     @db.VarChar(500)
-  city                  String?     @db.VarChar(100)
-  country               String?     @db.VarChar(100)
+  address               String?         @db.VarChar(500)
+  city                  String?         @db.VarChar(100)
+  country               String?         @db.VarChar(100)
   
   // Contact Information
-  email                 String?     @db.VarChar(255)
-  phone                 String?     @db.VarChar(50)
-  contact               String?     @db.VarChar(50)  // Keep for backward compatibility
+  email                 String?         @db.VarChar(255)
+  phone                 String?         @db.VarChar(50)
+  contact               String?         @db.VarChar(50)  // Keep for backward compatibility
   
   // Business Details
-  specializations       Json?       // Array of specialization strings
-  languages             Json?       // Array of language codes
+  specializations       Json?           // Array of specialization strings
+  languages             Json?           // Array of language codes
   
   // Operational
-  operating_days        String?     @db.VarChar(200)
-  operating_hours       String?     @db.VarChar(200)
+  operating_days        String?         @db.VarChar(200)
+  operating_hours       String?         @db.VarChar(200)
   
   // Online Presence
-  website               String?     @db.VarChar(255)
-  facebook_url          String?     @db.VarChar(255)
-  instagram_url         String?     @db.VarChar(255)
-  twitter_url           String?     @db.VarChar(255)
+  website               String?         @db.VarChar(255)
+  facebook_url          String?         @db.VarChar(255)
+  instagram_url         String?         @db.VarChar(255)
+  twitter_url           String?         @db.VarChar(255)
   
   // Additional Info
-  insurance_info        String?     @db.VarChar(500)
-  emergency_phone       String?     @db.VarChar(50)
-  supporting_docs       Json?       // Array of document URLs from Cloudinary
+  insurance_info        String?         @db.VarChar(500)
+  emergency_phone       String?         @db.VarChar(50)
+  supporting_docs       Json?           // Array of document URLs from Cloudinary
   
   // Timestamps
-  created_at            DateTime    @default(now())
-  updated_at            DateTime    @updatedAt
+  created_at            DateTime        @default(now())
+  updated_at            DateTime        @updatedAt
   
   // Relations
-  owner_id              String      @db.Uuid
-  owner                 User        @relation(fields: [owner_id], references: [id])
+  owner_id              String          @db.Uuid
+  owner                 User            @relation(fields: [owner_id], references: [id])
   itineraries           Itinerary[]
+  ratings               CompanyRating[]
+}
+
+model CompanyRating {
+  id          String   @id @default(uuid()) @db.Uuid
+  rating      Int      // Rating value from 1-10
+  comment     String?  @db.VarChar(1000)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  
+  // Relations
+  user_id     String   @db.Uuid
+  company_id  String   @db.Uuid
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  company     Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  
+  // One rating per user per company
+  @@unique([user_id, company_id])
+  @@index([company_id])
+  @@index([user_id])
 }
 
 model Itinerary {
@@ -126,12 +146,13 @@ model Role {
 }
 
 model User {
-  name         String    @db.VarChar(255)
-  email        String    @unique @db.VarChar(255)
-  phone_number String?   @db.VarChar(50)
-  password     String    @db.VarChar(255)
-  id           String    @id @default(uuid()) @db.Uuid
-  bookings     Booking[]
-  companies    Company[]
-  roles        Role[]
+  name           String          @db.VarChar(255)
+  email          String          @unique @db.VarChar(255)
+  phone_number   String?         @db.VarChar(50)
+  password       String          @db.VarChar(255)
+  id             String          @id @default(uuid()) @db.Uuid
+  bookings       Booking[]
+  companies      Company[]
+  roles          Role[]
+  companyRatings CompanyRating[]
 }
