@@ -556,6 +556,305 @@ paths:
           description: Booking item deleted
         "404":
           description: Booking item not found
+
+  /ratings/itinerary/{itinerary_id}/rating:
+    post:
+      summary: Create a rating for an itinerary
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: itinerary_id
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - rating
+              properties:
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 10
+                  description: Rating value from 1 to 10
+                title:
+                  type: string
+                  maxLength: 200
+                comment:
+                  type: string
+                  maxLength: 2000
+                good_value:
+                  type: boolean
+                  description: Worth the money?
+                good_guide:
+                  type: boolean
+                  description: Guide quality
+                well_organized:
+                  type: boolean
+                  description: Organization
+                safe:
+                  type: boolean
+                  description: Safety
+                would_recommend:
+                  type: boolean
+                  description: Recommend to others?
+                verified_booking:
+                  type: boolean
+                booking_id:
+                  type: string
+      responses:
+        "201":
+          description: Rating created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItineraryRating'
+        "400":
+          description: Invalid input or user already rated this itinerary
+        "401":
+          description: Unauthorized
+
+  /ratings/rating/{rating_id}:
+    get:
+      summary: Get a specific rating by ID
+      parameters:
+        - in: path
+          name: rating_id
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Rating retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItineraryRating'
+        "404":
+          description: Rating not found
+    put:
+      summary: Update a rating
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: rating_id
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 10
+                title:
+                  type: string
+                comment:
+                  type: string
+                good_value:
+                  type: boolean
+                good_guide:
+                  type: boolean
+                well_organized:
+                  type: boolean
+                safe:
+                  type: boolean
+                would_recommend:
+                  type: boolean
+      responses:
+        "200":
+          description: Rating updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItineraryRating'
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+        "404":
+          description: Rating not found
+    delete:
+      summary: Delete a rating
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: rating_id
+          schema:
+            type: string
+          required: true
+      responses:
+        "204":
+          description: Rating deleted successfully
+        "401":
+          description: Unauthorized
+        "404":
+          description: Rating not found
+
+  /ratings/itinerary/{itinerary_id}/ratings:
+    get:
+      summary: Get all ratings for an itinerary
+      parameters:
+        - in: path
+          name: itinerary_id
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Ratings retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItineraryRating'
+
+  /ratings/user/ratings:
+    get:
+      summary: Get all ratings by the authenticated user
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: User ratings retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItineraryRating'
+        "401":
+          description: Unauthorized
+
+  /ratings/itinerary/{itinerary_id}/user-rating:
+    get:
+      summary: Get user's rating for a specific itinerary
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: itinerary_id
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: User rating retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItineraryRating'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Rating not found
+
+  /ratings/itinerary/{itinerary_id}/rating-stats:
+    get:
+      summary: Get rating statistics for an itinerary
+      parameters:
+        - in: path
+          name: itinerary_id
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Rating statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  averageRating:
+                    type: number
+                    nullable: true
+                  totalRatings:
+                    type: integer
+                  distribution:
+                    type: object
+                    additionalProperties:
+                      type: integer
+
+  /upload/videos:
+    post:
+      summary: Upload videos
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                videos:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  maxItems: 5
+      responses:
+        "200":
+          description: Videos uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  videos:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        url:
+                          type: string
+                        publicId:
+                          type: string
+                        thumbnailUrl:
+                          type: string
+        "400":
+          description: No files uploaded
+        "401":
+          description: Unauthorized
+    delete:
+      summary: Delete a video
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - publicId
+              properties:
+                publicId:
+                  type: string
+      responses:
+        "200":
+          description: Video deleted successfully
+        "400":
+          description: Public ID is required
+        "401":
+          description: Unauthorized
+
 components:
   securitySchemes:
     bearerAuth:
@@ -609,6 +908,269 @@ components:
           format: date
         price:
           type: number
+        # Duration & Scheduling
+        duration_days:
+          type: integer
+          nullable: true
+        duration_hours:
+          type: integer
+          nullable: true
+        start_time:
+          type: string
+          nullable: true
+        end_time:
+          type: string
+          nullable: true
+        is_multi_day:
+          type: boolean
+          default: false
+        schedule_details:
+          type: string
+          nullable: true
+        # Capacity & Booking
+        min_participants:
+          type: integer
+          nullable: true
+        max_participants:
+          type: integer
+          nullable: true
+        available_slots:
+          type: integer
+          nullable: true
+        allows_individuals:
+          type: boolean
+          default: true
+        allows_groups:
+          type: boolean
+          default: true
+        group_discount_percent:
+          type: number
+          nullable: true
+        group_min_size:
+          type: integer
+          nullable: true
+        booking_deadline:
+          type: string
+          format: date-time
+          nullable: true
+        # Inclusions & Exclusions
+        inclusions:
+          type: array
+          items:
+            type: string
+          nullable: true
+        exclusions:
+          type: array
+          items:
+            type: string
+          nullable: true
+        provided_equipment:
+          type: array
+          items:
+            type: string
+          nullable: true
+        required_items:
+          type: array
+          items:
+            type: string
+          nullable: true
+        # Food & Meals
+        meals_included:
+          type: boolean
+          default: false
+        meal_types:
+          type: array
+          items:
+            type: string
+          nullable: true
+        food_options:
+          type: string
+          nullable: true
+        can_buy_food_onsite:
+          type: boolean
+          default: false
+        can_bring_own_food:
+          type: boolean
+          default: true
+        dietary_accommodations:
+          type: string
+          nullable: true
+        # Transportation
+        transport_included:
+          type: boolean
+          default: false
+        transport_type:
+          type: string
+          nullable: true
+        pickup_locations:
+          type: array
+          items:
+            type: string
+          nullable: true
+        dropoff_locations:
+          type: array
+          items:
+            type: string
+          nullable: true
+        allows_own_transport:
+          type: boolean
+          default: false
+        parking_available:
+          type: boolean
+          default: false
+        transport_notes:
+          type: string
+          nullable: true
+        # Location Details
+        meeting_point:
+          type: string
+          nullable: true
+        meeting_point_lat:
+          type: number
+          nullable: true
+        meeting_point_lng:
+          type: number
+          nullable: true
+        end_point:
+          type: string
+          nullable: true
+        end_point_lat:
+          type: number
+          nullable: true
+        end_point_lng:
+          type: number
+          nullable: true
+        location_details:
+          type: string
+          nullable: true
+        # Requirements
+        difficulty_level:
+          type: string
+          nullable: true
+        fitness_level_required:
+          type: string
+          nullable: true
+        min_age:
+          type: integer
+          nullable: true
+        max_age:
+          type: integer
+          nullable: true
+        age_restrictions_notes:
+          type: string
+          nullable: true
+        accessibility_info:
+          type: string
+          nullable: true
+        # Pricing & Payment
+        price_per_person:
+          type: number
+          nullable: true
+        price_per_group:
+          type: number
+          nullable: true
+        deposit_required:
+          type: number
+          nullable: true
+        deposit_percentage:
+          type: number
+          nullable: true
+        payment_methods:
+          type: array
+          items:
+            type: string
+          nullable: true
+        currency:
+          type: string
+          default: RWF
+        refund_policy:
+          type: string
+          nullable: true
+        cancellation_policy:
+          type: string
+          nullable: true
+        # Safety & Insurance
+        insurance_included:
+          type: boolean
+          default: false
+        insurance_details:
+          type: string
+          nullable: true
+        safety_measures:
+          type: array
+          items:
+            type: string
+          nullable: true
+        emergency_procedures:
+          type: string
+          nullable: true
+        medical_requirements:
+          type: string
+          nullable: true
+        # Additional Info
+        languages_offered:
+          type: array
+          items:
+            type: string
+          nullable: true
+        guide_info:
+          type: string
+          nullable: true
+        weather_dependency:
+          type: boolean
+          default: false
+        weather_notes:
+          type: string
+          nullable: true
+        what_to_wear:
+          type: string
+          nullable: true
+        additional_notes:
+          type: string
+          nullable: true
+        terms_and_conditions:
+          type: string
+          nullable: true
+        # Status & Visibility
+        status:
+          type: string
+          default: draft
+        is_featured:
+          type: boolean
+          default: false
+        is_active:
+          type: boolean
+          default: true
+        tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+        category:
+          type: string
+          nullable: true
+        # Rating Statistics
+        average_rating:
+          type: number
+          nullable: true
+        total_ratings:
+          type: integer
+          default: 0
+        # Timestamps
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        last_booking_date:
+          type: string
+          format: date-time
+          nullable: true
     ItineraryCreateWithImagesRequest:
       type: object
       required:
@@ -661,3 +1223,90 @@ components:
           type: string
         booking_id:
           type: string
+    ItineraryRating:
+      type: object
+      properties:
+        id:
+          type: string
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 10
+          description: Rating value from 1 to 10
+        title:
+          type: string
+          maxLength: 200
+          nullable: true
+        comment:
+          type: string
+          maxLength: 2000
+          nullable: true
+        good_value:
+          type: boolean
+          nullable: true
+          description: Worth the money?
+        good_guide:
+          type: boolean
+          nullable: true
+          description: Guide quality
+        well_organized:
+          type: boolean
+          nullable: true
+          description: Organization
+        safe:
+          type: boolean
+          nullable: true
+          description: Safety
+        would_recommend:
+          type: boolean
+          nullable: true
+          description: Recommend to others?
+        verified_booking:
+          type: boolean
+          default: false
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        user_id:
+          type: string
+        itinerary_id:
+          type: string
+        booking_id:
+          type: string
+          nullable: true
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            email:
+              type: string
+    ItineraryVideo:
+      type: object
+      properties:
+        id:
+          type: string
+        itinerary_id:
+          type: string
+        video_url:
+          type: string
+        public_id:
+          type: string
+        thumbnail_url:
+          type: string
+          nullable: true
+        duration:
+          type: integer
+          nullable: true
+          description: Duration in seconds
+        order:
+          type: integer
+          default: 0
+        created_at:
+          type: string
+          format: date-time
