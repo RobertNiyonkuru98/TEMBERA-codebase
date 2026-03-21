@@ -113,9 +113,9 @@ model Itinerary {
   // Basic Information
   id                      String              @id @default(uuid()) @db.Uuid
   title                   String              @db.VarChar(200)
-  activity                String?             @db.VarChar(255)
+  activity                String              @db.VarChar(255)
   description             String?             @db.VarChar(3000)
-  location                String?             @db.VarChar(255)
+  location                String              @db.VarChar(255)
   date                    DateTime            @db.Date
   
   // Duration & Scheduling
@@ -177,7 +177,7 @@ model Itinerary {
   accessibility_info      String?             @db.VarChar(1000)
   
   // Pricing & Payment
-  price                   Float
+  price                   Float?
   price_per_person        Float?
   price_per_group         Float?
   deposit_required        Float?

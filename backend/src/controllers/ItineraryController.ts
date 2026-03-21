@@ -3,6 +3,7 @@ import { ResponseHandler } from '@/utils/response';
 import { BadRequestError, NotFoundError } from '@/utils/http-error';
 import { normalizeDate } from '@/utils/date.validator';
 import { Request, Response } from 'express';
+import { Prisma } from '@prisma/client';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -105,25 +106,45 @@ export const getItineraryById = async (req: Request, res: Response) => {
 };
 
 export const createItinerary = async (req: Request, res: Response) => {
+  if (!req.body?.title) {
+    throw new BadRequestError('Title is required to create an itinerary');
+  }
+  if (!req.body?.activity) {
+    throw new BadRequestError('Activity is required to create an itinerary');
+  }
   if (!req.body?.date) {
-    throw new  BadRequestError('Date is required to create an itinerary');
+    throw new BadRequestError('Date is required to create an itinerary');
   }
-  if (!req.body.price) {
-    throw new  BadRequestError('Price is required to create an itinerary');
+  if (!req.body?.location) {
+    throw new BadRequestError('Location is required to create an itinerary');
   }
-    const normalizedDate = normalizeDate(req.body.date);
-    const { imageUrls, ...itineraryData } = req.body;
-    const itineraryPayload = {
-      ...itineraryData,
-      price: Number(req.body.price),
-      date: normalizedDate,
-    };
+  if (!req.body.company_id) {
+    throw new BadRequestError('Company ID is required to create an itinerary');
+  }
+
+  const normalizedDate = normalizeDate(req.body.date);
+  const { imageUrls, videoUrls, company_id, price, ...itineraryData } = req.body;
+  
+  // Properly structure the Prisma ItineraryCreateInput
+  const itineraryPayload: Prisma.ItineraryCreateInput = {
+    ...itineraryData,
+    ...(price && { price: Number(price) }),
+    date: normalizedDate,
+    company: {
+      connect: { id: company_id }
+    }
+  };
 
   const itinerary = await itineraryService.create(itineraryPayload);
   
   // Add images if provided
   if (imageUrls && Array.isArray(imageUrls) && imageUrls.length > 0) {
     await itineraryService.addCloudinaryImages(itinerary.id, imageUrls);
+  }
+  
+  // Add videos if provided
+  if (videoUrls && Array.isArray(videoUrls) && videoUrls.length > 0) {
+    await itineraryService.addVideos(itinerary.id, videoUrls);
   }
   
   const presentable = await presentItineraryImages(
