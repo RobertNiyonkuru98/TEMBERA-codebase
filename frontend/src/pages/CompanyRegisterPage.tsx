@@ -1,52 +1,130 @@
-import { type FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "../AuthContext";
 import { useI18n } from "../i18n";
 import { createCompany } from "../api/platformApi";
-import { Building2, FileText, Phone, Loader2, AlertCircle, Sparkles } from "lucide-react";
+import { BasicInfoStep } from "./company/components/BasicInfoStep";
+import { VisualBrandingStep } from "./company/components/VisualBrandingStep";
+import { LocationContactStep } from "./company/components/LocationContactStep";
+import { BusinessDetailsStep } from "./company/components/BusinessDetailsStep";
+import { OperationalOnlineStep } from "./company/components/OperationalOnlineStep";
+import { AdditionalInfoStep } from "./company/components/AdditionalInfoStep";
+import type { CompanyFormData } from "./company/components/types";
+import { Building2, ChevronLeft, ChevronRight, Check, X, Loader2 } from "lucide-react";
 
 function CompanyRegisterPage() {
   const { token, user } = useAuth();
   const { t } = useI18n();
   const navigate = useNavigate();
-
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [contact, setContact] = useState("");
+  const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const [formData, setFormData] = useState<CompanyFormData>({
+    name: "",
+    tagline: "",
+    description: "",
+    ownerId: user ? String(user.id) : "",
+    logoImages: [],
+    coverImages: [],
+    logoUrl: "",
+    coverUrl: "",
+    address: "",
+    city: "",
+    country: "Rwanda",
+    email: "",
+    phone: "",
+    specializations: [],
+    languages: [],
+    operatingDays: "",
+    operatingHours: "",
+    website: "",
+    facebookUrl: "",
+    instagramUrl: "",
+    twitterUrl: "",
+    insuranceInfo: "",
+    emergencyPhone: "",
+    supportingDocs: [],
+    docUrls: [],
+  });
 
+  const updateFormData = (data: Partial<CompanyFormData>) => {
+    setFormData((prev) => ({ ...prev, ...data }));
+  };
+
+  const steps = [
+    { title: t("admin.createCompany.basicInfo"), desc: t("admin.createCompany.basicInfoDesc"), component: BasicInfoStep },
+    { title: t("admin.createCompany.branding"), desc: t("admin.createCompany.brandingDesc"), component: VisualBrandingStep },
+    { title: t("admin.createCompany.locationContact"), desc: t("admin.createCompany.locationContactDesc"), component: LocationContactStep },
+    { title: t("admin.createCompany.businessDetails"), desc: t("admin.createCompany.businessDetailsDesc"), component: BusinessDetailsStep },
+    { title: t("admin.createCompany.operational"), desc: t("admin.createCompany.operationalDesc"), component: OperationalOnlineStep },
+    { title: t("admin.createCompany.additionalInfo"), desc: t("admin.createCompany.additionalInfoDesc"), component: AdditionalInfoStep },
+  ];
+
+  const CurrentStepComponent = steps[currentStep].component;
+
+  const canGoNext = () => {
+    if (currentStep === 0) {
+      return formData.name.trim() && formData.ownerId.trim();
+    }
+    return true;
+  };
+
+  const handleNext = () => {
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleSubmit = async () => {
     if (!token || !user) {
-      toast.error(t("company.register.loginRequired"));
+      toast.error("You must be logged in to create a company.");
       return;
     }
 
-    if (!name.trim()) {
-      toast.error(t("company.register.nameRequired"));
+    if (!formData.name.trim()) {
+      toast.error("Company name is required.");
       return;
     }
 
     try {
       setIsSubmitting(true);
-      setError(null);
+
       await createCompany(token, {
-        name: name.trim(),
-        description: description.trim() || undefined,
-        contact: contact.trim() || undefined,
+        name: formData.name.trim(),
+        tagline: formData.tagline.trim() || undefined,
+        description: formData.description.trim() || undefined,
+        logo_url: formData.logoUrl || undefined,
+        cover_image_url: formData.coverUrl || undefined,
+        address: formData.address.trim() || undefined,
+        city: formData.city.trim() || undefined,
+        country: formData.country || undefined,
+        email: formData.email.trim() || undefined,
+        phone: formData.phone.trim() || undefined,
+        specializations: formData.specializations.length > 0 ? formData.specializations : undefined,
+        languages: formData.languages.length > 0 ? formData.languages : undefined,
+        operating_days: formData.operatingDays.trim() || undefined,
+        operating_hours: formData.operatingHours.trim() || undefined,
+        website: formData.website.trim() || undefined,
+        facebook_url: formData.facebookUrl.trim() || undefined,
+        instagram_url: formData.instagramUrl.trim() || undefined,
+        twitter_url: formData.twitterUrl.trim() || undefined,
+        insurance_info: formData.insuranceInfo.trim() || undefined,
+        emergency_phone: formData.emergencyPhone.trim() || undefined,
+        supporting_docs: formData.docUrls.length > 0 ? formData.docUrls : undefined,
         owner_id: String(user.id),
       });
-      toast.success(t("company.register.success"));
+
+      toast.success("Company created successfully!");
       navigate("/company/itineraries/create", { replace: true });
-    } catch (submitError) {
-      const errorMsg =
-        submitError instanceof Error
-          ? submitError.message
-          : "Failed to register company";
-      setError(errorMsg);
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : "Failed to create company";
       toast.error(errorMsg);
     } finally {
       setIsSubmitting(false);
@@ -54,136 +132,126 @@ function CompanyRegisterPage() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 py-8">
-      <div className="mx-auto w-[95%] max-w-3xl space-y-8">
-        {/* Header */}
-        <header className="space-y-4 text-center">
-          <div className="flex justify-center">
-            <div className="rounded-2xl bg-linear-to-br from-emerald-400 to-emerald-600 p-4 shadow-lg">
-              <Building2 className="h-12 w-12 text-white" />
-            </div>
+    <div className="mx-auto max-w-4xl space-y-6 pb-8">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-emerald-500 to-emerald-600 shadow-lg">
+            <Building2 className="h-6 w-6 text-white" />
           </div>
-          <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
-            {t("company.register.title")}
-          </h1>
-          <p className="text-lg text-slate-600 dark:text-slate-300">
-            {t("company.register.subtitle")}
-          </p>
-        </header>
-
-        {/* Info Banner */}
-        <section className="overflow-hidden rounded-2xl border border-amber-200 dark:border-amber-900/50 bg-linear-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 shadow-lg">
-          <div className="flex items-start gap-4 p-6">
-            <div className="rounded-xl bg-amber-100 dark:bg-amber-900/30 p-3">
-              <AlertCircle className="h-6 w-6 text-amber-600 dark:text-amber-400" />
-            </div>
-            <div className="flex-1">
-              <p className="font-semibold text-amber-900 dark:text-amber-100">
-                {t("company.register.setupRequired")}
-              </p>
-              <p className="mt-1 text-sm text-amber-800 dark:text-amber-200">
-                {t("company.register.setupMessage")}
-              </p>
-            </div>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-50">
+              {t("company.register.title")}
+            </h1>
+            <p className="text-sm text-slate-600 dark:text-slate-400">
+              {t("admin.createCompany.step")} {currentStep + 1} {t("admin.createCompany.of")} {steps.length}
+            </p>
           </div>
-        </section>
+        </div>
 
-        {/* Registration Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Company Name Card */}
-          <div className="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 shadow-lg">
-            <div className="border-b border-slate-200 dark:border-slate-800 bg-linear-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-900/10 px-6 py-4">
-              <div className="flex items-center gap-3">
-                <div className="rounded-xl bg-blue-500 p-2">
-                  <Building2 className="h-5 w-5 text-white" />
-                </div>
-                <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
-                  {t("company.register.companyName")}
-                </h2>
+        <Link
+          to="/dashboard"
+          className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 transition-colors rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+        >
+          <X className="h-4 w-4" />
+          {t("admin.createCompany.cancel")}
+        </Link>
+      </div>
+
+      {/* Progress Bar */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-3">
+          {steps.map((step, index) => (
+            <div
+              key={index}
+              className={`flex-1 text-center ${
+                index < steps.length - 1 ? "mr-2" : ""
+              }`}
+            >
+              <div
+                className={`text-xs font-semibold mb-1 transition-colors ${
+                  index === currentStep
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : index < currentStep
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : "text-slate-400 dark:text-slate-500"
+                }`}
+              >
+                {step.title}
               </div>
             </div>
-            <div className="p-6">
-              <input
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-                className="w-full rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-3 text-sm font-medium text-slate-900 dark:text-slate-50 outline-none transition-all focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
-                placeholder={t("company.register.companyNamePlaceholder")}
-                required
-              />
-            </div>
-          </div>
+          ))}
+        </div>
+        <div className="flex items-center gap-2">
+          {steps.map((_, index) => (
+            <div
+              key={index}
+              className={`h-2.5 flex-1 rounded-full transition-all shadow-sm ${
+                index < currentStep
+                  ? "bg-emerald-600 dark:bg-emerald-400"
+                  : index === currentStep
+                  ? "bg-emerald-500 dark:bg-emerald-500"
+                  : "bg-slate-200 dark:bg-slate-700"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
 
-          {/* Contact Card */}
-          <div className="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 shadow-lg">
-            <div className="border-b border-slate-200 dark:border-slate-800 bg-linear-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-900/10 px-6 py-4">
-              <div className="flex items-center gap-3">
-                <div className="rounded-xl bg-purple-500 p-2">
-                  <Phone className="h-5 w-5 text-white" />
-                </div>
-                <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
-                  {t("company.register.contact")}
-                </h2>
-              </div>
-            </div>
-            <div className="p-6">
-              <input
-                value={contact}
-                onChange={(event) => setContact(event.target.value)}
-                className="w-full rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-3 text-sm font-medium text-slate-900 dark:text-slate-50 outline-none transition-all focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600"
-                placeholder={t("company.register.contactPlaceholder")}
-              />
-            </div>
-          </div>
+      {/* Step Content */}
+      <div className="rounded-xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
+        <CurrentStepComponent
+          formData={formData}
+          updateFormData={updateFormData}
+          token={token || ""}
+          isAdmin={false}
+          currentUserId={user?.id ? String(user.id) : ""}
+          currentUserName={user?.name || ""}
+        />
+      </div>
 
-          {/* Description Card */}
-          <div className="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 shadow-lg">
-            <div className="border-b border-slate-200 dark:border-slate-800 bg-linear-to-r from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-900/10 px-6 py-4">
-              <div className="flex items-center gap-3">
-                <div className="rounded-xl bg-emerald-500 p-2">
-                  <FileText className="h-5 w-5 text-white" />
-                </div>
-                <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
-                  {t("company.register.description")}
-                </h2>
-              </div>
-            </div>
-            <div className="p-6">
-              <textarea
-                value={description}
-                onChange={(event) => setDescription(event.target.value)}
-                rows={5}
-                className="w-full rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-3 text-sm font-medium text-slate-900 dark:text-slate-50 outline-none transition-all focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 placeholder:text-slate-400 dark:placeholder:text-slate-600 resize-none"
-                placeholder={t("company.register.descriptionPlaceholder")}
-              />
-            </div>
-          </div>
+      {/* Navigation */}
+      <div className="flex items-center justify-between gap-4">
+        <button
+          type="button"
+          onClick={handleBack}
+          disabled={currentStep === 0}
+          className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          {t("admin.createCompany.back")}
+        </button>
 
-          {/* Error Message */}
-          {error && (
-            <div className="rounded-xl border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/10 p-4">
-              <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-            </div>
-          )}
-
-          {/* Submit Button */}
+        {currentStep < steps.length - 1 ? (
           <button
-            type="submit"
-            disabled={isSubmitting}
-            className="group w-full inline-flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-emerald-500 to-emerald-600 px-6 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-emerald-500/50 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            type="button"
+            onClick={handleNext}
+            disabled={!canGoNext()}
+            className="flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transition-all"
+          >
+            {t("admin.createCompany.next")}
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={!canGoNext() || isSubmitting}
+            className="flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transition-all"
           >
             {isSubmitting ? (
               <>
-                <Loader2 className="h-5 w-5 animate-spin" />
-                {t("company.register.creating")}
+                <Loader2 className="h-4 w-4 animate-spin" />
+                {t("admin.createCompany.creating")}
               </>
             ) : (
               <>
-                <Sparkles className="h-5 w-5 transition-transform group-hover:scale-110" />
+                <Check className="h-4 w-4" />
                 {t("company.register.createButton")}
               </>
             )}
           </button>
-        </form>
+        )}
       </div>
     </div>
   );

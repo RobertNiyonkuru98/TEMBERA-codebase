@@ -31,7 +31,7 @@ export function VisualBrandingStep({ formData, updateFormData, token }: VisualBr
     }
 
     const data = await response.json();
-    return data.data.imageUrls[0];
+    return data.images[0].url;
   };
 
   const handleLogoUpload = async () => {

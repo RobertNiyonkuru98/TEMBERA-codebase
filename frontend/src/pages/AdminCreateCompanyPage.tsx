@@ -204,6 +204,9 @@ function AdminCreateCompanyPage() {
           formData={formData}
           updateFormData={updateFormData}
           token={token || ""}
+          isAdmin={true}
+          currentUserId={user?.id ? String(user.id) : ""}
+          currentUserName={user?.name || ""}
         />
       </div>
 
