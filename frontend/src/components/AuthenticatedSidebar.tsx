@@ -128,7 +128,7 @@ function AuthenticatedSidebar({
           </div>
           <div className="flex flex-col">
             <span className="text-xs font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-              {role} Portal
+              {role === 'admin' ? 'Admin' : role === 'company' ? 'Company' : role === 'user' ? 'Traveler' : 'Visitor'} Portal
             </span>
           </div>
         </div>
