@@ -21,12 +21,49 @@ type BackendUser = {
 };
 
 type BackendCompany = {
+  // Basic Info
   id: string;
   name: string;
+  tagline?: string | null;
   description?: string | null;
+  
+  // Visual Branding
+  logo_url?: string | null;
+  cover_image_url?: string | null;
+  
+  // Location
+  address?: string | null;
+  city?: string | null;
+  country?: string | null;
+  
+  // Contact Information
+  email?: string | null;
+  phone?: string | null;
   contact?: string | null;
+  
+  // Business Details
+  specializations?: string[] | null;
+  languages?: string[] | null;
+  
+  // Operational
+  operating_days?: string | null;
+  operating_hours?: string | null;
+  
+  // Online Presence
+  website?: string | null;
+  facebook_url?: string | null;
+  instagram_url?: string | null;
+  twitter_url?: string | null;
+  
+  // Additional Info
+  insurance_info?: string | null;
+  emergency_phone?: string | null;
+  supporting_docs?: string[] | null;
+  
+  // Metadata
   owner_id: string;
   created_at?: string;
+  updated_at?: string;
 };
 
 type BackendItinerary = {
@@ -115,9 +152,45 @@ type CreateBookingItemPayload = {
 };
 
 type CreateCompanyPayload = {
+  // Basic Info
   name: string;
+  tagline?: string;
   description?: string;
+  
+  // Visual Branding
+  logo_url?: string;
+  cover_image_url?: string;
+  
+  // Location
+  address?: string;
+  city?: string;
+  country?: string;
+  
+  // Contact Information
+  email?: string;
+  phone?: string;
   contact?: string;
+  
+  // Business Details
+  specializations?: string[];
+  languages?: string[];
+  
+  // Operational
+  operating_days?: string;
+  operating_hours?: string;
+  
+  // Online Presence
+  website?: string;
+  facebook_url?: string;
+  instagram_url?: string;
+  twitter_url?: string;
+  
+  // Additional Info
+  insurance_info?: string;
+  emergency_phone?: string;
+  supporting_docs?: string[];
+  
+  // Required
   owner_id: string;
 };
 
@@ -183,13 +256,49 @@ function mapUser(user: BackendUser): User {
 
 function mapCompany(company: BackendCompany): Company {
   return {
+    // Basic Info
     id: company.id,
     name: company.name,
+    tagline: company.tagline ?? undefined,
     description: company.description ?? undefined,
+    
+    // Visual Branding
+    logoUrl: company.logo_url ?? undefined,
+    coverImageUrl: company.cover_image_url ?? undefined,
+    
+    // Location
+    address: company.address ?? undefined,
+    city: company.city ?? undefined,
+    country: company.country ?? undefined,
+    
+    // Contact Information
+    email: company.email ?? undefined,
+    phone: company.phone ?? undefined,
     contact: company.contact ?? undefined,
+    
+    // Business Details
+    specializations: company.specializations ?? undefined,
+    languages: company.languages ?? undefined,
+    
+    // Operational
+    operatingDays: company.operating_days ?? undefined,
+    operatingHours: company.operating_hours ?? undefined,
+    
+    // Online Presence
+    website: company.website ?? undefined,
+    facebookUrl: company.facebook_url ?? undefined,
+    instagramUrl: company.instagram_url ?? undefined,
+    twitterUrl: company.twitter_url ?? undefined,
+    
+    // Additional Info
+    insuranceInfo: company.insurance_info ?? undefined,
+    emergencyPhone: company.emergency_phone ?? undefined,
+    supportingDocs: company.supporting_docs ?? undefined,
+    
+    // Metadata
     ownerId: company.owner_id,
     createdAt: company.created_at,
-    status: "active",
+    updatedAt: company.updated_at,
   };
 }
 

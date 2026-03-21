@@ -326,7 +326,93 @@ type TranslationKey =
   | "company.manageImages.uploadError"
   | "company.manageImages.photoCount"
   | "company.manageImages.notFound"
-  | "company.manageImages.loading";
+  | "company.manageImages.loading"
+  | "admin.createCompany.title"
+  | "admin.createCompany.step"
+  | "admin.createCompany.of"
+  | "admin.createCompany.basicInfo"
+  | "admin.createCompany.basicInfoDesc"
+  | "admin.createCompany.branding"
+  | "admin.createCompany.brandingDesc"
+  | "admin.createCompany.locationContact"
+  | "admin.createCompany.locationContactDesc"
+  | "admin.createCompany.businessDetails"
+  | "admin.createCompany.businessDetailsDesc"
+  | "admin.createCompany.operational"
+  | "admin.createCompany.operationalDesc"
+  | "admin.createCompany.additionalInfo"
+  | "admin.createCompany.additionalInfoDesc"
+  | "admin.createCompany.companyName"
+  | "admin.createCompany.companyNamePlaceholder"
+  | "admin.createCompany.companyOwner"
+  | "admin.createCompany.selectOwner"
+  | "admin.createCompany.tagline"
+  | "admin.createCompany.taglinePlaceholder"
+  | "admin.createCompany.taglineHint"
+  | "admin.createCompany.descriptionLabel"
+  | "admin.createCompany.descriptionPlaceholder"
+  | "admin.createCompany.charactersCount"
+  | "admin.createCompany.visualBranding"
+  | "admin.createCompany.visualBrandingDesc"
+  | "admin.createCompany.companyLogo"
+  | "admin.createCompany.coverImage"
+  | "admin.createCompany.uploadLogo"
+  | "admin.createCompany.uploadCover"
+  | "admin.createCompany.uploading"
+  | "admin.createCompany.uploadSuccess"
+  | "admin.createCompany.uploadTip"
+  | "admin.createCompany.location"
+  | "admin.createCompany.address"
+  | "admin.createCompany.addressPlaceholder"
+  | "admin.createCompany.city"
+  | "admin.createCompany.cityPlaceholder"
+  | "admin.createCompany.country"
+  | "admin.createCompany.contactInfo"
+  | "admin.createCompany.emailLabel"
+  | "admin.createCompany.emailPlaceholder"
+  | "admin.createCompany.phoneLabel"
+  | "admin.createCompany.phonePlaceholder"
+  | "admin.createCompany.businessDetailsTitle"
+  | "admin.createCompany.businessDetailsSubtitle"
+  | "admin.createCompany.specializations"
+  | "admin.createCompany.specializationsHint"
+  | "admin.createCompany.specializationsSelected"
+  | "admin.createCompany.languages"
+  | "admin.createCompany.languagesHint"
+  | "admin.createCompany.languagesSelected"
+  | "admin.createCompany.operationalTitle"
+  | "admin.createCompany.operationalSubtitle"
+  | "admin.createCompany.operatingHours"
+  | "admin.createCompany.operatingDays"
+  | "admin.createCompany.operatingDaysPlaceholder"
+  | "admin.createCompany.operatingHoursLabel"
+  | "admin.createCompany.operatingHoursPlaceholder"
+  | "admin.createCompany.onlinePresence"
+  | "admin.createCompany.website"
+  | "admin.createCompany.websitePlaceholder"
+  | "admin.createCompany.facebook"
+  | "admin.createCompany.facebookPlaceholder"
+  | "admin.createCompany.instagram"
+  | "admin.createCompany.instagramPlaceholder"
+  | "admin.createCompany.twitter"
+  | "admin.createCompany.twitterPlaceholder"
+  | "admin.createCompany.additionalInfoTitle"
+  | "admin.createCompany.additionalInfoSubtitle"
+  | "admin.createCompany.insurance"
+  | "admin.createCompany.insurancePlaceholder"
+  | "admin.createCompany.emergencyContact"
+  | "admin.createCompany.emergencyContactPlaceholder"
+  | "admin.createCompany.supportingDocs"
+  | "admin.createCompany.supportingDocsHint"
+  | "admin.createCompany.uploadDocs"
+  | "admin.createCompany.uploadingDocs"
+  | "admin.createCompany.docsUploaded"
+  | "admin.createCompany.back"
+  | "admin.createCompany.cancel"
+  | "admin.createCompany.next"
+  | "admin.createCompany.creating"
+  | "admin.createCompany.createButton"
+  | "admin.createCompany.required";
 
 const translations: Record<Lang, Record<TranslationKey, string>> = {
   en: {
@@ -654,6 +740,92 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
     "company.manageImages.photoCount": "photos",
     "company.manageImages.notFound": "Itinerary not found",
     "company.manageImages.loading": "Loading itinerary...",
+    "admin.createCompany.title": "Create Company",
+    "admin.createCompany.step": "Step",
+    "admin.createCompany.of": "of",
+    "admin.createCompany.basicInfo": "Basic Info",
+    "admin.createCompany.basicInfoDesc": "Let's start with the essentials",
+    "admin.createCompany.branding": "Branding",
+    "admin.createCompany.brandingDesc": "Add your company logo and cover image",
+    "admin.createCompany.locationContact": "Location & Contact",
+    "admin.createCompany.locationContactDesc": "Where are you located and how can customers reach you?",
+    "admin.createCompany.businessDetails": "Business Details",
+    "admin.createCompany.businessDetailsDesc": "What services do you offer and what languages do you speak?",
+    "admin.createCompany.operational": "Operational",
+    "admin.createCompany.operationalDesc": "When are you available and where can people find you online?",
+    "admin.createCompany.additionalInfo": "Additional Info",
+    "admin.createCompany.additionalInfoDesc": "Insurance, emergency contacts, and supporting documents",
+    "admin.createCompany.companyName": "Company Name",
+    "admin.createCompany.companyNamePlaceholder": "e.g. Kigali Adventures",
+    "admin.createCompany.companyOwner": "Company Owner",
+    "admin.createCompany.selectOwner": "Select company owner",
+    "admin.createCompany.tagline": "Tagline",
+    "admin.createCompany.taglinePlaceholder": "e.g. Discover Rwanda's Hidden Gems",
+    "admin.createCompany.taglineHint": "A short, catchy phrase that describes your company",
+    "admin.createCompany.descriptionLabel": "Description",
+    "admin.createCompany.descriptionPlaceholder": "Describe your company, services, and what makes you unique...",
+    "admin.createCompany.charactersCount": "characters",
+    "admin.createCompany.visualBranding": "Visual Branding",
+    "admin.createCompany.visualBrandingDesc": "Add your company logo and cover image",
+    "admin.createCompany.companyLogo": "Company Logo",
+    "admin.createCompany.coverImage": "Cover Image",
+    "admin.createCompany.uploadLogo": "Upload Logo",
+    "admin.createCompany.uploadCover": "Upload Cover",
+    "admin.createCompany.uploading": "Uploading...",
+    "admin.createCompany.uploadSuccess": "uploaded successfully",
+    "admin.createCompany.uploadTip": "Tip: Upload high-quality images for the best presentation. Logo should be square (1:1 ratio), and cover image should be wide (16:9 ratio).",
+    "admin.createCompany.location": "Location",
+    "admin.createCompany.address": "Address",
+    "admin.createCompany.addressPlaceholder": "e.g. KN 4 Ave, Kigali",
+    "admin.createCompany.city": "City",
+    "admin.createCompany.cityPlaceholder": "e.g. Kigali",
+    "admin.createCompany.country": "Country",
+    "admin.createCompany.contactInfo": "Contact Information",
+    "admin.createCompany.emailLabel": "Email",
+    "admin.createCompany.emailPlaceholder": "contact@company.com",
+    "admin.createCompany.phoneLabel": "Phone",
+    "admin.createCompany.phonePlaceholder": "+250 XXX XXX XXX",
+    "admin.createCompany.businessDetailsTitle": "Business Details",
+    "admin.createCompany.businessDetailsSubtitle": "What services do you offer and what languages do you speak?",
+    "admin.createCompany.specializations": "Tour Specializations",
+    "admin.createCompany.specializationsHint": "Select all types of tours you offer",
+    "admin.createCompany.specializationsSelected": "specialization(s) selected",
+    "admin.createCompany.languages": "Languages Spoken",
+    "admin.createCompany.languagesHint": "Select all languages your team can communicate in",
+    "admin.createCompany.languagesSelected": "language(s) selected",
+    "admin.createCompany.operationalTitle": "Operational & Online",
+    "admin.createCompany.operationalSubtitle": "When are you available and where can people find you online?",
+    "admin.createCompany.operatingHours": "Operating Hours",
+    "admin.createCompany.operatingDays": "Operating Days",
+    "admin.createCompany.operatingDaysPlaceholder": "e.g. Monday - Sunday",
+    "admin.createCompany.operatingHoursLabel": "Operating Hours",
+    "admin.createCompany.operatingHoursPlaceholder": "e.g. 8:00 AM - 6:00 PM",
+    "admin.createCompany.onlinePresence": "Online Presence",
+    "admin.createCompany.website": "Website",
+    "admin.createCompany.websitePlaceholder": "https://www.yourcompany.com",
+    "admin.createCompany.facebook": "Facebook",
+    "admin.createCompany.facebookPlaceholder": "https://facebook.com/yourcompany",
+    "admin.createCompany.instagram": "Instagram",
+    "admin.createCompany.instagramPlaceholder": "https://instagram.com/yourcompany",
+    "admin.createCompany.twitter": "Twitter",
+    "admin.createCompany.twitterPlaceholder": "https://twitter.com/yourcompany",
+    "admin.createCompany.additionalInfoTitle": "Additional Information",
+    "admin.createCompany.additionalInfoSubtitle": "Insurance, emergency contacts, and supporting documents",
+    "admin.createCompany.insurance": "Insurance Information",
+    "admin.createCompany.insurancePlaceholder": "Details about your insurance coverage...",
+    "admin.createCompany.emergencyContact": "Emergency Contact Number",
+    "admin.createCompany.emergencyContactPlaceholder": "+250 XXX XXX XXX",
+    "admin.createCompany.supportingDocs": "Supporting Documents (Optional)",
+    "admin.createCompany.supportingDocsHint": "Upload licenses, certifications, or other relevant documents (PDF, Word, Excel)",
+    "admin.createCompany.uploadDocs": "Upload Documents",
+    "admin.createCompany.uploadingDocs": "Uploading document(s)...",
+    "admin.createCompany.docsUploaded": "document(s) uploaded successfully",
+    "admin.createCompany.back": "Back",
+    "admin.createCompany.cancel": "Cancel",
+    "admin.createCompany.next": "Next",
+    "admin.createCompany.creating": "Creating...",
+    "admin.createCompany.createButton": "Create Company",
+    "admin.createCompany.required": "*",
   },
   fr: {
     "nav.home": "Accueil",
@@ -984,6 +1156,92 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
     "company.manageImages.photoCount": "photos",
     "company.manageImages.notFound": "Itinéraire introuvable",
     "company.manageImages.loading": "Chargement de l'itinéraire...",
+    "admin.createCompany.title": "Créer une Entreprise",
+    "admin.createCompany.step": "Étape",
+    "admin.createCompany.of": "de",
+    "admin.createCompany.basicInfo": "Informations de Base",
+    "admin.createCompany.basicInfoDesc": "Commençons par l'essentiel",
+    "admin.createCompany.branding": "Image de Marque",
+    "admin.createCompany.brandingDesc": "Ajoutez le logo et l'image de couverture de votre entreprise",
+    "admin.createCompany.locationContact": "Localisation & Contact",
+    "admin.createCompany.locationContactDesc": "Où êtes-vous situé et comment les clients peuvent-ils vous joindre?",
+    "admin.createCompany.businessDetails": "Détails de l'Entreprise",
+    "admin.createCompany.businessDetailsDesc": "Quels services offrez-vous et quelles langues parlez-vous?",
+    "admin.createCompany.operational": "Opérationnel",
+    "admin.createCompany.operationalDesc": "Quand êtes-vous disponible et où peut-on vous trouver en ligne?",
+    "admin.createCompany.additionalInfo": "Informations Supplémentaires",
+    "admin.createCompany.additionalInfoDesc": "Assurance, contacts d'urgence et documents justificatifs",
+    "admin.createCompany.companyName": "Nom de l'Entreprise",
+    "admin.createCompany.companyNamePlaceholder": "ex. Aventures de Kigali",
+    "admin.createCompany.companyOwner": "Propriétaire de l'Entreprise",
+    "admin.createCompany.selectOwner": "Sélectionner le propriétaire",
+    "admin.createCompany.tagline": "Slogan",
+    "admin.createCompany.taglinePlaceholder": "ex. Découvrez les Trésors Cachés du Rwanda",
+    "admin.createCompany.taglineHint": "Une phrase courte et accrocheuse qui décrit votre entreprise",
+    "admin.createCompany.descriptionLabel": "Description",
+    "admin.createCompany.descriptionPlaceholder": "Décrivez votre entreprise, vos services et ce qui vous rend unique...",
+    "admin.createCompany.charactersCount": "caractères",
+    "admin.createCompany.visualBranding": "Image de Marque Visuelle",
+    "admin.createCompany.visualBrandingDesc": "Ajoutez le logo et l'image de couverture de votre entreprise",
+    "admin.createCompany.companyLogo": "Logo de l'Entreprise",
+    "admin.createCompany.coverImage": "Image de Couverture",
+    "admin.createCompany.uploadLogo": "Télécharger le Logo",
+    "admin.createCompany.uploadCover": "Télécharger la Couverture",
+    "admin.createCompany.uploading": "Téléchargement...",
+    "admin.createCompany.uploadSuccess": "téléchargé avec succès",
+    "admin.createCompany.uploadTip": "Conseil: Téléchargez des images de haute qualité pour une meilleure présentation. Le logo doit être carré (ratio 1:1) et l'image de couverture doit être large (ratio 16:9).",
+    "admin.createCompany.location": "Localisation",
+    "admin.createCompany.address": "Adresse",
+    "admin.createCompany.addressPlaceholder": "ex. KN 4 Ave, Kigali",
+    "admin.createCompany.city": "Ville",
+    "admin.createCompany.cityPlaceholder": "ex. Kigali",
+    "admin.createCompany.country": "Pays",
+    "admin.createCompany.contactInfo": "Informations de Contact",
+    "admin.createCompany.emailLabel": "Email",
+    "admin.createCompany.emailPlaceholder": "contact@entreprise.com",
+    "admin.createCompany.phoneLabel": "Téléphone",
+    "admin.createCompany.phonePlaceholder": "+250 XXX XXX XXX",
+    "admin.createCompany.businessDetailsTitle": "Détails de l'Entreprise",
+    "admin.createCompany.businessDetailsSubtitle": "Quels services offrez-vous et quelles langues parlez-vous?",
+    "admin.createCompany.specializations": "Spécialisations Touristiques",
+    "admin.createCompany.specializationsHint": "Sélectionnez tous les types de tours que vous offrez",
+    "admin.createCompany.specializationsSelected": "spécialisation(s) sélectionnée(s)",
+    "admin.createCompany.languages": "Langues Parlées",
+    "admin.createCompany.languagesHint": "Sélectionnez toutes les langues que votre équipe peut parler",
+    "admin.createCompany.languagesSelected": "langue(s) sélectionnée(s)",
+    "admin.createCompany.operationalTitle": "Opérationnel & En Ligne",
+    "admin.createCompany.operationalSubtitle": "Quand êtes-vous disponible et où peut-on vous trouver en ligne?",
+    "admin.createCompany.operatingHours": "Heures d'Ouverture",
+    "admin.createCompany.operatingDays": "Jours d'Ouverture",
+    "admin.createCompany.operatingDaysPlaceholder": "ex. Lundi - Dimanche",
+    "admin.createCompany.operatingHoursLabel": "Heures d'Ouverture",
+    "admin.createCompany.operatingHoursPlaceholder": "ex. 8h00 - 18h00",
+    "admin.createCompany.onlinePresence": "Présence en Ligne",
+    "admin.createCompany.website": "Site Web",
+    "admin.createCompany.websitePlaceholder": "https://www.votreentreprise.com",
+    "admin.createCompany.facebook": "Facebook",
+    "admin.createCompany.facebookPlaceholder": "https://facebook.com/votreentreprise",
+    "admin.createCompany.instagram": "Instagram",
+    "admin.createCompany.instagramPlaceholder": "https://instagram.com/votreentreprise",
+    "admin.createCompany.twitter": "Twitter",
+    "admin.createCompany.twitterPlaceholder": "https://twitter.com/votreentreprise",
+    "admin.createCompany.additionalInfoTitle": "Informations Supplémentaires",
+    "admin.createCompany.additionalInfoSubtitle": "Assurance, contacts d'urgence et documents justificatifs",
+    "admin.createCompany.insurance": "Informations d'Assurance",
+    "admin.createCompany.insurancePlaceholder": "Détails sur votre couverture d'assurance...",
+    "admin.createCompany.emergencyContact": "Numéro de Contact d'Urgence",
+    "admin.createCompany.emergencyContactPlaceholder": "+250 XXX XXX XXX",
+    "admin.createCompany.supportingDocs": "Documents Justificatifs (Optionnel)",
+    "admin.createCompany.supportingDocsHint": "Téléchargez des licences, certifications ou autres documents pertinents (PDF, Word, Excel)",
+    "admin.createCompany.uploadDocs": "Télécharger les Documents",
+    "admin.createCompany.uploadingDocs": "Téléchargement de(s) document(s)...",
+    "admin.createCompany.docsUploaded": "document(s) téléchargé(s) avec succès",
+    "admin.createCompany.back": "Retour",
+    "admin.createCompany.cancel": "Annuler",
+    "admin.createCompany.next": "Suivant",
+    "admin.createCompany.creating": "Création...",
+    "admin.createCompany.createButton": "Créer l'Entreprise",
+    "admin.createCompany.required": "*",
   },
   rw: {
     "nav.home": "Ahabanza",
@@ -1314,6 +1572,92 @@ const translations: Record<Lang, Record<TranslationKey, string>> = {
     "company.manageImages.photoCount": "amafoto",
     "company.manageImages.notFound": "Ingendo ntiyabonetse",
     "company.manageImages.loading": "Gupakira ingendo...",
+    "admin.createCompany.title": "Kora Ikigo",
+    "admin.createCompany.step": "Intambwe",
+    "admin.createCompany.of": "kuri",
+    "admin.createCompany.basicInfo": "Amakuru Yibanze",
+    "admin.createCompany.basicInfoDesc": "Reka duhere kubintu byibanze",
+    "admin.createCompany.branding": "Ikirango",
+    "admin.createCompany.brandingDesc": "Ongeraho ikirango n'ishusho y'ikigo cyawe",
+    "admin.createCompany.locationContact": "Ahantu & Aho Kubarizwa",
+    "admin.createCompany.locationContactDesc": " Uri he kandi abakiriya bashobora kubona gute?",
+    "admin.createCompany.businessDetails": "Ibisobanuro by'Ubucuruzi",
+    "admin.createCompany.businessDetailsDesc": "Ni izihe serivisi utanga kandi ni izihe ndimi uvuga?",
+    "admin.createCompany.operational": "Ibikorwa",
+    "admin.createCompany.operationalDesc": "Ni ryari uraboneka kandi abantu bashobora kubona he kuri interineti?",
+    "admin.createCompany.additionalInfo": "Amakuru Yinyongera",
+    "admin.createCompany.additionalInfoDesc": "Ubwishingizi, aho kubarizwa mu bihe bidasanzwe, n'inyandiko zishyigikira",
+    "admin.createCompany.companyName": "Izina ry'Ikigo",
+    "admin.createCompany.companyNamePlaceholder": "urugero: Ingendo za Kigali",
+    "admin.createCompany.companyOwner": "Nyir'Ikigo",
+    "admin.createCompany.selectOwner": "Hitamo nyir'ikigo",
+    "admin.createCompany.tagline": "Umurongo Muto",
+    "admin.createCompany.taglinePlaceholder": "urugero: Menya Ubutunzi bw'u Rwanda buhishe",
+    "admin.createCompany.taglineHint": "Interuro ngufi kandi ishimishije isobanura ikigo cyawe",
+    "admin.createCompany.descriptionLabel": "Ibisobanuro",
+    "admin.createCompany.descriptionPlaceholder": "Sobanura ikigo cyawe, serivisi zawe, n'icyo kigutandukanya...",
+    "admin.createCompany.charactersCount": "inyuguti",
+    "admin.createCompany.visualBranding": "Ikirango Kigaragara",
+    "admin.createCompany.visualBrandingDesc": "Ongeraho ikirango n'ishusho y'ikigo cyawe",
+    "admin.createCompany.companyLogo": "Ikirango cy'Ikigo",
+    "admin.createCompany.coverImage": "Ishusho y'Ibanze",
+    "admin.createCompany.uploadLogo": "Shyiraho Ikirango",
+    "admin.createCompany.uploadCover": "Shyiraho Ishusho",
+    "admin.createCompany.uploading": "Gushyiraho...",
+    "admin.createCompany.uploadSuccess": "byashyizweho neza",
+    "admin.createCompany.uploadTip": "Icyitonderwa: Shyiraho amashusho meza kugira ngo urebe neza. Ikirango kigomba kuba kare (1:1) kandi ishusho y'ibanze igomba kuba yagutse (16:9).",
+    "admin.createCompany.location": "Ahantu",
+    "admin.createCompany.address": "Aderesi",
+    "admin.createCompany.addressPlaceholder": "urugero: KN 4 Ave, Kigali",
+    "admin.createCompany.city": "Umujyi",
+    "admin.createCompany.cityPlaceholder": "urugero: Kigali",
+    "admin.createCompany.country": "Igihugu",
+    "admin.createCompany.contactInfo": "Amakuru yo Kuvugana",
+    "admin.createCompany.emailLabel": "Imeri",
+    "admin.createCompany.emailPlaceholder": "contact@ikigo.com",
+    "admin.createCompany.phoneLabel": "Telefoni",
+    "admin.createCompany.phonePlaceholder": "+250 XXX XXX XXX",
+    "admin.createCompany.businessDetailsTitle": "Ibisobanuro by'Ubucuruzi",
+    "admin.createCompany.businessDetailsSubtitle": "Ni izihe serivisi utanga kandi ni izihe ndimi uvuga?",
+    "admin.createCompany.specializations": "Ubwoko bw'Ingendo",
+    "admin.createCompany.specializationsHint": "Hitamo ubwoko bwose bw'ingendo utanga",
+    "admin.createCompany.specializationsSelected": "ubwoko bwahiswemo",
+    "admin.createCompany.languages": "Indimi Zivugwa",
+    "admin.createCompany.languagesHint": "Hitamo indimi zose itsinda ryawe rishobora kuvugana",
+    "admin.createCompany.languagesSelected": "indimi zahiswemo",
+    "admin.createCompany.operationalTitle": "Ibikorwa & Kuri Interineti",
+    "admin.createCompany.operationalSubtitle": "Ni ryari uraboneka kandi abantu bashobora kubona he kuri interineti?",
+    "admin.createCompany.operatingHours": "Amasaha y'Akazi",
+    "admin.createCompany.operatingDays": "Iminsi y'Akazi",
+    "admin.createCompany.operatingDaysPlaceholder": "urugero: Kuwa mbere - Ku cyumweru",
+    "admin.createCompany.operatingHoursLabel": "Amasaha y'Akazi",
+    "admin.createCompany.operatingHoursPlaceholder": "urugero: 8:00 AM - 6:00 PM",
+    "admin.createCompany.onlinePresence": "Kuri Interineti",
+    "admin.createCompany.website": "Urubuga",
+    "admin.createCompany.websitePlaceholder": "https://www.ikigocyawe.com",
+    "admin.createCompany.facebook": "Facebook",
+    "admin.createCompany.facebookPlaceholder": "https://facebook.com/ikigocyawe",
+    "admin.createCompany.instagram": "Instagram",
+    "admin.createCompany.instagramPlaceholder": "https://instagram.com/ikigocyawe",
+    "admin.createCompany.twitter": "Twitter",
+    "admin.createCompany.twitterPlaceholder": "https://twitter.com/ikigocyawe",
+    "admin.createCompany.additionalInfoTitle": "Amakuru Yinyongera",
+    "admin.createCompany.additionalInfoSubtitle": "Ubwishingizi, aho kubarizwa mu bihe bidasanzwe, n'inyandiko zishyigikira",
+    "admin.createCompany.insurance": "Amakuru y'Ubwishingizi",
+    "admin.createCompany.insurancePlaceholder": "Ibisobanuro ku bwishingizi bwawe...",
+    "admin.createCompany.emergencyContact": "Numero yo Guhamagara mu Bihe Bidasanzwe",
+    "admin.createCompany.emergencyContactPlaceholder": "+250 XXX XXX XXX",
+    "admin.createCompany.supportingDocs": "Inyandiko Zishyigikira (Si ngombwa)",
+    "admin.createCompany.supportingDocsHint": "Shyiraho impushya, impamyabumenyi cyangwa andi manyandiko akenewe (PDF, Word, Excel)",
+    "admin.createCompany.uploadDocs": "Shyiraho Inyandiko",
+    "admin.createCompany.uploadingDocs": "Gushyiraho inyandiko...",
+    "admin.createCompany.docsUploaded": "inyandiko zashyizweho neza",
+    "admin.createCompany.back": "Subira Inyuma",
+    "admin.createCompany.cancel": "Kureka",
+    "admin.createCompany.next": "Komeza",
+    "admin.createCompany.creating": "Gukora...",
+    "admin.createCompany.createButton": "Kora Ikigo",
+    "admin.createCompany.required": "*",
   },
 };
 

@@ -40,13 +40,53 @@ model BookingMember {
 }
 
 model Company {
-  name        String      @db.VarChar(50)
-  description String?     @db.VarChar(255)
-  contact     String?     @db.VarChar(50)
-  id          String      @id @default(uuid()) @db.Uuid
-  owner_id    String      @db.Uuid
-  owner       User        @relation(fields: [owner_id], references: [id])
-  itineraries Itinerary[]
+  // Basic Info
+  id                    String      @id @default(uuid()) @db.Uuid
+  name                  String      @db.VarChar(100)
+  tagline               String?     @db.VarChar(150)
+  description           String?     @db.VarChar(2000)
+  
+  // Visual Branding
+  logo_url              String?     @db.VarChar(500)
+  cover_image_url       String?     @db.VarChar(500)
+  
+  // Location
+  address               String?     @db.VarChar(500)
+  city                  String?     @db.VarChar(100)
+  country               String?     @db.VarChar(100)
+  
+  // Contact Information
+  email                 String?     @db.VarChar(255)
+  phone                 String?     @db.VarChar(50)
+  contact               String?     @db.VarChar(50)  // Keep for backward compatibility
+  
+  // Business Details
+  specializations       Json?       // Array of specialization strings
+  languages             Json?       // Array of language codes
+  
+  // Operational
+  operating_days        String?     @db.VarChar(200)
+  operating_hours       String?     @db.VarChar(200)
+  
+  // Online Presence
+  website               String?     @db.VarChar(255)
+  facebook_url          String?     @db.VarChar(255)
+  instagram_url         String?     @db.VarChar(255)
+  twitter_url           String?     @db.VarChar(255)
+  
+  // Additional Info
+  insurance_info        String?     @db.VarChar(500)
+  emergency_phone       String?     @db.VarChar(50)
+  supporting_docs       Json?       // Array of document URLs from Cloudinary
+  
+  // Timestamps
+  created_at            DateTime    @default(now())
+  updated_at            DateTime    @updatedAt
+  
+  // Relations
+  owner_id              String      @db.Uuid
+  owner                 User        @relation(fields: [owner_id], references: [id])
+  itineraries           Itinerary[]
 }
 
 model Itinerary {

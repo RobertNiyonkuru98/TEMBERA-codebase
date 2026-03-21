@@ -13,12 +13,49 @@ export type User = {
 };
 
 export type Company = {
+  // Basic Info
   id: string | number;
   name: string;
+  tagline?: string;
   description?: string;
-  contact?: string;
+  
+  // Visual Branding
+  logoUrl?: string;
+  coverImageUrl?: string;
+  
+  // Location
+  address?: string;
+  city?: string;
+  country?: string;
+  
+  // Contact Information
+  email?: string;
+  phone?: string;
+  contact?: string; // Keep for backward compatibility
+  
+  // Business Details
+  specializations?: string[];
+  languages?: string[];
+  
+  // Operational
+  operatingDays?: string;
+  operatingHours?: string;
+  
+  // Online Presence
+  website?: string;
+  facebookUrl?: string;
+  instagramUrl?: string;
+  twitterUrl?: string;
+  
+  // Additional Info
+  insuranceInfo?: string;
+  emergencyPhone?: string;
+  supportingDocs?: string[];
+  
+  // Metadata
   ownerId: string | number;
   createdAt?: string;
+  updatedAt?: string;
   status?: "active" | "inactive";
 };
 
