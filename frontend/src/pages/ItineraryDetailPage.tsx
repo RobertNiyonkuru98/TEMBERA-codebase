@@ -450,34 +450,293 @@ function ItineraryDetailPage() {
               )}
             </div>
 
+            {/* Schedule Details */}
+            {itinerary.scheduleDetails && (
+              <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Schedule</h2>
+                <p className="text-sm text-slate-600 dark:text-slate-300 whitespace-pre-line">{itinerary.scheduleDetails}</p>
+              </section>
+            )}
+
+            {/* Equipment & Items */}
+            {(itinerary.providedEquipment?.length || itinerary.requiredItems?.length) && (
+              <div className="grid gap-8 lg:grid-cols-2">
+                {itinerary.providedEquipment && itinerary.providedEquipment.length > 0 && (
+                  <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
+                    <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Provided Equipment</h2>
+                    <ul className="space-y-2">
+                      {itinerary.providedEquipment.map((item, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-300">
+                          <CheckCircle2 className="h-4 w-4 text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
+                {itinerary.requiredItems && itinerary.requiredItems.length > 0 && (
+                  <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
+                    <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">What to Bring</h2>
+                    <ul className="space-y-2">
+                      {itinerary.requiredItems.map((item, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-300">
+                          <AlertCircle className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
+              </div>
+            )}
+
+            {/* Meeting & Location Details */}
+            {(itinerary.meetingPoint || itinerary.endPoint || itinerary.locationDetails) && (
+              <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                  <MapPin className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                  Meeting & Location Details
+                </h2>
+                <div className="space-y-4">
+                  {itinerary.meetingPoint && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Meeting Point</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{itinerary.meetingPoint}</p>
+                      {(itinerary.meetingPointLat && itinerary.meetingPointLng) && (
+                        <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
+                          GPS: {itinerary.meetingPointLat}, {itinerary.meetingPointLng}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                  {itinerary.endPoint && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">End Point</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{itinerary.endPoint}</p>
+                      {(itinerary.endPointLat && itinerary.endPointLng) && (
+                        <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
+                          GPS: {itinerary.endPointLat}, {itinerary.endPointLng}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                  {itinerary.locationDetails && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Additional Location Info</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{itinerary.locationDetails}</p>
+                    </div>
+                  )}
+                </div>
+              </section>
+            )}
+
+            {/* Fitness & Requirements */}
+            {(itinerary.fitnessLevelRequired || itinerary.accessibilityInfo || itinerary.ageRestrictionsNotes) && (
+              <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Requirements</h2>
+                <div className="space-y-4">
+                  {itinerary.fitnessLevelRequired && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Fitness Level</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{itinerary.fitnessLevelRequired}</p>
+                    </div>
+                  )}
+                  {itinerary.accessibilityInfo && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Accessibility</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{itinerary.accessibilityInfo}</p>
+                    </div>
+                  )}
+                  {itinerary.ageRestrictionsNotes && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Age Restrictions</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{itinerary.ageRestrictionsNotes}</p>
+                    </div>
+                  )}
+                </div>
+              </section>
+            )}
+
+            {/* Pricing Details */}
+            {(itinerary.pricePerPerson || itinerary.pricePerGroup || itinerary.depositRequired || itinerary.refundPolicy || itinerary.cancellationPolicy) && (
+              <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                  <DollarSign className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                  Pricing Details
+                </h2>
+                <div className="space-y-4">
+                  {itinerary.pricePerPerson && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">Price per Person</p>
+                      <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
+                        {itinerary.pricePerPerson.toLocaleString()} {itinerary.currency || 'RWF'}
+                      </p>
+                    </div>
+                  )}
+                  {itinerary.pricePerGroup && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">Price per Group</p>
+                      <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
+                        {itinerary.pricePerGroup.toLocaleString()} {itinerary.currency || 'RWF'}
+                      </p>
+                    </div>
+                  )}
+                  {itinerary.depositRequired && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">Deposit Required</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">
+                        {itinerary.depositRequired.toLocaleString()} {itinerary.currency || 'RWF'}
+                        {itinerary.depositPercentage && ` (${itinerary.depositPercentage}%)`}
+                      </p>
+                    </div>
+                  )}
+                  {itinerary.refundPolicy && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Refund Policy</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{itinerary.refundPolicy}</p>
+                    </div>
+                  )}
+                  {itinerary.cancellationPolicy && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Cancellation Policy</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{itinerary.cancellationPolicy}</p>
+                    </div>
+                  )}
+                </div>
+              </section>
+            )}
+
             {/* Safety & Requirements */}
-            {(itinerary.insuranceIncluded || itinerary.safetyMeasures || itinerary.minAge || itinerary.maxAge) && (
+            {(itinerary.insuranceIncluded || itinerary.safetyMeasures || itinerary.emergencyProcedures || itinerary.medicalRequirements || itinerary.minAge || itinerary.maxAge) && (
               <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
                 <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                   <Shield className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                   Safety & Requirements
                 </h2>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {itinerary.insuranceIncluded && (
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                      <span className="text-sm text-slate-600 dark:text-slate-300">Insurance Included</span>
+                <div className="space-y-4">
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {itinerary.insuranceIncluded && (
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                        <span className="text-sm text-slate-600 dark:text-slate-300">Insurance Included</span>
+                      </div>
+                    )}
+                    {(itinerary.minAge || itinerary.maxAge) && (
+                      <div className="flex items-start gap-2">
+                        <AlertCircle className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5" />
+                        <span className="text-sm text-slate-600 dark:text-slate-300">
+                          Age: {itinerary.minAge && itinerary.maxAge ? `${itinerary.minAge}-${itinerary.maxAge} years` : itinerary.minAge ? `${itinerary.minAge}+ years` : `Up to ${itinerary.maxAge} years`}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  {itinerary.insuranceDetails && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Insurance Details</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{itinerary.insuranceDetails}</p>
                     </div>
                   )}
-                  {(itinerary.minAge || itinerary.maxAge) && (
-                    <div className="flex items-start gap-2">
-                      <AlertCircle className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5" />
-                      <span className="text-sm text-slate-600 dark:text-slate-300">
-                        Age: {itinerary.minAge && itinerary.maxAge ? `${itinerary.minAge}-${itinerary.maxAge} years` : itinerary.minAge ? `${itinerary.minAge}+ years` : `Up to ${itinerary.maxAge} years`}
-                      </span>
+                  {itinerary.safetyMeasures && Array.isArray(itinerary.safetyMeasures) && itinerary.safetyMeasures.length > 0 && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Safety Measures</p>
+                      <ul className="space-y-1">
+                        {itinerary.safetyMeasures.map((measure, idx) => (
+                          <li key={idx} className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-300">
+                            <Shield className="h-4 w-4 text-purple-600 dark:text-purple-400 mt-0.5 shrink-0" />
+                            {measure}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {itinerary.emergencyProcedures && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Emergency Procedures</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{itinerary.emergencyProcedures}</p>
+                    </div>
+                  )}
+                  {itinerary.medicalRequirements && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Medical Requirements</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{itinerary.medicalRequirements}</p>
                     </div>
                   )}
                 </div>
-                {itinerary.safetyMeasures && (
-                  <p className="mt-4 text-sm text-slate-600 dark:text-slate-300">
-                    <span className="font-semibold">Safety Measures:</span> {itinerary.safetyMeasures}
-                  </p>
-                )}
+              </section>
+            )}
+
+            {/* Guide & Languages */}
+            {(itinerary.guideInfo || itinerary.languagesOffered?.length) && (
+              <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Guide Information</h2>
+                <div className="space-y-4">
+                  {itinerary.guideInfo && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">About Your Guide</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{itinerary.guideInfo}</p>
+                    </div>
+                  )}
+                  {itinerary.languagesOffered && itinerary.languagesOffered.length > 0 && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Languages Offered</p>
+                      <div className="flex flex-wrap gap-2">
+                        {itinerary.languagesOffered.map((lang, idx) => (
+                          <span key={idx} className="inline-block px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-xs font-medium text-blue-700 dark:text-blue-300">
+                            {lang}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </section>
+            )}
+
+            {/* Weather & What to Wear */}
+            {(itinerary.weatherDependency || itinerary.weatherNotes || itinerary.whatToWear) && (
+              <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Weather & Preparation</h2>
+                <div className="space-y-4">
+                  {itinerary.weatherDependency && (
+                    <div className="flex items-center gap-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-900/30">
+                      <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                      <span className="text-sm font-medium text-amber-700 dark:text-amber-300">This activity is weather dependent</span>
+                    </div>
+                  )}
+                  {itinerary.weatherNotes && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Weather Information</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{itinerary.weatherNotes}</p>
+                    </div>
+                  )}
+                  {itinerary.whatToWear && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">What to Wear</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{itinerary.whatToWear}</p>
+                    </div>
+                  )}
+                </div>
+              </section>
+            )}
+
+            {/* Additional Notes & Terms */}
+            {(itinerary.additionalNotes || itinerary.termsAndConditions) && (
+              <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Additional Information</h2>
+                <div className="space-y-4">
+                  {itinerary.additionalNotes && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Additional Notes</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400 whitespace-pre-line">{itinerary.additionalNotes}</p>
+                    </div>
+                  )}
+                  {itinerary.termsAndConditions && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Terms & Conditions</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400 whitespace-pre-line">{itinerary.termsAndConditions}</p>
+                    </div>
+                  )}
+                </div>
               </section>
             )}
 
