@@ -210,6 +210,10 @@ model Itinerary {
   tags                    Json?               // ["adventure", "family-friendly"]
   category                String?             @db.VarChar(100)
   
+  // Rating Statistics (cached from ItineraryRating)
+  average_rating          Float?
+  total_ratings           Int                 @default(0)
+  
   // Timestamps
   created_at              DateTime            @default(now())
   updated_at              DateTime            @updatedAt
