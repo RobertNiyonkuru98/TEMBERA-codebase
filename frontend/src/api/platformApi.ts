@@ -67,6 +67,7 @@ type BackendCompany = {
 };
 
 type BackendItinerary = {
+  // Basic Information
   id: string;
   company_id: string;
   title: string;
@@ -74,7 +75,100 @@ type BackendItinerary = {
   description?: string | null;
   location?: string | null;
   date: string;
-  price: number;
+  price?: number | null;
+  
+  // Duration & Scheduling
+  duration_days?: number | null;
+  duration_hours?: number | null;
+  start_time?: string | null;
+  end_time?: string | null;
+  is_multi_day?: boolean;
+  schedule_details?: string | null;
+  
+  // Capacity & Booking Policies
+  min_participants?: number | null;
+  max_participants?: number | null;
+  available_slots?: number | null;
+  allows_individuals?: boolean;
+  allows_groups?: boolean;
+  group_discount_percent?: number | null;
+  group_min_size?: number | null;
+  booking_deadline?: string | null;
+  
+  // Inclusions & Exclusions
+  inclusions?: string[] | null;
+  exclusions?: string[] | null;
+  provided_equipment?: string[] | null;
+  required_items?: string[] | null;
+  
+  // Food & Meals
+  meals_included?: boolean;
+  meal_types?: string[] | null;
+  food_options?: string | null;
+  can_buy_food_onsite?: boolean;
+  can_bring_own_food?: boolean;
+  dietary_accommodations?: string | null;
+  
+  // Transportation
+  transport_included?: boolean;
+  transport_type?: string | null;
+  pickup_locations?: string[] | null;
+  dropoff_locations?: string[] | null;
+  allows_own_transport?: boolean;
+  parking_available?: boolean;
+  transport_notes?: string | null;
+  
+  // Meeting & Location Details
+  meeting_point?: string | null;
+  meeting_point_lat?: number | null;
+  meeting_point_lng?: number | null;
+  end_point?: string | null;
+  end_point_lat?: number | null;
+  end_point_lng?: number | null;
+  location_details?: string | null;
+  
+  // Difficulty & Requirements
+  difficulty_level?: string | null;
+  fitness_level_required?: string | null;
+  min_age?: number | null;
+  max_age?: number | null;
+  age_restrictions_notes?: string | null;
+  accessibility_info?: string | null;
+  
+  // Pricing & Payment
+  price_per_person?: number | null;
+  price_per_group?: number | null;
+  deposit_required?: number | null;
+  deposit_percentage?: number | null;
+  payment_methods?: any[] | null;
+  currency?: string | null;
+  refund_policy?: string | null;
+  cancellation_policy?: string | null;
+  
+  // Safety & Insurance
+  insurance_included?: boolean;
+  insurance_details?: string | null;
+  safety_measures?: string[] | null;
+  emergency_procedures?: string | null;
+  medical_requirements?: string | null;
+  
+  // Additional Information
+  languages_offered?: string[] | null;
+  guide_info?: string | null;
+  weather_dependency?: boolean;
+  weather_notes?: string | null;
+  what_to_wear?: string | null;
+  additional_notes?: string | null;
+  terms_and_conditions?: string | null;
+  
+  // Status & Visibility
+  status?: string | null;
+  is_featured?: boolean;
+  is_active?: boolean;
+  tags?: string[] | null;
+  category?: string | null;
+  
+  // Media & Relations
   images?: Array<{
     id?: string;
     image_url: string;
@@ -84,7 +178,24 @@ type BackendItinerary = {
   }>;
   image_urls?: string[];
   image_blobs?: (string | null)[];
+  videos?: Array<{
+    id?: string;
+    video_url: string;
+    public_id: string;
+    thumbnail_url?: string | null;
+    order?: number;
+  }>;
+  video_urls?: string[];
+  
+  // Timestamps
   created_at?: string;
+  updated_at?: string;
+  published_at?: string | null;
+  last_booking_date?: string | null;
+  
+  // Ratings (computed)
+  average_rating?: number | null;
+  total_ratings?: number | null;
 };
 
 type BackendBooking = {
@@ -338,7 +449,22 @@ function mapItinerary(itinerary: BackendItinerary): Itinerary {
       .filter(Boolean) as string[];
   }
 
-  const result = {
+  // Handle video URLs
+  let videoUrls: string[] = [];
+  if (itinerary.video_urls && itinerary.video_urls.length > 0) {
+    videoUrls = itinerary.video_urls.map((url) => {
+      // If it's already a full URL (Cloudinary), return as-is
+      if (url.startsWith("http://") || url.startsWith("https://")) {
+        return url;
+      }
+      // If it's a local path, prepend API base URL
+      const fullUrl = url.startsWith("/") ? `${API_BASE_URL}${url}` : `${API_BASE_URL}/${url}`;
+      return fullUrl;
+    });
+  }
+
+  const result: Itinerary = {
+    // Basic Information
     id: itinerary.id,
     companyId: itinerary.company_id,
     title: itinerary.title,
@@ -346,11 +472,115 @@ function mapItinerary(itinerary: BackendItinerary): Itinerary {
     description: itinerary.description ?? undefined,
     location: itinerary.location ?? undefined,
     date: itinerary.date,
-    price: itinerary.price,
+    price: itinerary.price ?? 0, // Default to 0 if null
+    
+    // Duration & Scheduling
+    durationDays: itinerary.duration_days ?? undefined,
+    durationHours: itinerary.duration_hours ?? undefined,
+    startTime: itinerary.start_time ?? undefined,
+    endTime: itinerary.end_time ?? undefined,
+    isMultiDay: itinerary.is_multi_day ?? undefined,
+    scheduleDetails: itinerary.schedule_details ?? undefined,
+    
+    // Capacity & Booking Policies
+    minParticipants: itinerary.min_participants ?? undefined,
+    maxParticipants: itinerary.max_participants ?? undefined,
+    availableSlots: itinerary.available_slots ?? undefined,
+    allowsIndividuals: itinerary.allows_individuals ?? undefined,
+    allowsGroups: itinerary.allows_groups ?? undefined,
+    groupDiscountPercent: itinerary.group_discount_percent ?? undefined,
+    groupMinSize: itinerary.group_min_size ?? undefined,
+    bookingDeadline: itinerary.booking_deadline ?? undefined,
+    
+    // Inclusions & Exclusions
+    inclusions: itinerary.inclusions ?? undefined,
+    exclusions: itinerary.exclusions ?? undefined,
+    providedEquipment: itinerary.provided_equipment ?? undefined,
+    requiredItems: itinerary.required_items ?? undefined,
+    
+    // Food & Meals
+    mealsIncluded: itinerary.meals_included ?? undefined,
+    mealTypes: itinerary.meal_types ?? undefined,
+    foodOptions: itinerary.food_options ?? undefined,
+    canBuyFoodOnsite: itinerary.can_buy_food_onsite ?? undefined,
+    canBringOwnFood: itinerary.can_bring_own_food ?? undefined,
+    dietaryAccommodations: itinerary.dietary_accommodations ?? undefined,
+    
+    // Transportation
+    transportIncluded: itinerary.transport_included ?? undefined,
+    transportType: itinerary.transport_type ?? undefined,
+    pickupLocations: itinerary.pickup_locations ?? undefined,
+    dropoffLocations: itinerary.dropoff_locations ?? undefined,
+    allowsOwnTransport: itinerary.allows_own_transport ?? undefined,
+    parkingAvailable: itinerary.parking_available ?? undefined,
+    transportNotes: itinerary.transport_notes ?? undefined,
+    
+    // Meeting & Location Details
+    meetingPoint: itinerary.meeting_point ?? undefined,
+    meetingPointLat: itinerary.meeting_point_lat ?? undefined,
+    meetingPointLng: itinerary.meeting_point_lng ?? undefined,
+    endPoint: itinerary.end_point ?? undefined,
+    endPointLat: itinerary.end_point_lat ?? undefined,
+    endPointLng: itinerary.end_point_lng ?? undefined,
+    locationDetails: itinerary.location_details ?? undefined,
+    
+    // Difficulty & Requirements
+    difficultyLevel: itinerary.difficulty_level ?? undefined,
+    fitnessLevelRequired: itinerary.fitness_level_required ?? undefined,
+    minAge: itinerary.min_age ?? undefined,
+    maxAge: itinerary.max_age ?? undefined,
+    ageRestrictionsNotes: itinerary.age_restrictions_notes ?? undefined,
+    accessibilityInfo: itinerary.accessibility_info ?? undefined,
+    
+    // Pricing & Payment
+    pricePerPerson: itinerary.price_per_person ?? undefined,
+    pricePerGroup: itinerary.price_per_group ?? undefined,
+    depositRequired: itinerary.deposit_required ?? undefined,
+    depositPercentage: itinerary.deposit_percentage ?? undefined,
+    paymentMethods: itinerary.payment_methods ?? undefined,
+    currency: itinerary.currency ?? undefined,
+    refundPolicy: itinerary.refund_policy ?? undefined,
+    cancellationPolicy: itinerary.cancellation_policy ?? undefined,
+    
+    // Safety & Insurance
+    insuranceIncluded: itinerary.insurance_included ?? undefined,
+    insuranceDetails: itinerary.insurance_details ?? undefined,
+    safetyMeasures: itinerary.safety_measures ?? undefined,
+    emergencyProcedures: itinerary.emergency_procedures ?? undefined,
+    medicalRequirements: itinerary.medical_requirements ?? undefined,
+    
+    // Additional Information
+    languagesOffered: itinerary.languages_offered ?? undefined,
+    guideInfo: itinerary.guide_info ?? undefined,
+    weatherDependency: itinerary.weather_dependency ?? undefined,
+    weatherNotes: itinerary.weather_notes ?? undefined,
+    whatToWear: itinerary.what_to_wear ?? undefined,
+    additionalNotes: itinerary.additional_notes ?? undefined,
+    termsAndConditions: itinerary.terms_and_conditions ?? undefined,
+    
+    // Status & Visibility
+    status: itinerary.status ?? undefined,
+    isFeatured: itinerary.is_featured ?? undefined,
+    isActive: itinerary.is_active ?? undefined,
+    tags: itinerary.tags ?? undefined,
+    category: itinerary.category ?? undefined,
+    
+    // Media
     imageUrls,
     imageUrl: imageUrls[0],
+    videoUrls,
+    
+    // Timestamps
     createdAt: itinerary.created_at,
+    updatedAt: itinerary.updated_at,
+    publishedAt: itinerary.published_at ?? undefined,
+    lastBookingDate: itinerary.last_booking_date ?? undefined,
+    
+    // Ratings (computed)
+    averageRating: itinerary.average_rating ?? undefined,
+    totalRatings: itinerary.total_ratings ?? undefined,
   };
+  
   return result;
 }
 
@@ -438,7 +668,9 @@ export async function fetchItineraryById(
     token,
     headers: getAuthHeaders(token),
   });
-  return mapItinerary(parsed.data);
+  const mapped = mapItinerary(parsed.data);
+  
+  return mapped;
 }
 
 export async function fetchBookings(token: string): Promise<Booking[]> {

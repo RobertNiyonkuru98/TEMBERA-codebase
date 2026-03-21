@@ -16,6 +16,7 @@ interface ItineraryCardProps {
 const ItineraryCard: React.FC<ItineraryCardProps> = ({
 	itinerary,
 	company,
+	as = "div",
 	onAttend,
 	attendLabel,
 	isAttending = false,
@@ -31,8 +32,8 @@ const ItineraryCard: React.FC<ItineraryCardProps> = ({
 
 	const hasRatings = itinerary.averageRating && itinerary.totalRatings && itinerary.totalRatings > 0;
 
-	return (
-		<div className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 transition-all duration-300 hover:shadow-xl hover:border-emerald-500/50 dark:hover:border-emerald-400/70 hover:-translate-y-1">
+	const cardContent = (
+		<div className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 transition-all duration-300 hover:shadow-xl hover:border-emerald-500/50 dark:hover:border-emerald-400/70 hover:-translate-y-1 cursor-pointer">
 			{itinerary.imageUrl && (
 				<div className="relative overflow-hidden h-48">
 					<img
@@ -65,12 +66,9 @@ const ItineraryCard: React.FC<ItineraryCardProps> = ({
 			)}
 			
 			<div className="flex flex-col flex-1 p-5 space-y-3">
-				<Link
-					to={`/itinerary/${itinerary.id}`}
-					className="text-lg font-bold text-slate-900 dark:text-slate-50 transition-colors group-hover:text-emerald-600 dark:group-hover:text-emerald-400 line-clamp-2"
-				>
+				<div className="text-lg font-bold text-slate-900 dark:text-slate-50 transition-colors group-hover:text-emerald-600 dark:group-hover:text-emerald-400 line-clamp-2">
 					{itinerary.title}
-				</Link>
+				</div>
 				
 				{itinerary.description && (
 					<p className="line-clamp-2 text-sm text-slate-600 dark:text-slate-400">
@@ -150,7 +148,7 @@ const ItineraryCard: React.FC<ItineraryCardProps> = ({
 					<div className="flex items-center gap-1.5">
 						<DollarSign className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
 						<span className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
-							{itinerary.price.toLocaleString()}
+							{itinerary.price?.toLocaleString() || 'Price on request'}
 						</span>
 						<span className="text-sm text-slate-500 dark:text-slate-400">RWF</span>
 					</div>
@@ -164,7 +162,10 @@ const ItineraryCard: React.FC<ItineraryCardProps> = ({
 				{onAttend && (
 					<button
 						type="button"
-						onClick={() => onAttend(itinerary)}
+						onClick={(e) => {
+							e.stopPropagation();
+							onAttend(itinerary);
+						}}
 						disabled={isAttending}
 						className="w-full mt-3 inline-flex items-center justify-center rounded-xl bg-linear-to-r from-emerald-500 to-emerald-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-emerald-500/50 hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
 					>
@@ -174,6 +175,13 @@ const ItineraryCard: React.FC<ItineraryCardProps> = ({
 			</div>
 		</div>
 	);
+
+	// Render based on the 'as' prop
+	if (as === "link") {
+		return <Link to={`/itinerary/${itinerary.id}`}>{cardContent}</Link>;
+	}
+
+	return cardContent;
 };
 
 export default ItineraryCard;
