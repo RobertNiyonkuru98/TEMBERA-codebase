@@ -306,6 +306,7 @@ type CreateCompanyPayload = {
 };
 
 type CreateItineraryPayload = {
+  // Basic Information
   company_id: string;
   title: string;
   activity?: string;
@@ -313,6 +314,99 @@ type CreateItineraryPayload = {
   location?: string;
   date: string;
   price: number;
+  
+  // Duration & Scheduling
+  duration_days?: number;
+  duration_hours?: number;
+  start_time?: string;
+  end_time?: string;
+  is_multi_day?: boolean;
+  schedule_details?: string;
+  
+  // Capacity & Booking Policies
+  min_participants?: number;
+  max_participants?: number;
+  available_slots?: number;
+  allows_individuals?: boolean;
+  allows_groups?: boolean;
+  group_discount_percent?: number;
+  group_min_size?: number;
+  booking_deadline?: string;
+  
+  // Inclusions & Exclusions
+  inclusions?: string[];
+  exclusions?: string[];
+  provided_equipment?: string[];
+  required_items?: string[];
+  
+  // Food & Meals
+  meals_included?: boolean;
+  meal_types?: string[];
+  food_options?: string;
+  can_buy_food_onsite?: boolean;
+  can_bring_own_food?: boolean;
+  dietary_accommodations?: string;
+  
+  // Transportation
+  transport_included?: boolean;
+  transport_type?: string;
+  pickup_locations?: string[];
+  dropoff_locations?: string[];
+  allows_own_transport?: boolean;
+  parking_available?: boolean;
+  transport_notes?: string;
+  
+  // Meeting & Location Details
+  meeting_point?: string;
+  meeting_point_lat?: number | null;
+  meeting_point_lng?: number | null;
+  end_point?: string;
+  end_point_lat?: number | null;
+  end_point_lng?: number | null;
+  location_details?: string;
+  
+  // Difficulty & Requirements
+  difficulty_level?: string;
+  fitness_level_required?: string;
+  min_age?: number;
+  max_age?: number;
+  age_restrictions_notes?: string;
+  accessibility_info?: string;
+  
+  // Pricing & Payment
+  price_per_person?: number;
+  price_per_group?: number;
+  deposit_required?: number;
+  deposit_percentage?: number;
+  payment_methods?: string[];
+  currency?: string;
+  refund_policy?: string;
+  cancellation_policy?: string;
+  
+  // Safety & Insurance
+  insurance_included?: boolean;
+  insurance_details?: string;
+  safety_measures?: string[];
+  emergency_procedures?: string;
+  medical_requirements?: string;
+  
+  // Additional Information
+  languages_offered?: string[];
+  guide_info?: string;
+  weather_dependency?: boolean;
+  weather_notes?: string;
+  what_to_wear?: string;
+  additional_notes?: string;
+  terms_and_conditions?: string;
+  
+  // Status & Visibility
+  status?: string;
+  is_featured?: boolean;
+  is_active?: boolean;
+  tags?: string[];
+  category?: string;
+  
+  // Media
   images?: File[];
   imageUrls?: string[];
 };
@@ -847,18 +941,9 @@ export async function createItinerary(
   token: string,
   payload: CreateItineraryPayload,
 ): Promise<Itinerary> {
-  // Build JSON body
-  const body: any = {
-    company_id: payload.company_id,
-    title: payload.title,
-    date: payload.date,
-    price: payload.price,
-  };
-
-  if (payload.activity) body.activity = payload.activity;
-  if (payload.description) body.description = payload.description;
-  if (payload.location) body.location = payload.location;
-  if (payload.imageUrls) body.imageUrls = payload.imageUrls;
+  // Omit files from JSON body if present
+  const body: any = { ...payload };
+  delete body.images;
 
   // Send request as JSON
   const parsed = await requestHelper<BackendItinerary>({

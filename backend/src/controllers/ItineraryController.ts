@@ -152,7 +152,7 @@ export const createItinerary = async (req: Request, res: Response) => {
     ...(req.body.allows_groups !== undefined && { allows_groups: req.body.allows_groups }),
     ...(req.body.group_discount_percent && { group_discount_percent: Number(req.body.group_discount_percent) }),
     ...(req.body.group_min_size && { group_min_size: Number(req.body.group_min_size) }),
-    ...(req.body.booking_deadline && { booking_deadline: req.body.booking_deadline }),
+    ...(req.body.booking_deadline && { booking_deadline: normalizeDate(req.body.booking_deadline) }),
     ...(req.body.inclusions && Array.isArray(req.body.inclusions) && { inclusions: req.body.inclusions }),
     ...(req.body.exclusions && Array.isArray(req.body.exclusions) && { exclusions: req.body.exclusions }),
     ...(req.body.provided_equipment && Array.isArray(req.body.provided_equipment) && { provided_equipment: req.body.provided_equipment }),
@@ -296,7 +296,7 @@ export const updateItinerary = async (req: Request, res: Response) => {
   if (req.body.allows_groups !== undefined) updateData.allows_groups = req.body.allows_groups;
   if (req.body.group_discount_percent !== undefined) updateData.group_discount_percent = req.body.group_discount_percent ? Number(req.body.group_discount_percent) : null;
   if (req.body.group_min_size !== undefined) updateData.group_min_size = req.body.group_min_size ? Number(req.body.group_min_size) : null;
-  if (req.body.booking_deadline !== undefined) updateData.booking_deadline = req.body.booking_deadline;
+  if (req.body.booking_deadline !== undefined) updateData.booking_deadline = req.body.booking_deadline ? normalizeDate(req.body.booking_deadline) : null;
   if (req.body.inclusions !== undefined) updateData.inclusions = req.body.inclusions;
   if (req.body.exclusions !== undefined) updateData.exclusions = req.body.exclusions;
   if (req.body.provided_equipment !== undefined) updateData.provided_equipment = req.body.provided_equipment;
