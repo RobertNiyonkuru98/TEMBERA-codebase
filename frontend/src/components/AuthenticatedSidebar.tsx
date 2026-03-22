@@ -63,7 +63,7 @@ function linksByRole(role: UserRole, t: (key: any) => string): SidebarLink[] {
       { to: "/admin/users", label: t("admin.usersTitle"), icon: Users },
       { to: "/admin/companies", label: t("admin.totalCompanies"), icon: Building2 },
       { to: "/admin/companies/create", label: t("company.createButton"), icon: PlusCircle },
-      { to: "/admin/itineraries", label: t("admin.totalItineraries"), icon: Map },
+      { to: "/admin/itineraries", label: t("nav.itineraries"), icon: Map },
       { to: "/admin/itineraries/create", label: t("company.createItinerary"), icon: PlusCircle },
       { to: "/profile", label: t("nav.profile"), icon: User },
     ];
@@ -72,7 +72,7 @@ function linksByRole(role: UserRole, t: (key: any) => string): SidebarLink[] {
   if (role === "company") {
     return [
       { to: "/company/dashboard", label: t("admin.dashboardTitle"), icon: LayoutDashboard },
-      { to: "/company/itineraries", label: t("nav.companyItineraries"), icon: Map },
+      { to: "/company/itineraries", label: t("nav.itineraries"), icon: Map },
       { to: "/company/itineraries/create", label: t("company.createItinerary"), icon: PlusCircle },
       { to: "/company/statistics", label: "Statistics", icon: BarChart3 },
       { to: "/profile", label: t("nav.profile"), icon: User },
@@ -255,7 +255,7 @@ function AuthenticatedSidebar({
                   </div>
                   <span className="font-semibold text-emerald-600 dark:text-emerald-400">{lang.toUpperCase()}</span>
                 </MenubarTrigger>
-                <MenubarContent className="min-w-[180px]">
+                <MenubarContent className="min-w-45">
                   <MenubarItem
                     onClick={() => onLangChange("en")}
                     disabled={lang === "en"}
@@ -300,7 +300,7 @@ function AuthenticatedSidebar({
                   </div>
                   <span className="font-semibold text-emerald-600 dark:text-emerald-400 capitalize">{resolvedTheme}</span>
                 </MenubarTrigger>
-                <MenubarContent className="min-w-[180px]">
+                <MenubarContent className="min-w-45">
                   <MenubarItem
                     onClick={() => setTheme("light")}
                     disabled={resolvedTheme === "light"}
