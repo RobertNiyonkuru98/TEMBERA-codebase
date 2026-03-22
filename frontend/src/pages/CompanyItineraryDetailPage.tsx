@@ -29,6 +29,13 @@ import {
   Clock,
   Star,
   TrendingUp,
+  CheckCircle2,
+  XCircle,
+  Utensils,
+  Car,
+  Shield,
+  Info,
+  AlertCircle
 } from "lucide-react";
 
 function CompanyItineraryDetailPage() {
@@ -290,19 +297,364 @@ function CompanyItineraryDetailPage() {
               <p className="text-slate-300 leading-relaxed">{itinerary.description}</p>
             </div>
           )}
+
+          {/* Inclusions & Exclusions */}
+          {(itinerary.inclusions?.length || itinerary.exclusions?.length) && (
+            <div className="grid gap-4 sm:grid-cols-2">
+              {itinerary.inclusions && itinerary.inclusions.length > 0 && (
+                <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+                  <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-500" /> What's Included
+                  </h3>
+                  <ul className="space-y-2">
+                    {itinerary.inclusions.map((item, idx) => (
+                      <li key={idx} className="flex items-start gap-2 text-sm text-slate-300">
+                        <CheckCircle2 className="h-4 w-4 text-emerald-500 mt-0.5 shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {itinerary.exclusions && itinerary.exclusions.length > 0 && (
+                <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+                  <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                    <XCircle className="h-4 w-4 text-red-500" /> What's Not Included
+                  </h3>
+                  <ul className="space-y-2">
+                    {itinerary.exclusions.map((item, idx) => (
+                      <li key={idx} className="flex items-start gap-2 text-sm text-slate-300">
+                        <XCircle className="h-4 w-4 text-red-500 mt-0.5 shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Meals & Transport */}
+          <div className="grid gap-4 sm:grid-cols-2">
+            {itinerary.mealsIncluded && (
+              <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+                <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                  <Utensils className="h-4 w-4 text-emerald-500" /> Meals
+                </h3>
+                <div className="space-y-3">
+                  <p className="text-sm text-slate-300"><span className="font-semibold text-slate-200">Included:</span> Yes</p>
+                  {itinerary.mealTypes && itinerary.mealTypes.length > 0 && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-200 mb-2">Types:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {itinerary.mealTypes.map((meal, idx) => (
+                          <span key={idx} className="inline-block px-2 py-1 rounded bg-slate-800 text-xs font-medium text-emerald-400">
+                            {meal}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {itinerary.dietaryAccommodations && (
+                    <p className="text-sm text-slate-300"><span className="font-semibold text-slate-200">Dietary:</span> {itinerary.dietaryAccommodations}</p>
+                  )}
+                  {itinerary.foodOptions && (
+                    <p className="text-sm text-slate-300"><span className="font-semibold text-slate-200">Details:</span> {itinerary.foodOptions}</p>
+                  )}
+                  {(itinerary.canBringOwnFood || itinerary.canBuyFoodOnsite) && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {itinerary.canBringOwnFood && (
+                        <span className="inline-flex items-center gap-1 text-xs text-slate-400 bg-slate-800 px-2 py-1 rounded">
+                          <CheckCircle2 className="h-3 w-3 text-emerald-500" /> Bring own
+                        </span>
+                      )}
+                      {itinerary.canBuyFoodOnsite && (
+                        <span className="inline-flex items-center gap-1 text-xs text-slate-400 bg-slate-800 px-2 py-1 rounded">
+                          <CheckCircle2 className="h-3 w-3 text-emerald-500" /> Buy onsite
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {itinerary.transportIncluded && (
+              <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+                <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                  <Car className="h-4 w-4 text-blue-500" /> Transportation
+                </h3>
+                <div className="space-y-3">
+                  <p className="text-sm text-slate-300"><span className="font-semibold text-slate-200">Included:</span> Yes</p>
+                  {itinerary.transportType && (
+                    <p className="text-sm text-slate-300"><span className="font-semibold text-slate-200">Type:</span> {itinerary.transportType}</p>
+                  )}
+                  {itinerary.pickupLocations && itinerary.pickupLocations.length > 0 && (
+                    <p className="text-sm text-slate-300"><span className="font-semibold text-slate-200">Pickup:</span> {itinerary.pickupLocations.join(', ')}</p>
+                  )}
+                  {itinerary.dropoffLocations && itinerary.dropoffLocations.length > 0 && (
+                    <p className="text-sm text-slate-300"><span className="font-semibold text-slate-200">Dropoff:</span> {itinerary.dropoffLocations.join(', ')}</p>
+                  )}
+                  {itinerary.transportNotes && (
+                    <p className="text-sm text-slate-300"><span className="font-semibold text-slate-200">Notes:</span> {itinerary.transportNotes}</p>
+                  )}
+                  {(itinerary.allowsOwnTransport || itinerary.parkingAvailable) && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {itinerary.allowsOwnTransport && (
+                        <span className="inline-flex items-center gap-1 text-xs text-slate-400 bg-slate-800 px-2 py-1 rounded">
+                          <CheckCircle2 className="h-3 w-3 text-blue-500" /> Own transport okay
+                        </span>
+                      )}
+                      {itinerary.parkingAvailable && (
+                        <span className="inline-flex items-center gap-1 text-xs text-slate-400 bg-slate-800 px-2 py-1 rounded">
+                          <CheckCircle2 className="h-3 w-3 text-blue-500" /> Parking available
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Schedule */}
+          {(itinerary.scheduleDetails || itinerary.meetingPoint || itinerary.endPoint) && (
+            <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6 space-y-4">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                <Clock className="h-4 w-4 text-purple-500" /> Schedule & Logistics
+              </h3>
+              {itinerary.scheduleDetails && (
+                <div>
+                  <p className="text-sm font-semibold text-slate-200 mb-1">Schedule</p>
+                  <p className="text-sm text-slate-300 whitespace-pre-line">{itinerary.scheduleDetails}</p>
+                </div>
+              )}
+              {itinerary.meetingPoint && (
+                <div>
+                  <p className="text-sm font-semibold text-slate-200 mb-1">Meeting Point</p>
+                  <p className="text-sm text-slate-300">{itinerary.meetingPoint}</p>
+                  {(itinerary.meetingPointLat && itinerary.meetingPointLng) && (
+                    <p className="text-xs text-slate-500">GPS: {itinerary.meetingPointLat}, {itinerary.meetingPointLng}</p>
+                  )}
+                </div>
+              )}
+              {itinerary.endPoint && (
+                <div>
+                  <p className="text-sm font-semibold text-slate-200 mb-1">End Point</p>
+                  <p className="text-sm text-slate-300">{itinerary.endPoint}</p>
+                </div>
+              )}
+              {itinerary.locationDetails && (
+                <div>
+                  <p className="text-sm font-semibold text-slate-200 mb-1">Location Notes</p>
+                  <p className="text-sm text-slate-300">{itinerary.locationDetails}</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Requirements & Info */}
+          <div className="grid gap-4 sm:grid-cols-2">
+            {(itinerary.providedEquipment?.length || itinerary.requiredItems?.length) && (
+              <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+                <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-400">Equipment</h3>
+                {itinerary.providedEquipment && itinerary.providedEquipment.length > 0 && (
+                  <div className="mb-4">
+                    <p className="text-sm font-semibold text-slate-200 mb-2">Provided:</p>
+                    <ul className="space-y-1">
+                      {itinerary.providedEquipment.map((item, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-sm text-slate-300">
+                          <CheckCircle2 className="h-4 w-4 text-emerald-500 mt-0.5 shrink-0" /> {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {itinerary.requiredItems && itinerary.requiredItems.length > 0 && (
+                  <div>
+                    <p className="text-sm font-semibold text-slate-200 mb-2">What to Bring:</p>
+                    <ul className="space-y-1">
+                      {itinerary.requiredItems.map((item, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-sm text-slate-300">
+                          <AlertCircle className="h-4 w-4 text-amber-500 mt-0.5 shrink-0" /> {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {(itinerary.fitnessLevelRequired || itinerary.minAge || itinerary.accessibilityInfo || itinerary.insuranceIncluded || itinerary.safetyMeasures) && (
+              <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6 space-y-4">
+                <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                  <Shield className="h-4 w-4 text-amber-500" /> Requirements & Safety
+                </h3>
+                {itinerary.fitnessLevelRequired && (
+                  <div>
+                    <p className="text-sm font-semibold text-slate-200 mb-1">Fitness Level</p>
+                    <p className="text-sm text-slate-300">{itinerary.fitnessLevelRequired}</p>
+                  </div>
+                )}
+                {(itinerary.minAge || itinerary.maxAge) && (
+                  <div>
+                    <p className="text-sm font-semibold text-slate-200 mb-1">Age Limits</p>
+                    <p className="text-sm text-slate-300">
+                      {itinerary.minAge && itinerary.maxAge ? `${itinerary.minAge}-${itinerary.maxAge} years` : itinerary.minAge ? `${itinerary.minAge}+ years` : `Up to ${itinerary.maxAge} years`}
+                    </p>
+                    {itinerary.ageRestrictionsNotes && <p className="text-xs text-slate-400 mt-1">{itinerary.ageRestrictionsNotes}</p>}
+                  </div>
+                )}
+                {itinerary.accessibilityInfo && (
+                  <div>
+                    <p className="text-sm font-semibold text-slate-200 mb-1">Accessibility</p>
+                    <p className="text-sm text-slate-300">{itinerary.accessibilityInfo}</p>
+                  </div>
+                )}
+                {(itinerary.insuranceIncluded || itinerary.medicalRequirements || itinerary.safetyMeasures?.length) && (
+                  <div className="pt-2 border-t border-slate-800">
+                    {itinerary.insuranceIncluded && <p className="text-sm text-emerald-400 font-medium flex items-center gap-2"><CheckCircle2 className="w-3 h-3" /> Insurance Included</p>}
+                    {itinerary.insuranceDetails && <p className="text-xs text-slate-400 mt-1">{itinerary.insuranceDetails}</p>}
+                    {itinerary.medicalRequirements && <p className="text-sm text-amber-400 mt-2 font-medium">Medical Req: <span className="text-slate-300 font-normal">{itinerary.medicalRequirements}</span></p>}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Pricing Details */}
+          {(itinerary.pricePerPerson || itinerary.pricePerGroup || itinerary.depositRequired || itinerary.refundPolicy || itinerary.cancellationPolicy || itinerary.paymentMethods?.length) && (
+            <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6 space-y-4">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                <DollarSign className="h-4 w-4 text-emerald-500" /> Payment & Policies
+              </h3>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  {(itinerary.pricePerPerson || itinerary.pricePerGroup) && (
+                    <div className="mb-3">
+                      <p className="text-sm font-semibold text-slate-200 mb-1">Pricing Tiers</p>
+                      {itinerary.pricePerPerson && <p className="text-sm text-emerald-400">{itinerary.pricePerPerson.toLocaleString()} {itinerary.currency} / person</p>}
+                      {itinerary.pricePerGroup && <p className="text-sm text-emerald-400">{itinerary.pricePerGroup.toLocaleString()} {itinerary.currency} / group</p>}
+                    </div>
+                  )}
+                  {itinerary.depositRequired && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-200 mb-1">Deposit</p>
+                      <p className="text-sm text-amber-400">{itinerary.depositRequired.toLocaleString()} {itinerary.currency} {itinerary.depositPercentage ? `(${itinerary.depositPercentage}%)` : ''}</p>
+                    </div>
+                  )}
+                </div>
+                <div>
+                  {(itinerary.refundPolicy || itinerary.cancellationPolicy) && (
+                    <div className="mb-3">
+                      <p className="text-sm font-semibold text-slate-200 mb-1">Policies</p>
+                      {itinerary.refundPolicy && <p className="text-xs text-slate-300 mb-1"><span className="font-semibold text-slate-400">Refund:</span> {itinerary.refundPolicy}</p>}
+                      {itinerary.cancellationPolicy && <p className="text-xs text-slate-300"><span className="font-semibold text-slate-400">Canx:</span> {itinerary.cancellationPolicy}</p>}
+                    </div>
+                  )}
+                  {itinerary.paymentMethods && itinerary.paymentMethods.length > 0 && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-200 mb-1">Payment Methods</p>
+                      <div className="flex flex-wrap gap-1">
+                        {itinerary.paymentMethods.map(m => (
+                          <span key={m} className="bg-slate-800 text-slate-300 text-[10px] px-2 py-1 rounded uppercase tracking-wider">{m.replace('_', ' ')}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {/* Weather, Guide, Notes */}
+          {(itinerary.weatherNotes || itinerary.weatherDependency || itinerary.guideInfo || itinerary.languagesOffered?.length || itinerary.additionalNotes || itinerary.termsAndConditions) && (
+            <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6 space-y-4">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                <Info className="h-4 w-4 text-blue-500" /> Additional Information
+              </h3>
+              
+              <div className="grid gap-6 sm:grid-cols-2">
+                <div>
+                  {(itinerary.guideInfo || itinerary.languagesOffered?.length) && (
+                    <div className="mb-4">
+                      <p className="text-sm font-semibold text-slate-200 mb-1">Guide info</p>
+                      {itinerary.guideInfo && <p className="text-sm text-slate-300 mb-2">{itinerary.guideInfo}</p>}
+                      {itinerary.languagesOffered && itinerary.languagesOffered.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                          {itinerary.languagesOffered.map(l => (
+                            <span key={l} className="bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs px-2 py-0.5 rounded-full">{l}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {(itinerary.weatherNotes || itinerary.weatherDependency || itinerary.whatToWear) && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-200 mb-1">Weather & Prep</p>
+                      {itinerary.weatherDependency && <p className="text-xs text-amber-500 font-medium mb-1">Weather Dependent</p>}
+                      {itinerary.weatherNotes && <p className="text-sm text-slate-300 mb-1">{itinerary.weatherNotes}</p>}
+                      {itinerary.whatToWear && <p className="text-sm text-slate-300"><span className="text-slate-400">Wear:</span> {itinerary.whatToWear}</p>}
+                    </div>
+                  )}
+                </div>
+                <div>
+                  {itinerary.additionalNotes && (
+                    <div className="mb-4">
+                      <p className="text-sm font-semibold text-slate-200 mb-1">Notes</p>
+                      <p className="text-sm text-slate-300 whitespace-pre-line">{itinerary.additionalNotes}</p>
+                    </div>
+                  )}
+                  {itinerary.termsAndConditions && (
+                    <div>
+                      <p className="text-sm font-semibold text-slate-200 mb-1">Terms</p>
+                      <p className="text-sm text-slate-300 whitespace-pre-line">{itinerary.termsAndConditions}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Right: Details Panel */}
         <div className="space-y-5">
           {/* Title & Activity */}
           <div>
+            <div className="flex flex-wrap items-center gap-2 mb-2">
+              <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium uppercase tracking-wider border ${itinerary.isActive ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20'}`}>
+                {itinerary.isActive ? 'Active' : 'Inactive'}
+              </span>
+              <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium uppercase tracking-wider border ${itinerary.status === 'published' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 'bg-slate-500/10 text-slate-400 border-slate-500/20'}`}>
+                {itinerary.status || 'draft'}
+              </span>
+              {itinerary.isFeatured && (
+                <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                  <Star className="h-3 w-3 fill-amber-400" /> Featured
+                </span>
+              )}
+            </div>
             <h1 className="text-2xl font-bold tracking-tight text-slate-50">
               {itinerary.title}
             </h1>
-            {itinerary.activity && (
-              <span className="mt-2 inline-block rounded-full bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 text-xs font-medium text-emerald-400">
-                {itinerary.activity}
-              </span>
+            <div className="flex flex-wrap items-center gap-2 mt-2">
+              {itinerary.activity && (
+                <span className="inline-block rounded-full bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 text-xs font-medium text-emerald-400">
+                  {itinerary.activity}
+                </span>
+              )}
+              {itinerary.category && (
+                <span className="inline-block rounded-full bg-purple-500/10 border border-purple-500/20 px-3 py-1 text-xs font-medium text-purple-400">
+                  {itinerary.category}
+                </span>
+              )}
+            </div>
+            {itinerary.tags && itinerary.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1 mt-3">
+                {itinerary.tags.map(t => (
+                  <span key={t} className="text-xs text-slate-400 bg-slate-800 px-2 py-1 rounded">#{t}</span>
+                ))}
+              </div>
             )}
           </div>
 

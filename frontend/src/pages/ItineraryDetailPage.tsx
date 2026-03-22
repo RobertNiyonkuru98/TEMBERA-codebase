@@ -152,7 +152,7 @@ function ItineraryDetailPage() {
   if (error) {
     return (
       <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
-        <div className="mx-auto w-[95%] max-w-[1920px] py-12">
+        <div className="mx-auto w-[95%] max-w-480 py-12">
           <div className="rounded-xl border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/10 p-8 text-center space-y-4">
             <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
             <button
@@ -172,7 +172,7 @@ function ItineraryDetailPage() {
   if (!itinerary) {
     return (
       <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
-        <div className="mx-auto w-[95%] max-w-[1920px] py-12">
+        <div className="mx-auto w-[95%] max-w-480 py-12">
           <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8 text-center space-y-4">
             <p className="text-sm text-slate-600 dark:text-slate-400">{t("detail.notFound")}</p>
             <button
@@ -191,7 +191,7 @@ function ItineraryDetailPage() {
 
   return (
     <div className="w-full min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
-      <div className="mx-auto w-[95%] max-w-[1920px] py-12">
+      <div className="mx-auto w-[95%] max-w-480 py-12">
         {/* Back Button */}
         <button
           onClick={() => navigate(-1)}
@@ -212,9 +212,21 @@ function ItineraryDetailPage() {
               />
               <div className="absolute inset-0 bg-linear-to-t from-slate-900 via-slate-900/40 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-8">
-                <span className="inline-block rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-lg mb-4">
-                  {itinerary.activity ?? "Experience"}
-                </span>
+                <div className="flex flex-wrap items-center gap-2 mb-4">
+                  <span className="inline-block rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-lg">
+                    {itinerary.activity ?? "Experience"}
+                  </span>
+                  {itinerary.category && (
+                    <span className="inline-block rounded-full bg-blue-500/80 px-4 py-2 text-sm font-semibold text-white shadow-lg">
+                      {itinerary.category}
+                    </span>
+                  )}
+                  {itinerary.isFeatured && (
+                    <span className="rounded-full bg-amber-500 px-4 py-2 text-sm font-semibold text-white shadow-lg flex items-center gap-1">
+                      <Star className="h-4 w-4 fill-white" /> Featured
+                    </span>
+                  )}
+                </div>
                 <h1 className="text-4xl font-bold text-white sm:text-5xl mb-3">
                   {itinerary.title}
                 </h1>
@@ -340,17 +352,27 @@ function ItineraryDetailPage() {
                       </dd>
                     </div>
                   </div>
-                  {(itinerary.minParticipants || itinerary.maxParticipants) && (
+                  {(itinerary.minParticipants || itinerary.maxParticipants || itinerary.groupMinSize || itinerary.groupDiscountPercent) && (
                     <div className="flex items-start gap-4">
                       <Users className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5" />
                       <div>
-                        <dt className="text-sm font-medium text-slate-500 dark:text-slate-400">Participants</dt>
+                        <dt className="text-sm font-medium text-slate-500 dark:text-slate-400">Participants & Groups</dt>
                         <dd className="mt-1 text-base font-semibold text-slate-900 dark:text-white">
-                          {itinerary.minParticipants && itinerary.maxParticipants
-                            ? `${itinerary.minParticipants} - ${itinerary.maxParticipants} people`
-                            : itinerary.maxParticipants
-                            ? `Up to ${itinerary.maxParticipants} people`
-                            : `Minimum ${itinerary.minParticipants} people`}
+                          {(itinerary.minParticipants || itinerary.maxParticipants) && (
+                            <div>
+                              {itinerary.minParticipants && itinerary.maxParticipants
+                                ? `${itinerary.minParticipants} - ${itinerary.maxParticipants} people`
+                                : itinerary.maxParticipants
+                                ? `Up to ${itinerary.maxParticipants} people`
+                                : `Minimum ${itinerary.minParticipants} people`}
+                            </div>
+                          )}
+                          {itinerary.groupMinSize && (
+                            <div className="text-sm mt-1 text-blue-600 dark:text-blue-400">
+                              Groups: Min {itinerary.groupMinSize} people
+                              {itinerary.groupDiscountPercent ? ` (${itinerary.groupDiscountPercent}% discount)` : ''}
+                            </div>
+                          )}
                         </dd>
                       </div>
                     </div>
@@ -362,6 +384,17 @@ function ItineraryDetailPage() {
                         <dt className="text-sm font-medium text-slate-500 dark:text-slate-400">Available Slots</dt>
                         <dd className="mt-1 text-base font-semibold text-slate-900 dark:text-white">
                           {itinerary.availableSlots} {itinerary.availableSlots === 1 ? 'slot' : 'slots'}
+                        </dd>
+                      </div>
+                    </div>
+                  )}
+                  {itinerary.bookingDeadline && (
+                    <div className="flex items-start gap-4">
+                      <Clock className="h-5 w-5 text-red-600 dark:text-red-400 mt-0.5" />
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500 dark:text-slate-400">Booking Deadline</dt>
+                        <dd className="mt-1 text-base font-semibold text-red-600 dark:text-red-400">
+                          {new Date(itinerary.bookingDeadline).toLocaleDateString()}
                         </dd>
                       </div>
                     </div>
@@ -445,6 +478,30 @@ function ItineraryDetailPage() {
                         </div>
                       </div>
                     )}
+                    {itinerary.dietaryAccommodations && (
+                      <p className="text-sm text-slate-600 dark:text-slate-300">
+                        <span className="font-semibold">Dietary Options:</span> {itinerary.dietaryAccommodations}
+                      </p>
+                    )}
+                    {itinerary.foodOptions && (
+                      <p className="text-sm text-slate-600 dark:text-slate-300">
+                        <span className="font-semibold">Details:</span> {itinerary.foodOptions}
+                      </p>
+                    )}
+                    {(itinerary.canBringOwnFood || itinerary.canBuyFoodOnsite) && (
+                      <div className="flex flex-wrap gap-3 mt-2">
+                        {itinerary.canBringOwnFood && (
+                          <span className="inline-flex items-center gap-1 text-xs text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">
+                            <CheckCircle2 className="h-3 w-3 text-emerald-500" /> Bring own food allowed
+                          </span>
+                        )}
+                        {itinerary.canBuyFoodOnsite && (
+                          <span className="inline-flex items-center gap-1 text-xs text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">
+                            <CheckCircle2 className="h-3 w-3 text-emerald-500" /> Food available onsite
+                          </span>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </section>
               )}
@@ -467,6 +524,30 @@ function ItineraryDetailPage() {
                       <p className="text-sm text-slate-600 dark:text-slate-300">
                         <span className="font-semibold">Pickup:</span> {itinerary.pickupLocations.join(', ')}
                       </p>
+                    )}
+                    {itinerary.dropoffLocations && itinerary.dropoffLocations.length > 0 && (
+                      <p className="text-sm text-slate-600 dark:text-slate-300">
+                        <span className="font-semibold">Dropoff:</span> {itinerary.dropoffLocations.join(', ')}
+                      </p>
+                    )}
+                    {itinerary.transportNotes && (
+                      <p className="text-sm text-slate-600 dark:text-slate-300 mt-2">
+                        <span className="font-semibold">Notes:</span> {itinerary.transportNotes}
+                      </p>
+                    )}
+                    {(itinerary.allowsOwnTransport || itinerary.parkingAvailable) && (
+                      <div className="flex flex-wrap gap-3 mt-2">
+                        {itinerary.allowsOwnTransport && (
+                          <span className="inline-flex items-center gap-1 text-xs text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">
+                            <CheckCircle2 className="h-3 w-3 text-blue-500" /> Own transport okay
+                          </span>
+                        )}
+                        {itinerary.parkingAvailable && (
+                          <span className="inline-flex items-center gap-1 text-xs text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">
+                            <CheckCircle2 className="h-3 w-3 text-blue-500" /> Parking available
+                          </span>
+                        )}
+                      </div>
                     )}
                   </div>
                 </section>
@@ -622,6 +703,18 @@ function ItineraryDetailPage() {
                     {itinerary.cancellationPolicy || 'No cancellation policy specified'}
                   </p>
                 </div>
+                {itinerary.paymentMethods && itinerary.paymentMethods.length > 0 && (
+                  <div>
+                    <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Accepted Payment Methods</p>
+                    <div className="flex flex-wrap gap-2">
+                      {itinerary.paymentMethods.map((method, idx) => (
+                        <span key={idx} className="inline-block px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-xs font-medium text-slate-700 dark:text-slate-300 capitalize">
+                          {method.replace('_', ' ')}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </section>
 
