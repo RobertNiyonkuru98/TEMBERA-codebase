@@ -411,6 +411,8 @@ type CreateItineraryPayload = {
   imageUrls?: string[];
 };
 
+export type UpdateItineraryPayload = Partial<Omit<CreateItineraryPayload, "company_id" | "images">>;
+
 export type CompanyState = {
   hasCompany: boolean;
   companyId?: string;
@@ -1137,6 +1139,35 @@ export async function deleteCompanyRating(
   await requestHelper({
     method: "DELETE",
     url: `${API_BASE_URL}/api/companies/ratings/${ratingId}`,
+    token,
+  });
+}
+
+// ============================================
+// Itinerary Update/Delete API Functions
+// ============================================
+
+export async function updateItinerary(
+  token: string,
+  itineraryId: string,
+  data: UpdateItineraryPayload,
+): Promise<Itinerary> {
+  const parsed = await requestHelper<BackendItinerary>({
+    method: "PUT",
+    url: `${API_BASE_URL}/api/itineraries/${itineraryId}`,
+    token,
+    data,
+  });
+  return mapItinerary(parsed.data);
+}
+
+export async function deleteItinerary(
+  token: string,
+  itineraryId: string,
+): Promise<void> {
+  await requestHelper({
+    method: "DELETE",
+    url: `${API_BASE_URL}/api/itineraries/${itineraryId}`,
     token,
   });
 }
