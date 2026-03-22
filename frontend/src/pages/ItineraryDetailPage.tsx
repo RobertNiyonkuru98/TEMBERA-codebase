@@ -234,6 +234,24 @@ function ItineraryDetailPage() {
             </div>
           )}
 
+          {/* Image Gallery */}
+          {itinerary.imageUrls && itinerary.imageUrls.length > 0 && (
+            <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Image Gallery</h2>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {itinerary.imageUrls.map((imgUrl, idx) => (
+                  <div key={idx} className="relative overflow-hidden rounded-xl h-48 group cursor-pointer shadow-sm">
+                    <img
+                      src={imgUrl}
+                      alt={`${itinerary.title} gallery ${idx + 1}`}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
           {/* Video Gallery */}
           {itinerary.videoUrls && itinerary.videoUrls.length > 0 && (
             <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-8">

@@ -33,7 +33,7 @@ const ItineraryCard: React.FC<ItineraryCardProps> = ({
 	const hasRatings = itinerary.averageRating && itinerary.totalRatings && itinerary.totalRatings > 0;
 
 	const cardContent = (
-		<div className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 transition-all duration-300 hover:shadow-xl hover:border-emerald-500/50 dark:hover:border-emerald-400/70 hover:-translate-y-1 cursor-pointer">
+		<div className="group h-full flex flex-col overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 transition-all duration-300 hover:shadow-xl hover:border-emerald-500/50 dark:hover:border-emerald-400/70 hover:-translate-y-1 cursor-pointer">
 			{itinerary.imageUrl && (
 				<div className="relative overflow-hidden h-48">
 					<img
@@ -178,7 +178,7 @@ const ItineraryCard: React.FC<ItineraryCardProps> = ({
 
 	// Render based on the 'as' prop
 	if (as === "link") {
-		return <Link to={`/itinerary/${itinerary.id}`}>{cardContent}</Link>;
+		return <Link to={`/itinerary/${itinerary.id}`} className="block h-full">{cardContent}</Link>;
 	}
 
 	return cardContent;
