@@ -9,33 +9,37 @@ import { useAuth } from "@/features/auth/AuthContext";
 import type { UserRole } from "@/shared/types";
 import { Eye, Shield, Building2, User, Check } from "lucide-react";
 import { toast } from "sonner";
+import { useI18n } from "@/core/i18n";
 
 // Role metadata for better UX
-const roleMetadata: Record<UserRole, { icon: React.ComponentType<{ className?: string }>; description: string; label: string }> = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getRoleMetadata = (t: any): Record<UserRole, { icon: React.ComponentType<{ className?: string }>; description: string; label: string }> => ({
   admin: {
     icon: Shield,
-    description: "Full system access and management",
-    label: "Administrator"
+    description: t("roles.admin.description"),
+    label: t("roles.admin.label")
   },
   company: {
     icon: Building2,
-    description: "Manage your company's itineraries",
-    label: "Company Manager"
+    description: t("roles.company.description"),
+    label: t("roles.company.label")
   },
   user: {
     icon: User,
-    description: "Browse and book experiences",
-    label: "Traveler"
+    description: t("roles.user.description"),
+    label: t("roles.user.label")
   },
   visitor: {
     icon: User,
-    description: "Browse public content",
-    label: "Visitor"
+    description: t("roles.visitor.description"),
+    label: t("roles.visitor.label")
   }
-};
+});
 
 export function RoleSwitcher() {
   const { allRoles, activeRole, switchRole } = useAuth();
+  const { t } = useI18n();
+  const roleMetadata = getRoleMetadata(t);
 
   if (!allRoles || allRoles.length <= 1 || !activeRole) {
     return null;
@@ -44,8 +48,8 @@ export function RoleSwitcher() {
   const handleRoleSwitch = (role: UserRole) => {
     const roleLabel = roleMetadata[role]?.label || role;
     switchRole(role);
-    toast.success(`Switched to ${roleLabel} view`, {
-      description: roleMetadata[role]?.description || `Now viewing as ${role}`,
+    toast.success(`${t("roles.switched")} ${roleLabel}`, {
+      description: roleMetadata[role]?.description || `${t("roles.viewingAs")} ${role}`,
       duration: 2000,
     });
   };
@@ -59,7 +63,7 @@ export function RoleSwitcher() {
         <MenubarTrigger className="w-full flex flex-col items-start gap-2 rounded-xl border-2 border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 px-4 py-2.5 text-sm font-semibold text-emerald-900 dark:text-emerald-100 transition-all hover:bg-emerald-100 dark:hover:bg-emerald-900/40 hover:shadow-md data-[state=open]:bg-emerald-100 dark:data-[state=open]:bg-emerald-900/40">
           <div className="flex items-center gap-2">
             <Eye className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-            <span className="text-xs text-emerald-700 dark:text-emerald-300">Viewing as</span>
+            <span className="text-xs text-emerald-700 dark:text-emerald-300">{t("roles.viewingAs")}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <ActiveRoleIcon className="h-3.5 w-3.5" />
@@ -68,7 +72,7 @@ export function RoleSwitcher() {
         </MenubarTrigger>
         <MenubarContent className="min-w-[280px] p-2">
           <div className="px-2 py-1.5 mb-1">
-            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Switch View</p>
+            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("roles.switchView")}</p>
           </div>
           {allRoles.map((role) => {
             const RoleIcon = roleMetadata[role]?.icon || User;
@@ -104,7 +108,7 @@ export function RoleSwitcher() {
                     {isActive && (
                       <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/50">
                         <Check className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />
-                        <span className="text-xs font-medium text-emerald-700 dark:text-emerald-300">Active</span>
+                        <span className="text-xs font-medium text-emerald-700 dark:text-emerald-300">{t("roles.active")}</span>
                       </div>
                     )}
                   </div>

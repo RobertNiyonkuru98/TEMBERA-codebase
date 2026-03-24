@@ -8,6 +8,7 @@ import profile from './profile.json';
 import showcase from './showcase.json';
 import company from './company.json';
 import admin from './admin.json';
+import roles from './roles.json';
 
 export const en = {
   ...common,
@@ -20,6 +21,7 @@ export const en = {
   ...showcase,
   ...company,
   ...admin,
+  ...roles,
 } as const;
 
 export type TranslationKey = keyof typeof en;

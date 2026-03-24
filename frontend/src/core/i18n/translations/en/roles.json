@@ -1,0 +1,14 @@
+{
+  "roles.admin.label": "Administrator",
+  "roles.admin.description": "Full system access and management",
+  "roles.company.label": "Company Manager",
+  "roles.company.description": "Manage your company's itineraries",
+  "roles.user.label": "Traveler",
+  "roles.user.description": "Browse and book experiences",
+  "roles.visitor.label": "Visitor",
+  "roles.visitor.description": "Browse public content",
+  "roles.viewingAs": "Viewing as",
+  "roles.switchView": "Switch View",
+  "roles.active": "Active",
+  "roles.switched": "Switched to view"
+}

@@ -136,9 +136,9 @@ function HomePage() {
           />
         </div>
 
-        {/* Gradient Overlay for Text Readability */}
-        <div className="absolute inset-0 bg-linear-to-b from-slate-950/80 via-slate-950/60 to-slate-950/90 z-10" />
-        <div className="absolute inset-0 bg-linear-to-r from-slate-950/70 via-transparent to-slate-950/70 z-10" />
+        {/* Gradient Overlay for Text Readability - Adapts to light/dark mode */}
+        <div className="absolute inset-0 bg-linear-to-b from-slate-950/80 via-slate-950/60 to-slate-950/90 dark:from-slate-950/80 dark:via-slate-950/60 dark:to-slate-950/90 z-10" />
+        <div className="absolute inset-0 bg-linear-to-r from-slate-950/70 via-transparent to-slate-950/70 dark:from-slate-950/70 dark:via-transparent dark:to-slate-950/70 z-10" />
 
         {/* Hero Content */}
         <div className="relative z-20 flex h-full flex-col items-center justify-center px-4 text-center">

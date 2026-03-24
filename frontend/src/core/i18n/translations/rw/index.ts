@@ -6,6 +6,7 @@ import rwHome from './home.json';
 import rwItineraries from './itineraries.json';
 import rwDetail from './detail.json';
 import rwShowcase from './showcase.json';
+import rwRoles from './roles.json';
 
 export const rw = {
   ...en,
@@ -15,4 +16,5 @@ export const rw = {
   ...rwItineraries,
   ...rwDetail,
   ...rwShowcase,
+  ...rwRoles,
 } as const;

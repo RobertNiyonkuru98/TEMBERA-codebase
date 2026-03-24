@@ -1,0 +1,14 @@
+{
+  "roles.admin.label": "Administrateur",
+  "roles.admin.description": "Accès complet et gestion du système",
+  "roles.company.label": "Gestionnaire d'Entreprise",
+  "roles.company.description": "Gérez les itinéraires de votre entreprise",
+  "roles.user.label": "Voyageur",
+  "roles.user.description": "Parcourir et réserver des expériences",
+  "roles.visitor.label": "Visiteur",
+  "roles.visitor.description": "Parcourir le contenu public",
+  "roles.viewingAs": "Affichage en tant que",
+  "roles.switchView": "Changer de Vue",
+  "roles.active": "Actif",
+  "roles.switched": "Basculé vers la vue"
+}

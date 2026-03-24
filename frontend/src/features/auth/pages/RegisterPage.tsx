@@ -50,7 +50,7 @@ function RegisterPage() {
               alt="Rwanda adventures"
               className="h-[700px] w-full object-cover"
             />
-            <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/40 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/40 to-transparent dark:from-slate-950 dark:via-slate-950/40 dark:to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-8">
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="h-5 w-5 text-emerald-400" />

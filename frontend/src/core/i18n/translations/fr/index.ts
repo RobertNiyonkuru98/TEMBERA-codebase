@@ -6,6 +6,7 @@ import frHome from './home.json';
 import frItineraries from './itineraries.json';
 import frDetail from './detail.json';
 import frShowcase from './showcase.json';
+import frRoles from './roles.json';
 
 export const fr = {
   ...en,
@@ -15,4 +16,5 @@ export const fr = {
   ...frItineraries,
   ...frDetail,
   ...frShowcase,
+  ...frRoles,
 } as const;
