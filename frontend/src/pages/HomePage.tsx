@@ -13,11 +13,12 @@ import { toast } from "sonner";
 import { ChevronRight, MapPin, Calendar, Users, Star, Play, CheckCircle2, Sparkles, Mountain, Camera } from "lucide-react";
 import { useI18n } from "../i18n";
 
-// Import local images
+// Import local images and video
 import volcanoImg from "../assets/forigners_on_top_of_volcano.jpg";
 import gorillaImg from "../assets/gorilla_1.jpg";
 import happyPeopleImg from "../assets/happy_people.jpeg";
 import hikingImg from "../assets/hiking_1.jpg";
+import visitRwandaVideo from "../assets/visit_rwanda_video.mp4";
 
 function HomePage() {
   const { token, user, activeRole } = useAuth();
@@ -120,16 +121,18 @@ function HomePage() {
 
   return (
     <div className="relative w-full overflow-hidden">
-      {/* HERO SECTION - Full Screen YouTube Video Background */}
+      {/* HERO SECTION - Full Screen Local Video Background */}
       <section ref={heroRef} className="relative h-screen min-h-[600px] w-full overflow-hidden">
-        {/* YouTube Video Background */}
+        {/* Local Video Background */}
         <div className="absolute inset-0 z-0">
-          <iframe
-            className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+          <video
+            className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 object-cover pointer-events-none"
             style={{ width: '100vw', height: '56.25vw', minHeight: '100vh', minWidth: '177.77vh' }}
-            src="https://www.youtube.com/embed/bX_wOIZW1RM?autoplay=1&mute=1&controls=0&loop=1&playlist=bX_wOIZW1RM&playsinline=1&rel=0&modestbranding=1"
-            title="Rwanda Tourism Video"
-            allow="autoplay; encrypted-media"
+            autoPlay
+            muted
+            loop
+            playsInline
+            src={visitRwandaVideo}
           />
         </div>
 
