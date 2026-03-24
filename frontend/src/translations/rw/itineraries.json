@@ -1,0 +1,13 @@
+{
+  "itineraries.title": "Ingendo zose",
+  "itineraries.subtitle": "Reba ibikorwa n'ingendo byose bitangwa n'ibigo by'ahantu.",
+  "itineraries.pageTitle": "Shakisha Ingendo",
+  "itineraries.pageSubtitle": "Vumbura ibisubizo n'ibikorwa bitangaje mu Rwanda",
+  "itineraries.loading": "Irapakurura ingendo...",
+  "itineraries.noResults": "Nta ngendo zabonetse.",
+  "itineraries.error": "Byanze gupakurura ingendo",
+  "itineraries.registered": "Kwiyandikisha byagenze neza!",
+  "itineraries.loginRequired": "Nyamuneka injira kugira ngo wiyandikishe ku ngendo.",
+  "itineraries.filterAll": "Ingendo Zose",
+  "itineraries.searchPlaceholder": "Shakisha ingendo..."
+}

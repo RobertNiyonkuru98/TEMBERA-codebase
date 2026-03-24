@@ -1,0 +1,18 @@
+{
+  "detail.tripInfo": "Trip information",
+  "detail.date": "Date",
+  "detail.location": "Location",
+  "detail.priceLabel": "Price per person (RWF)",
+  "detail.company": "Company",
+  "detail.bookingsTitle": "Bookings that include this itinerary",
+  "detail.noBookings": "No  bookings currently include this itinerary.",
+  "detail.addToBooking": "Add to booking",
+  "detail.goBack": "Go back",
+  "detail.notFound": "The requested itinerary could not be found.",
+  "detail.loadingDetails": "Loading itinerary details...",
+  "detail.attendButton": "Book Now",
+  "detail.attending": "Booking...",
+  "detail.bookingNumber": "Booking",
+  "detail.createdOn": "Created on",
+  "detail.by": "By"
+}

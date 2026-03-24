@@ -1,0 +1,13 @@
+{
+  "itineraries.title": "Tous les itinéraires",
+  "itineraries.subtitle": "Parcourez toutes les activités et tous les voyages proposés par les entreprises locales.",
+  "itineraries.pageTitle": "Explorer les Itinéraires",
+  "itineraries.pageSubtitle": "Découvrez des aventures et activités incroyables à travers le Rwanda",
+  "itineraries.loading": "Chargement des itinéraires...",
+  "itineraries.noResults": "Aucun itinéraire trouvé.",
+  "itineraries.error": "Échec du chargement des itinéraires",
+  "itineraries.registered": "Inscription réussie!",
+  "itineraries.loginRequired": "Veuillez vous connecter pour vous inscrire à un itinéraire.",
+  "itineraries.filterAll": "Tous les Itinéraires",
+  "itineraries.searchPlaceholder": "Rechercher des itinéraires..."
+}

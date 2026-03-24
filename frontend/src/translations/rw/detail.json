@@ -1,0 +1,18 @@
+{
+  "detail.tripInfo": "Amakuru ku rugendo",
+  "detail.date": "Itariki",
+  "detail.location": "Ahantu",
+  "detail.priceLabel": "Igiciro kuri buri muntu (RWF)",
+  "detail.company": "Ikigo",
+  "detail.bookingsTitle": "Aho wabitse harimo iyi ngendo",
+  "detail.noBookings": "Nta kubita kuri ubu harimo iyi ngendo.",
+  "detail.addToBooking": "Ongeraho aho wabitse",
+  "detail.goBack": "Subira inyuma",
+  "detail.notFound": "Ingendo wasabye ntibonetse.",
+  "detail.loadingDetails": "Irapakurura amakuru y'ingendo...",
+  "detail.attendButton": "Bita Ubu",
+  "detail.attending": "Urabita...",
+  "detail.bookingNumber": "Kubita",
+  "detail.createdOn": "Byakozwe ku",
+  "detail.by": "Na"
+}
