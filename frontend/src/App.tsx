@@ -1,10 +1,10 @@
 import { BrowserRouter } from "react-router-dom";
 import { useEffect } from "react";
 import { Toaster } from "sonner";
-import { useAuth } from "./AuthContext";
-import { useI18n } from "./i18n";
-import { AuthenticatedLayout, GuestLayout } from "./layouts";
-import { AppRouter } from "./routes";
+import { useAuth } from "@/features/auth/AuthContext";
+import { useI18n } from "@/core/i18n";
+import { AuthenticatedLayout, GuestLayout } from "@/shared/components/layout/layouts";
+import { AppRouter } from "@/core/routing";
 
 function App() {
   const { user, activeRole, logout, initialize, isInitialized } = useAuth();
