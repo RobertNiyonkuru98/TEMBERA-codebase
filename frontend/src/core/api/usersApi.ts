@@ -35,3 +35,26 @@ export const usersService = new UsersApiService("/api/users", mapUser);
 export async function fetchUsers(token: string): Promise<User[]> {
   return usersService.getAll(token);
 }
+
+export type UpdateUserPayload = {
+  name?: string;
+  email?: string;
+  phone_number?: string;
+  role?: UserRole;
+  access_status?: "active" | "inactive";
+};
+
+export async function updateUser(
+  id: string | number,
+  payload: UpdateUserPayload,
+  token: string
+): Promise<User> {
+  return usersService.update(String(id), payload, token);
+}
+
+export async function deleteUser(
+  id: string | number,
+  token: string
+): Promise<void> {
+  return usersService.delete(String(id), token);
+}
