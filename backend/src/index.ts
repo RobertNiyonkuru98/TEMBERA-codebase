@@ -10,8 +10,6 @@ import { logger } from "./utils/logger";
 import router from "./routes";
 import cors from "cors";
 
-const __dirname = path.resolve();
-
 const app = express();
 
 const connectionString = process.env.DATABASE_URL;
@@ -35,7 +33,7 @@ async function verifyDatabaseConnection(): Promise<boolean> {
 }
 
 // Swagger setup from YAML
-const swaggerDocument = YAML.load(path.join(__dirname, "src", "swagger.yml"));
+const swaggerDocument = YAML.load(path.join(__dirname, "..", "src", "swagger.yml"));
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(express.json());
