@@ -18,6 +18,12 @@ graph TB
         UC8[Cancel Booking]
         UC9[Update Profile]
         UC10[Add Booking Members]
+        UC31[Rate Company]
+        UC32[Rate Itinerary]
+        UC33[Write Review]
+        UC34[Update My Rating]
+        UC35[Delete My Rating]
+        UC36[View Rating Statistics]
         
         %% Company Use Cases
         UC11[Register Company]
@@ -25,10 +31,13 @@ graph TB
         UC13[Update Itinerary]
         UC14[Delete Itinerary]
         UC15[Upload Itinerary Images]
+        UC37[Upload Itinerary Videos]
         UC16[View Company Bookings]
         UC17[Manage Company Profile]
         UC18[View Booking Statistics]
         UC19[View Attendees]
+        UC38[View Company Ratings]
+        UC39[View Itinerary Ratings]
         
         %% Admin Use Cases
         UC20[Manage Users]
@@ -39,11 +48,14 @@ graph TB
         UC25[View System Statistics]
         UC26[Approve/Suspend Companies]
         UC27[Delete Users]
+        UC40[Moderate Ratings]
+        UC41[View All Ratings]
         
         %% Shared Use Cases
         UC28[Logout]
         UC29[Search Itineraries]
         UC30[Filter by Location/Date/Price]
+        UC42[View Ratings and Reviews]
     end
     
     %% Actors
@@ -59,6 +71,7 @@ graph TB
     Visitor --> UC4
     Visitor --> UC29
     Visitor --> UC30
+    Visitor --> UC42
     
     %% User Connections
     User --> UC1
@@ -72,6 +85,13 @@ graph TB
     User --> UC28
     User --> UC29
     User --> UC30
+    User --> UC31
+    User --> UC32
+    User --> UC33
+    User --> UC34
+    User --> UC35
+    User --> UC36
+    User --> UC42
     
     %% Company Connections
     Company --> UC11
@@ -79,6 +99,7 @@ graph TB
     Company --> UC13
     Company --> UC14
     Company --> UC15
+    Company --> UC37
     Company --> UC16
     Company --> UC17
     Company --> UC18
@@ -86,6 +107,9 @@ graph TB
     Company --> UC28
     Company --> UC1
     Company --> UC29
+    Company --> UC38
+    Company --> UC39
+    Company --> UC42
     
     %% Admin Connections
     Admin --> UC20
@@ -99,6 +123,9 @@ graph TB
     Admin --> UC28
     Admin --> UC1
     Admin --> UC29
+    Admin --> UC40
+    Admin --> UC41
+    Admin --> UC42
     
     %% Relationships
     UC6 -.->|includes| UC10
@@ -138,6 +165,12 @@ graph TB
 | UC8 | Cancel Booking | Cancel an existing booking |
 | UC9 | Update Profile | Modify user profile information |
 | UC10 | Add Booking Members | Add member details to a group booking |
+| UC31 | Rate Company | Provide a rating (1-10) for a tour company |
+| UC32 | Rate Itinerary | Provide a rating (1-10) for an itinerary experience |
+| UC33 | Write Review | Add detailed text feedback with ratings |
+| UC34 | Update My Rating | Modify previously submitted ratings |
+| UC35 | Delete My Rating | Remove own rating from the system |
+| UC36 | View Rating Statistics | See average ratings and distributions |
 | UC28 | Logout | End the current session |
 
 ### Company Owner Use Cases
@@ -145,14 +178,17 @@ graph TB
 | Use Case ID | Use Case Name | Description |
 |------------|---------------|-------------|
 | UC11 | Register Company | Create a company profile on the platform |
-| UC12 | Create Itinerary | Add a new travel itinerary with details |
+| UC12 | Create Itinerary | Add a new travel itinerary with comprehensive details |
 | UC13 | Update Itinerary | Modify existing itinerary information |
 | UC14 | Delete Itinerary | Remove an itinerary from the platform |
 | UC15 | Upload Itinerary Images | Add multiple images to showcase an itinerary |
+| UC37 | Upload Itinerary Videos | Add up to 5 videos per itinerary |
 | UC16 | View Company Bookings | See all bookings for company itineraries |
-| UC17 | Manage Company Profile | Update company information |
+| UC17 | Manage Company Profile | Update enhanced company information (logo, tagline, social media, etc.) |
 | UC18 | View Booking Statistics | See analytics and booking trends |
 | UC19 | View Attendees | See list of people who booked company itineraries |
+| UC38 | View Company Ratings | See all ratings and reviews for the company |
+| UC39 | View Itinerary Ratings | See ratings and feedback for specific itineraries |
 
 ### Administrator Use Cases
 
@@ -163,9 +199,17 @@ graph TB
 | UC22 | Create Company | Add new company on behalf of an owner |
 | UC23 | View All Bookings | See all bookings across the platform |
 | UC24 | Manage Roles | Assign or modify user roles and access levels |
-| UC25 | View System Statistics | Access platform-wide analytics |
+| UC25 | View System Statistics | Access platform-wide analytics including rating statistics |
 | UC26 | Approve/Suspend Companies | Control company access status |
 | UC27 | Delete Users | Remove user accounts from the system |
+| UC40 | Moderate Ratings | Remove inappropriate or spam ratings |
+| UC41 | View All Ratings | See all ratings across companies and itineraries |
+
+### Shared Use Cases
+
+| Use Case ID | Use Case Name | Description |
+|------------|---------------|-------------|
+| UC42 | View Ratings and Reviews | Browse ratings, reviews, and statistics for companies and itineraries |
 
 ## Actor Descriptions
 

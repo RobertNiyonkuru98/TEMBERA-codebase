@@ -1,0 +1,126 @@
+erDiagram
+    USER ||--o{ ROLE : "has"
+    USER ||--o{ COMPANY : "owns"
+    USER ||--o{ BOOKING : "creates"
+    USER ||--o{ COMPANY_RATING : "rates_company"
+    USER ||--o{ ITINERARY_RATING : "rates_itinerary"
+
+    COMPANY ||--o{ ITINERARY : "offers"
+    COMPANY ||--o{ COMPANY_RATING : "receives_ratings"
+
+    ITINERARY ||--o{ BOOKING : "booked_in"
+    ITINERARY ||--o{ BOOKING_ITEM : "linked_to"
+    ITINERARY ||--o{ ITINERARY_IMAGE : "has_images"
+    ITINERARY ||--o{ ITINERARY_VIDEO : "has_videos"
+    ITINERARY ||--o{ ITINERARY_RATING : "receives_ratings"
+
+    BOOKING ||--o{ BOOKING_ITEM : "contains"
+    BOOKING ||--o{ BOOKING_MEMBER : "includes"
+
+    USER {
+        uuid id PK
+        varchar(255) name
+        varchar(255) email UK
+        varchar(50) phone_number
+        varchar(255) password
+    }
+
+    ROLE {
+        uuid id PK
+        uuid user_id FK
+        varchar(50) access_level
+        varchar(20) access_status
+    }
+
+    COMPANY {
+        uuid id PK
+        varchar(100) name
+        varchar(150) tagline
+        varchar(2000) description
+        varchar(500) logo_url
+        varchar(500) cover_image_url
+        varchar(500) address
+        varchar(100) city
+        varchar(100) country
+        varchar(255) email
+        varchar(50) phone
+        json specializations
+        json languages
+        varchar(200) operating_days
+        varchar(200) operating_hours
+        varchar(255) website
+        varchar(255) facebook_url
+        varchar(255) instagram_url
+        varchar(255) twitter_url
+        uuid owner_id FK
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    COMPANY_RATING {
+        uuid id PK
+        uuid user_id FK
+        uuid company_id FK
+        int rating
+        varchar(1000) comment
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    ITINERARY {
+        uuid id PK
+        uuid company_id FK
+        varchar(200) title
+        varchar(255) activity
+        varchar(3000) description
+        varchar(255) location
+        date date
+        int duration_days
+        int duration_hours
+        int min_participants
+        int max_participants
+        int available_slots
+        float price
+        float price_per_person
+        float price_per_group
+        varchar(50) difficulty_level
+        int min_age
+        int max_age
+        boolean insurance_included
+        varchar(20) status
+        boolean is_featured
+        boolean is_active
+        float average_rating
+        int total_ratings
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    ITINERARY_RATING {
+        uuid id PK
+        uuid user_id FK
+        uuid itinerary_id FK
+        uuid booking_id FK
+        int rating
+        varchar(200) title
+        varchar(2000) comment
+        boolean good_value
+        boolean good_guide
+        boolean well_organized
+        boolean safe
+        boolean would_recommend
+        boolean verified_booking
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    ITINERARY_VIDEO {
+        uuid id PK
+        uuid itinerary_id FK
+        varchar(500) video_url
+        varchar(255) public_id
+        varchar(500) thumbnail_url
+        int duration
+        int order
+        timestamp created_at
+    }

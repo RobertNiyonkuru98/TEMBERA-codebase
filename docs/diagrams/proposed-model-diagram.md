@@ -87,7 +87,7 @@ sequenceDiagram
     end
 ```
 
-### 3. Itinerary Creation with Image Upload
+### 3. Itinerary Creation with Media Upload
 
 ```mermaid
 sequenceDiagram
@@ -98,6 +98,97 @@ sequenceDiagram
     participant ItineraryController
     participant ItineraryService
     participant Cloudinary
+    participant Database
+    
+    Company->>Frontend: Create Itinerary Form
+    Frontend->>API: POST /api/itineraries (with JWT)
+    API->>AuthMW: Validate Token & Role
+    
+    alt Not Company Role
+        AuthMW-->>API: 403 Forbidden
+        API-->>Frontend: Access Denied
+        Frontend-->>Company: Show Error
+    else Company Role
+        AuthMW-->>API: Authorized
+        API->>ItineraryController: createItinerary(req, res)
+        ItineraryController->>ItineraryService: createItinerary(data)
+        ItineraryService->>Database: INSERT INTO Itinerary
+        Database-->>ItineraryService: Itinerary Created
+        
+        opt Images Provided
+            ItineraryService->>Cloudinary: Upload Images
+            Cloudinary-->>ItineraryService: Image URLs
+            ItineraryService->>Database: INSERT INTO ItineraryImage
+        end
+        
+        opt Videos Provided
+            ItineraryService->>Cloudinary: Upload Videos (max 5)
+            Cloudinary-->>ItineraryService: Video URLs & Thumbnails
+            ItineraryService->>Database: INSERT INTO ItineraryVideo
+        end
+        
+        ItineraryService-->>ItineraryController: Success
+        ItineraryController-->>API: 201 Created
+        API-->>Frontend: Itinerary Data
+        Frontend-->>Company: Show Success
+    end
+```
+
+### 4. Rating Submission Workflow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend
+    participant API
+    participant AuthMW
+    participant RatingController
+    participant RatingService
+    participant RatingRepo
+    participant ItineraryRepo
+    participant Database
+    
+    User->>Frontend: Submit Rating & Review
+    Frontend->>API: POST /api/ratings/itinerary/:id/rating (with JWT)
+    API->>AuthMW: Validate Token
+    
+    alt Invalid Token
+        AuthMW-->>API: 401 Unauthorized
+        API-->>Frontend: Authentication Failed
+    else Valid Token
+        AuthMW-->>API: Authorized User
+        API->>RatingController: createRating(req, res)
+        RatingController->>RatingService: createRating(userId, data)
+        
+        RatingService->>RatingRepo: findUserRatingForItinerary(userId, itineraryId)
+        
+        alt Rating Already Exists
+            RatingRepo-->>RatingService: Existing Rating Found
+            RatingService-->>RatingController: Conflict Error
+            RatingController-->>API: 409 Conflict
+            API-->>Frontend: Already Rated
+            Frontend-->>User: Show Error
+        else No Existing Rating
+            RatingRepo-->>RatingService: null
+            RatingService->>RatingService: Validate Rating Data (1-10)
+            RatingService->>RatingRepo: create(ratingData)
+            RatingRepo->>Database: INSERT INTO ItineraryRating
+            Database-->>RatingRepo: Rating Created
+            
+            %% Update cached statistics
+            RatingService->>ItineraryRepo: updateRatingStats(itineraryId)
+            ItineraryRepo->>Database: Calculate AVG & COUNT
+            Database-->>ItineraryRepo: Statistics
+            ItineraryRepo->>Database: UPDATE Itinerary SET average_rating, total_ratings
+            
+            RatingRepo-->>RatingService: Rating Data
+            RatingService-->>RatingController: Success
+            RatingController-->>API: 201 Created
+            API-->>Frontend: Rating Submitted
+            Frontend-->>User: Thank You Message
+        end
+    end
+```
     participant Database
     
     Company->>Frontend: Create Itinerary Form

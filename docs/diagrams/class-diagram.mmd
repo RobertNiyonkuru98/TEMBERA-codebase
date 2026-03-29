@@ -1,8 +1,3 @@
-# Class Diagram - TEMBERA Tourism Platform
-
-## Backend Class Diagram (Mermaid)
-
-```mermaid
 classDiagram
     %% Controllers Layer
     class AuthController {
@@ -10,7 +5,7 @@ classDiagram
         +register(req: Request, res: Response)
         +login(req: Request, res: Response)
     }
-    
+
     class UserController {
         -userService: UserService
         +getAllUsers(req: Request, res: Response)
@@ -20,7 +15,7 @@ classDiagram
         +getUserRoles(req: Request, res: Response)
         +createRole(req: Request, res: Response)
     }
-    
+
     class CompanyController {
         -companyService: CompanyService
         +getAllCompanies(req: Request, res: Response)
@@ -30,7 +25,7 @@ classDiagram
         +deleteCompany(req: Request, res: Response)
         +getCompanyStatistics(req: Request, res: Response)
     }
-    
+
     class ItineraryController {
         -itineraryService: ItineraryService
         +getAllItineraries(req: Request, res: Response)
@@ -40,7 +35,7 @@ classDiagram
         +deleteItinerary(req: Request, res: Response)
         +uploadImages(req: Request, res: Response)
     }
-    
+
     class BookingController {
         -bookingService: BookingService
         +getAllBookings(req: Request, res: Response)
@@ -51,12 +46,35 @@ classDiagram
         +getMyBookings(req: Request, res: Response)
         +getCompanyBookings(req: Request, res: Response)
     }
-    
+
     class UploadController {
         +uploadImage(req: Request, res: Response)
+        +uploadVideos(req: Request, res: Response)
         -cloudinaryUpload(file: File)
     }
-    
+
+    class CompanyRatingController {
+        -ratingService: CompanyRatingService
+        +createRating(req: Request, res: Response)
+        +updateRating(req: Request, res: Response)
+        +deleteRating(req: Request, res: Response)
+        +getCompanyRatings(req: Request, res: Response)
+        +getCompanyRatingStats(req: Request, res: Response)
+        +getUserRatingForCompany(req: Request, res: Response)
+    }
+
+    class ItineraryRatingController {
+        -ratingService: ItineraryRatingService
+        +createRating(req: Request, res: Response)
+        +updateRating(req: Request, res: Response)
+        +deleteRating(req: Request, res: Response)
+        +getRatingById(req: Request, res: Response)
+        +getRatingsByItinerary(req: Request, res: Response)
+        +getRatingsByUser(req: Request, res: Response)
+        +getUserRatingForItinerary(req: Request, res: Response)
+        +getRatingStatistics(req: Request, res: Response)
+    }
+
     %% Services Layer
     class UserService {
         -userRepository: UserRepository
@@ -69,7 +87,7 @@ classDiagram
         +assignRole(userId: string, role: string)
         +getUserRoles(userId: string)
     }
-    
+
     class CompanyService {
         -companyRepository: CompanyRepository
         -userRepository: UserRepository
@@ -81,7 +99,7 @@ classDiagram
         +getCompanyByOwnerId(ownerId: string)
         +getStatistics(companyId: string)
     }
-    
+
     class ItineraryService {
         -itineraryRepository: ItineraryRepository
         -companyRepository: CompanyRepository
@@ -91,9 +109,11 @@ classDiagram
         +updateItinerary(id: string, data: UpdateItineraryDTO)
         +deleteItinerary(id: string)
         +addImages(itineraryId: string, images: ImageDTO[])
+        +addVideos(itineraryId: string, videos: VideoDTO[])
         +getCompanyItineraries(companyId: string)
+        +updateRatingStats(itineraryId: string)
     }
-    
+
     class BookingService {
         -bookingRepository: BookingRepository
         -itineraryRepository: ItineraryRepository
@@ -106,7 +126,41 @@ classDiagram
         +getCompanyBookings(companyId: string)
         +addBookingMembers(bookingId: string, members: MemberDTO[])
     }
-    
+
+    class CompanyRatingService {
+        -ratingRepository: CompanyRatingRepository
+        -companyRepository: CompanyRepository
+        +createRating(userId: string, data: CreateRatingDTO)
+        +updateRating(ratingId: string, userId: string, data: UpdateRatingDTO)
+        +deleteRating(ratingId: string, userId: string)
+        +getCompanyRatings(companyId: string)
+        +getCompanyRatingStats(companyId: string)
+        +getUserRatingForCompany(userId: string, companyId: string)
+    }
+
+    class ItineraryRatingService {
+        -ratingRepository: ItineraryRatingRepository
+        -itineraryRepository: ItineraryRepository
+        +createRating(userId: string, data: CreateRatingDTO)
+        +updateRating(ratingId: string, userId: string, data: UpdateRatingDTO)
+        +deleteRating(ratingId: string, userId: string)
+        +getRatingById(ratingId: string)
+        +getRatingsByItinerary(itineraryId: string)
+        +getRatingsByUser(userId: string)
+        +getUserRatingForItinerary(userId: string, itineraryId: string)
+        +getRatingStatistics(itineraryId: string)
+    }
+
+    class BookingService {
+        +getBookingById(id: string)
+        +getAllBookings()
+        +updateBooking(id: string, data: UpdateBookingDTO)
+        +cancelBooking(id: string)
+        +getUserBookings(userId: string)
+        +getCompanyBookings(companyId: string)
+        +addBookingMembers(bookingId: string, members: MemberDTO[])
+    }
+
     %% Repository Layer
     class UserRepository {
         -prisma: PrismaClient
@@ -118,7 +172,7 @@ classDiagram
         +delete(id: string)
         +findWithRolesByEmail(email: string)
     }
-    
+
     class RoleRepository {
         -prisma: PrismaClient
         +create(data: RoleData)
@@ -126,7 +180,7 @@ classDiagram
         +update(id: string, data: RoleData)
         +delete(id: string)
     }
-    
+
     class CompanyRepository {
         -prisma: PrismaClient
         +create(data: CompanyData)
@@ -136,7 +190,7 @@ classDiagram
         +delete(id: string)
         +findByOwnerId(ownerId: string)
     }
-    
+
     class ItineraryRepository {
         -prisma: PrismaClient
         +create(data: ItineraryData)
@@ -146,7 +200,7 @@ classDiagram
         +delete(id: string)
         +findByCompanyId(companyId: string)
     }
-    
+
     class BookingRepository {
         -prisma: PrismaClient
         +create(data: BookingData)
@@ -157,7 +211,32 @@ classDiagram
         +findByUserId(userId: string)
         +findByItineraryId(itineraryId: string)
     }
-    
+
+    class CompanyRatingRepository {
+        -prisma: PrismaClient
+        +create(data: RatingData)
+        +findById(id: string)
+        +findByCompanyId(companyId: string)
+        +findByUserId(userId: string)
+        +findUserRatingForCompany(userId: string, companyId: string)
+        +update(id: string, data: RatingData)
+        +delete(id: string)
+        +getAverageRating(companyId: string)
+    }
+
+    class ItineraryRatingRepository {
+        -prisma: PrismaClient
+        +create(data: RatingData)
+        +findById(id: string)
+        +findByItineraryId(itineraryId: string)
+        +findByUserId(userId: string)
+        +findUserRatingForItinerary(userId: string, itineraryId: string)
+        +update(id: string, data: RatingData)
+        +delete(id: string)
+        +getRatingStatistics(itineraryId: string)
+        +getAverageRating(itineraryId: string)
+    }
+
     %% Models/Entities
     class User {
         +id: string
@@ -168,8 +247,10 @@ classDiagram
         +roles: Role[]
         +bookings: Booking[]
         +companies: Company[]
+        +companyRatings: CompanyRating[]
+        +itineraryRatings: ItineraryRating[]
     }
-    
+
     class Role {
         +id: string
         +user_id: string
@@ -177,17 +258,45 @@ classDiagram
         +access_status: string
         +user: User
     }
-    
+
     class Company {
         +id: string
         +name: string
+        +tagline: string
         +description: string
-        +contact: string
+        +logo_url: string
+        +cover_image_url: string
+        +address: string
+        +city: string
+        +country: string
+        +email: string
+        +phone: string
+        +specializations: json
+        +languages: json
+        +website: string
+        +facebook_url: string
+        +instagram_url: string
+        +twitter_url: string
         +owner_id: string
+        +created_at: Date
+        +updated_at: Date
         +owner: User
         +itineraries: Itinerary[]
+        +ratings: CompanyRating[]
     }
-    
+
+    class CompanyRating {
+        +id: string
+        +user_id: string
+        +company_id: string
+        +rating: number
+        +comment: string
+        +created_at: Date
+        +updated_at: Date
+        +user: User
+        +company: Company
+    }
+
     class Itinerary {
         +id: string
         +company_id: string
@@ -196,13 +305,29 @@ classDiagram
         +description: string
         +location: string
         +date: Date
+        +duration_days: number
+        +duration_hours: number
         +price: number
+        +price_per_person: number
+        +price_per_group: number
+        +min_participants: number
+        +max_participants: number
+        +difficulty_level: string
+        +status: string
+        +is_featured: boolean
+        +is_active: boolean
+        +average_rating: number
+        +total_ratings: number
+        +created_at: Date
+        +updated_at: Date
         +company: Company
         +bookings: Booking[]
         +images: ItineraryImage[]
+        +videos: ItineraryVideo[]
         +items: BookingItem[]
+        +ratings: ItineraryRating[]
     }
-    
+
     class ItineraryImage {
         +id: string
         +itinerary_id: string
@@ -213,7 +338,39 @@ classDiagram
         +created_at: Date
         +itinerary: Itinerary
     }
-    
+
+    class ItineraryVideo {
+        +id: string
+        +itinerary_id: string
+        +video_url: string
+        +public_id: string
+        +thumbnail_url: string
+        +duration: number
+        +order: number
+        +created_at: Date
+        +itinerary: Itinerary
+    }
+
+    class ItineraryRating {
+        +id: string
+        +user_id: string
+        +itinerary_id: string
+        +booking_id: string
+        +rating: number
+        +title: string
+        +comment: string
+        +good_value: boolean
+        +good_guide: boolean
+        +well_organized: boolean
+        +safe: boolean
+        +would_recommend: boolean
+        +verified_booking: boolean
+        +created_at: Date
+        +updated_at: Date
+        +user: User
+        +itinerary: Itinerary
+    }
+
     class Booking {
         +id: string
         +user_id: string
@@ -227,7 +384,7 @@ classDiagram
         +items: BookingItem[]
         +members: BookingMember[]
     }
-    
+
     class BookingItem {
         +id: string
         +booking_id: string
@@ -235,7 +392,7 @@ classDiagram
         +booking: Booking
         +itinerary: Itinerary
     }
-    
+
     class BookingMember {
         +id: string
         +booking_id: string
@@ -244,62 +401,64 @@ classDiagram
         +phone: string
         +booking: Booking
     }
-    
+
     %% Middleware
     class AuthMiddleware {
         +authenticateToken(req, res, next)
         +authorizeRole(roles: string[])
         -verifyJWT(token: string)
     }
-    
+
     class UploadMiddleware {
         +multerConfig: MulterOptions
         +upload: Multer
         +handleUpload(req, res, next)
     }
-    
+
     %% Utilities
     class ResponseHandler {
         +success(res, status, message, data)
         +error(res, status, message)
     }
-    
+
     class HTTPError {
         <<abstract>>
         +statusCode: number
         +message: string
     }
-    
+
     class NotFoundError {
         +statusCode: 404
     }
-    
+
     class UnauthorizedError {
         +statusCode: 401
     }
-    
+
     class BadRequestError {
         +statusCode: 400
     }
-    
+
     class ConflictError {
         +statusCode: 409
     }
-    
+
     class Logger {
         +info(message: string)
         +error(message: string, error: Error)
         +warn(message: string)
         +debug(message: string)
     }
-    
+
     %% Relationships - Controllers to Services
     AuthController --> UserRepository
     UserController --> UserService
     CompanyController --> CompanyService
     ItineraryController --> ItineraryService
     BookingController --> BookingService
-    
+    CompanyRatingController --> CompanyRatingService
+    ItineraryRatingController --> ItineraryRatingService
+
     %% Services to Repositories
     UserService --> UserRepository
     UserService --> RoleRepository
@@ -309,115 +468,49 @@ classDiagram
     ItineraryService --> CompanyRepository
     BookingService --> BookingRepository
     BookingService --> ItineraryRepository
-    
+    CompanyRatingService --> CompanyRatingRepository
+    CompanyRatingService --> CompanyRepository
+    ItineraryRatingService --> ItineraryRatingRepository
+    ItineraryRatingService --> ItineraryRepository
+
     %% Repositories to Models
     UserRepository --> User
     RoleRepository --> Role
     CompanyRepository --> Company
     ItineraryRepository --> Itinerary
     BookingRepository --> Booking
-    
+    CompanyRatingRepository --> CompanyRating
+    ItineraryRatingRepository --> ItineraryRating
+
     %% Model Relationships
     User "1" --> "0..*" Role
     User "1" --> "0..*" Company
     User "1" --> "0..*" Booking
+    User "1" --> "0..*" CompanyRating
+    User "1" --> "0..*" ItineraryRating
     Company "1" --> "0..*" Itinerary
+    Company "1" --> "0..*" CompanyRating
     Itinerary "1" --> "0..*" Booking
     Itinerary "1" --> "0..*" ItineraryImage
+    Itinerary "1" --> "0..*" ItineraryVideo
+    Itinerary "1" --> "0..*" ItineraryRating
     Itinerary "1" --> "0..*" BookingItem
     Booking "1" --> "0..*" BookingItem
     Booking "1" --> "0..*" BookingMember
-    
+
     %% Middleware Usage
     AuthMiddleware ..> UserRepository
     AuthMiddleware ..> ResponseHandler
-    
+
     %% Error Hierarchy
     HTTPError <|-- NotFoundError
     HTTPError <|-- UnauthorizedError
     HTTPError <|-- BadRequestError
     HTTPError <|-- ConflictError
-    
+
     %% Utility Usage
     AuthController ..> ResponseHandler
     UserController ..> ResponseHandler
     CompanyController ..> ResponseHandler
     ItineraryController ..> ResponseHandler
     BookingController ..> ResponseHandler
-```
-
-## Class Descriptions
-
-### Controllers Layer
-Controllers handle HTTP requests, validate input, call appropriate services, and return responses.
-
-- **AuthController**: Handles user registration and authentication
-- **UserController**: Manages user CRUD operations
-- **CompanyController**: Manages company operations
-- **ItineraryController**: Handles itinerary management
-- **BookingController**: Manages booking operations
-- **UploadController**: Handles file uploads to Cloudinary
-
-### Services Layer
-Services contain business logic and orchestrate repository calls.
-
-- **UserService**: User-related business logic
-- **CompanyService**: Company management logic
-- **ItineraryService**: Itinerary operations and validation
-- **BookingService**: Booking workflow and rules
-
-### Repository Layer
-Repositories handle database operations using Prisma ORM.
-
-- **UserRepository**: User data access
-- **RoleRepository**: Role management data access
-- **CompanyRepository**: Company data operations
-- **ItineraryRepository**: Itinerary database operations
-- **BookingRepository**: Booking data access
-
-### Models/Entities
-Domain models representing database tables.
-
-- **User**: User account information
-- **Role**: User role and access level
-- **Company**: Tour company details
-- **Itinerary**: Travel package information
-- **ItineraryImage**: Images associated with itineraries
-- **Booking**: Booking transaction records
-- **BookingItem**: Junction table for booking-itinerary relationship
-- **BookingMember**: Group booking member information
-
-### Middleware
-- **AuthMiddleware**: JWT authentication and authorization
-- **UploadMiddleware**: File upload handling with Multer
-
-### Utilities
-- **ResponseHandler**: Standardized API response formatting
-- **HTTPError**: Custom error classes for different HTTP status codes
-- **Logger**: Winston-based logging utility
-
-## Design Patterns Used
-
-1. **Layered Architecture**: Clear separation of concerns (Controllers → Services → Repositories)
-2. **Repository Pattern**: Abstracts data access logic
-3. **Dependency Injection**: Services and repositories injected into controllers
-4. **Singleton Pattern**: Single Prisma client instance
-5. **Factory Pattern**: Error creation with custom error classes
-6. **Middleware Pattern**: Express middleware for cross-cutting concerns
-7. **DTO Pattern**: Data Transfer Objects for API contracts
-
-## Key Principles
-
-- **Single Responsibility**: Each class has one clear purpose
-- **Open/Closed**: Classes open for extension, closed for modification
-- **Dependency Inversion**: Depend on abstractions, not concrete implementations
-- **Interface Segregation**: Focused repository interfaces
-- **DRY**: Reusable utilities and response handlers
-
----
-
-**Framework**: Express.js + TypeScript  
-**ORM**: Prisma  
-**Architecture**: Layered/Clean Architecture  
-**Last Updated**: March 29, 2026
-
