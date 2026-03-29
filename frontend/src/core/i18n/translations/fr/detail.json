@@ -1,0 +1,18 @@
+{
+  "detail.tripInfo": "Informations sur le voyage",
+  "detail.date": "Date",
+  "detail.location": "Lieu",
+  "detail.priceLabel": "Prix par personne (RWF)",
+  "detail.company": "Entreprise",
+  "detail.bookingsTitle": "Réservations qui incluent cet itinéraire",
+  "detail.noBookings": "Aucune réservation n'inclut actuellement cet itinéraire.",
+  "detail.addToBooking": "Ajouter à une réservation",
+  "detail.goBack": "Retour",
+  "detail.notFound": "L'itinéraire demandé est introuvable.",
+  "detail.loadingDetails": "Chargement des détails de l'itinéraire...",
+  "detail.attendButton": "Réserver Maintenant",
+  "detail.attending": "Réservation...",
+  "detail.bookingNumber": "Réservation",
+  "detail.createdOn": "Créé le",
+  "detail.by": "Par"
+}

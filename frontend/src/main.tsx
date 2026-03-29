@@ -3,10 +3,10 @@ import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import "./index.css";
 import App from "./App.tsx";
-import { I18nProvider } from "./i18n.tsx";
-import { store } from "./store";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { ThemeProvider } from "./theme";
+import { I18nProvider } from "@/core/i18n";
+import { store } from "@/core/store";
+import { TooltipProvider } from "@/shared/components/ui";
+import { ThemeProvider } from "@/core/theme";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

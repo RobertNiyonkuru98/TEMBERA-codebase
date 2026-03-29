@@ -14,6 +14,21 @@ export class ItineraryRepository implements IItineraryRepository {
       where: { id },
       include: {
         images: true,
+        videos: true,
+        ratings: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+          orderBy: {
+            created_at: 'desc',
+          },
+        },
       },
     });
   }
@@ -23,6 +38,8 @@ export class ItineraryRepository implements IItineraryRepository {
       where: { company_id: companyId },
       include: {
         images: true,
+        videos: true,
+        ratings: true,
       },
       orderBy: {
         date: 'asc',
@@ -78,6 +95,8 @@ export class ItineraryRepository implements IItineraryRepository {
       take,
       include: {
         images: true,
+        videos: true,
+        ratings: true,
       },
       orderBy: {
         date: 'desc',
@@ -160,6 +179,55 @@ export class ItineraryRepository implements IItineraryRepository {
           order: index,
         };
       }),
+    });
+  }
+
+  async createVideos(itineraryId: string, videoData: Array<{ url: string; publicId: string; thumbnailUrl?: string }>): Promise<void> {
+    if (videoData.length === 0) {
+      return;
+    }
+
+    await prisma.itineraryVideo.createMany({
+      data: videoData.map((video, index) => ({
+        itinerary_id: itineraryId,
+        video_url: video.url,
+        public_id: video.publicId,
+        thumbnail_url: video.thumbnailUrl,
+        order: index,
+      })),
+    });
+  }
+
+  async deleteVideo(videoId: string): Promise<void> {
+    await prisma.itineraryVideo.delete({ where: { id: videoId } });
+  }
+
+  async updateRatingStats(itineraryId: string): Promise<void> {
+    const ratings = await prisma.itineraryRating.findMany({
+      where: { itinerary_id: itineraryId },
+      select: { rating: true },
+    });
+
+    if (ratings.length === 0) {
+      await prisma.itinerary.update({
+        where: { id: itineraryId },
+        data: {
+          average_rating: null,
+          total_ratings: 0,
+        },
+      });
+      return;
+    }
+
+    const totalRating = ratings.reduce((sum, r) => sum + r.rating, 0);
+    const averageRating = totalRating / ratings.length;
+
+    await prisma.itinerary.update({
+      where: { id: itineraryId },
+      data: {
+        average_rating: averageRating,
+        total_ratings: ratings.length,
+      },
     });
   }
 }

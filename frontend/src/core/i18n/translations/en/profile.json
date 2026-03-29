@@ -1,0 +1,17 @@
+{
+  "profile.title": "Profile",
+  "profile.subtitle": "Manage your personal information and account",
+  "profile.accountDetails": "Account Details",
+  "profile.userId": "User ID",
+  "profile.role": "Role",
+  "profile.updateProfile": "Update Profile",
+  "profile.fullName": "Full Name",
+  "profile.phoneNumber": "Phone Number",
+  "profile.saveChanges": "Save Changes",
+  "profile.saving": "Saving...",
+  "profile.dangerZone": "Danger Zone",
+  "profile.deleteAccount": "Delete Account",
+  "profile.deleteWarning": "Deleting your account is irreversible and removes your access",
+  "profile.deleting": "Processing...",
+  "profile.updateSuccess": "Profile updated successfully"
+}

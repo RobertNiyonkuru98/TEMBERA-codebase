@@ -29,6 +29,14 @@ async addImages(id: string, imagePaths: string[]): Promise<Itinerary | null> {
     await this.itineraryRepository.createCloudinaryImages(id, imageUrls);
     return this.itineraryRepository.findById(id);
   }
+
+  async addVideos(id: string, videoData: Array<{ url: string; publicId: string; thumbnailUrl?: string }>): Promise<Itinerary | null> {
+    const itinerary = await this.itineraryRepository.findById(id);
+    if (!itinerary) return null;
+    await this.itineraryRepository.createVideos(id, videoData);
+    return this.itineraryRepository.findById(id);
+  }
+
   async update(id: string, data: Prisma.ItineraryUpdateInput): Promise<Itinerary | null> {
     try {
       return await this.itineraryRepository.update(id, data);

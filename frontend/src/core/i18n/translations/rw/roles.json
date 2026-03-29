@@ -1,0 +1,14 @@
+{
+  "roles.admin.label": "Umuyobozi",
+  "roles.admin.description": "Uburenganzira bwuzuye no gucunga sisitemu",
+  "roles.company.label": "Umuyobozi w'Ikigo",
+  "roles.company.description": "Gucunga ingendo z'ikigo cyawe",
+  "roles.user.label": "Umugenzi",
+  "roles.user.description": "Shakisha kandi utumize uburambe",
+  "roles.visitor.label": "Umushinzwe",
+  "roles.visitor.description": "Reba ibintu rusange",
+  "roles.viewingAs": "Ureba nka",
+  "roles.switchView": "Hindura Icyerekezo",
+  "roles.active": "Gikora",
+  "roles.switched": "Wahinduye kuri"
+}
