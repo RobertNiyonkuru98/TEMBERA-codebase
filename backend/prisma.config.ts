@@ -1,8 +1,8 @@
 /// <reference types="node" />
-import "dotenv/config";
 import { defineConfig } from "prisma/config";
 
-const databaseUrl = process.env["DATABASE_URL"] || "postgresql://placeholder:placeholder@localhost:5432/placeholder";
+// Use placeholder URL during build, actual DATABASE_URL at runtime
+const databaseUrl = process.env.DATABASE_URL || "postgresql://user:pass@localhost:5432/db";
 
 export default defineConfig({
   schema: "src/prisma/schema.prisma",
