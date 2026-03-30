@@ -73,6 +73,73 @@ The server will be available at `http://localhost:3000/api`.
 Swagger documentation is available at:
 `http://localhost:3000/api/docs`
 
+## Docker: Build And Push To Docker Hub
+
+Use this guide to publish your backend image to Docker Hub.
+
+### 1. Build the Docker image locally
+
+From the `backend` directory:
+
+```bash
+docker build -t tembera-backend:latest .
+```
+
+### 2. Login to Docker Hub
+
+```bash
+docker login
+```
+
+### 3. Tag the image for your Docker Hub repository
+
+Replace `DOCKERHUB_USERNAME` with correct Docker Hub username and which holds the project in ths case `elijahladdie`
+
+```bash
+docker tag tembera-backend:latest DOCKERHUB_USERNAME/tembera-backend:latest
+```
+
+Optional versioned tag:
+
+```bash
+docker tag tembera-backend:latest DOCKERHUB_USERNAME/tembera-backend:v1.0.0
+```
+
+### 4. Push image to Docker Hub
+
+```bash
+docker push DOCKERHUB_USERNAME/tembera-backend:latest
+docker push DOCKERHUB_USERNAME/tembera-backend:v1.0.0
+```
+
+### 5. Pull and run from Docker Hub (verification)
+
+```bash
+docker pull DOCKERHUB_USERNAME/tembera-backend:latest
+docker run -d --name tembera-backend-app \
+	--env-file .env \
+	-e SKIP_MIGRATIONS=true \
+	-p 3001:3000 \
+	DOCKERHUB_USERNAME/tembera-backend:latest
+```
+
+Then confirm it is running:
+
+```bash
+docker ps
+docker logs --tail 100 tembera-backend-app
+curl -I http://localhost:3001/api/docs
+```
+
+### 6. Update release flow (recommended)
+
+When you ship a new release:
+
+1. Build new image from current source.
+2. Tag with a new version (for example `v1.0.1`).
+3. Push both `latest` and the version tag.
+4. Deploy using the version tag in production for safer rollbacks.
+
 ## Database Management
 
 Whenever you update the `prisma/schema.prisma` file, you must run:

@@ -7,13 +7,15 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "npx prisma generate && npx tsc && npx tsc-alias",
+    "build": "prisma generate && tsc && npx --yes tsc-alias",
     "start": "node dist/index.js",
     "start:prod": "NODE_ENV=production node dist/index.js",
     "type-check": "tsc --noEmit",
-    "generate": "npx prisma generate",
+    "generate": "prisma generate",
     "seed": "tsx src/prisma/seeders/seed.ts",
-    "migrate:deploy": "npx prisma migrate deploy"
+    "migrate:deploy": "prisma migrate deploy",
+    "docker:build": "docker build -t tembera-backend:latest .",
+    "docker:run": "docker run --env-file .env -p 3000:3000 tembera-backend:latest"
   },
   "keywords": [],
   "author": "",
